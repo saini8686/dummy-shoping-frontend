@@ -6,21 +6,6 @@ export default {
   ],
   theme: {
     extend: {
-      colors: {
-        green_100: "#53B175",
-        green_900: "#01BE62",
-        black_100: "#181725",
-        black_200: "#010101",
-        grey_100: "#F2F3F1",
-        grey_200: "#7C7C7C",
-        grey_300: "#E2E2E2",
-        grey_400: "#838483",
-        grey_500: "#C1C6C3",
-        yellow_200: "#FEF700",
-        red_100: "#FFE8E8",
-        red_200: "#FFE8E8",
-        red_900: "#FF3131",
-      },
       lineHeight: {
         100: "100%",
       },

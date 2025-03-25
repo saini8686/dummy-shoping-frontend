@@ -107,3 +107,20 @@ export const BEST_SELLER_LIST = [
     url: "#",
   },
 ];
+export const INSTRUCTION_LIST = [
+  {
+    title: "Choose Products",
+    description:
+      "Amet minim mollit non deserunt ullamco est sit aliqua dolor do amet sint. Velit officia consequat duis enim velit mollit.",
+  },
+  {
+    title: "Make Payment",
+    description:
+      "Amet minim mollit non deserunt ullamco est sit aliqua dolor do amet sint. Velit officia consequat duis enim velit mollit.",
+  },
+  {
+    title: "Get Your Order",
+    description:
+      "Amet minim mollit non deserunt ullamco est sit aliqua dolor do amet sint. Velit officia consequat duis enim velit mollit.",
+  },
+];

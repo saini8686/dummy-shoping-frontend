@@ -4,7 +4,7 @@ import Icon from "./Icons";
 import Link from "next/link";
 const Navbar = () => {
   return (
-    <div className="pt-8 pb-4 rounded-b-3xl  bg_green_900 px-4">
+    <div className="pt-8 pb-4 rounded-b-3xl  bg-greens-900 px-4">
       <Image
         src="./assets/images/svg/logo.svg"
         width={86}
