@@ -11,7 +11,7 @@ export const CustomButton = ({
     <>
       {url ? (
         <Link
-          className={`p-2.5 block overflow-hidden rounded bg-green_900 text-white font-medium text-base !leading-100 ${customClass}`}
+          className={`p-2.5 block overflow-hidden rounded custom_button text-white font-medium text-base !leading-100 ${customClass}`}
           href={url}
           onClick={onClick}
           aria-label="link"
@@ -20,7 +20,7 @@ export const CustomButton = ({
         </Link>
       ) : (
         <button
-          className={`p-2.5 block overflow-hidden rounded bg-green_900 text-white font-medium text-base !leading-100 ${customClass}`}
+          className={`p-2.5 block overflow-hidden rounded custom_button text-white font-medium text-base !leading-100 ${customClass}`}
           onClick={onClick}
           type={isSubmit ? "submit" : "button"}
         >

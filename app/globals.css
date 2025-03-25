@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Roboto:ital,wght@0,100..900;1,100..900&display=swap');
 @config "../tailwind.config.js";
 @import "tailwindcss";
 
@@ -6,6 +6,175 @@
   font-family: "Poppins", sans-serif;
 }
 
-body  {
-  @apply max-w-[640px] bg-white overflow-hidden mx-auto
+body {
+  @apply max-w-[640px] bg-white  mx-auto
+}
+
+.font-roboto {
+  font-family: "Roboto", sans-serif !important;
+}
+
+button {
+  @apply cursor-pointer
+}
+
+.custom_button {
+  @apply bg-green_900 hover:bg-white hover:text-green_900 border border-green_900 duration-300
+}
+
+/* Background Colors */
+.bg_green_100 {
+  @apply bg-green_100;
+}
+
+.bg_green_900 {
+  @apply bg-green_900;
+}
+
+.bg_black_100 {
+  @apply bg-black_100;
+}
+
+.bg_black_200 {
+  @apply bg-black_200;
+}
+
+.bg_grey_100 {
+  @apply bg-grey_100;
+}
+
+.bg_grey_200 {
+  @apply bg-grey_200;
+}
+
+.bg_grey_300 {
+  @apply bg-grey_300;
+}
+
+.bg_grey_400 {
+  @apply bg-grey_400;
+}
+
+.bg_grey_500 {
+  @apply bg-grey_500;
+}
+
+.bg_yellow_200 {
+  @apply bg-yellow_200;
+}
+
+.bg_red_100 {
+  @apply bg-red_100;
+}
+
+.bg_red_200 {
+  @apply bg-red_200;
+}
+
+.bg_red_900 {
+  @apply bg-red_900;
+}
+
+/* Text Colors */
+.text_green_100 {
+  @apply text-green_100;
+}
+
+.text_green_900 {
+  @apply text-green_900;
+}
+
+.text_black_100 {
+  @apply text-black_100;
+}
+
+.text_black_200 {
+  @apply text-black_200;
+}
+
+.text_grey_100 {
+  @apply text-grey_100;
+}
+
+.text_grey_200 {
+  @apply text-grey_200;
+}
+
+.text_grey_300 {
+  @apply text-grey_300;
+}
+
+.text_grey_400 {
+  @apply text-grey_400;
+}
+
+.text_grey_500 {
+  @apply text-grey_500;
+}
+
+.text_yellow_200 {
+  @apply text-yellow_200;
+}
+
+.text_red_100 {
+  @apply text-red_100;
+}
+
+.text_red_200 {
+  @apply text-red_200;
+}
+
+.text_red_900 {
+  @apply text-red_900;
+}
+
+/* Border Colors */
+.border_green_100 {
+  @apply border-green_100;
+}
+
+.border_green_900 {
+  @apply border-green_900;
+}
+
+.border_black_100 {
+  @apply border-black_100;
+}
+
+.border_black_200 {
+  @apply border-black_200;
+}
+
+.border_grey_100 {
+  @apply border-grey_100;
+}
+
+.border_grey_200 {
+  @apply border-grey_200;
+}
+
+.border_yellow_200 {
+  @apply border-yellow_200;
+}
+
+.border_red_100 {
+  @apply border-red_100;
+}
+
+.border_red_200 {
+  @apply border-red_200;
+}
+
+.border_red_900 {
+  @apply border-red_900;
+}
+
+/* Line Height */
+.leading_100 {
+  @apply !leading-100;
+}
+
+/* Shadows */
+.shadow_low_black {
+  @apply shadow-low_black;
 }
