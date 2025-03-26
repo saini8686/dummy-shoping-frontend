@@ -27,7 +27,7 @@ const PreLoader = () => {
       {loading && (
         <div className="w-full max-w-[640px] flex justify-center items-center mx-auto min-h-screen bg-white fixed inset-0 z-[51]">
           <Image
-            src="./assets/images/svg/main-logo.svg"
+            src="/assets/images/svg/main-logo.svg"
             width={205}
             height={97}
             sizes="100vw"
@@ -41,7 +41,7 @@ const PreLoader = () => {
         <div className="relative justify-between gap-10 flex-col flex z-10 min-h-screen">
           <div className="mt-10 px-4 flex w-full  justify-between items-center">
             {steps === "0" && (
-              <p className="text-lg font-semibold text-black leading_100">
+              <p className="text-lg font-semibold text-black !leading-130">
                 {activeIndex + 1}
                 <span className="text-greys-600">/3</span>
               </p>
@@ -62,14 +62,14 @@ const PreLoader = () => {
             {steps === "0" && (
               <Link
                 href="?steps=1"
-                className="text-reds-900 font-semibold text-xl !leading_100"
+                className="text-reds-900 font-semibold text-xl !!leading-130"
               >
                 Skip
               </Link>
             )}
           </div>
           <Image
-            src="./assets/images/svg/main-logo.svg"
+            src="/assets/images/svg/main-logo.svg"
             width={205}
             height={97}
             sizes="100vw"

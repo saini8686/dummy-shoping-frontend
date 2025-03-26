@@ -4,7 +4,7 @@ import React from "react";
 const SelectRole = () => {
   return (
     <div>
-      <h2 className="text-2xl font-semibold mb-3 text-white text-center leading_100">
+      <h2 className="text-2xl font-semibold mb-3 text-white text-center !leading-130">
         Select Role
       </h2>
       <p className="max-w-[319px] mx-auto text-sm text-center text-white">

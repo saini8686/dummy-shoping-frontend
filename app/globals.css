@@ -27,22 +27,22 @@ button {
   --color-greens-900: #01BE62;
   --color-blacks-100: #181725;
   --color-blacks-200: #010101;
+  --color-greys-dark-400: #575C57;
   --color-greys-100: #F2F3F1;
   --color-greys-200: #7C7C7C;
   --color-greys-300: #E2E2E2;
   --color-greys-400: #838483;
   --color-greys-500: #C1C6C3;
   --color-greys-600: #A0A0A1;
+  --color-greys-700: #E9ECE9;
   --color-yellows-200: #FEF700;
   --color-reds-100: #FFE8E8;
   --color-reds-200: #FFE8E8;
   --color-reds-900: #FF3131;
+  --spacing-130: 130%;
 }
 
-/* Line Height */
-.leading_100 {
-  @apply !leading-100;
-}
+
 
 /* Shadows */
 .shadow_low_black {
@@ -72,4 +72,8 @@ button {
   border-radius: 10px !important;
   opacity: 1 !important;
   background: #ffffff !important;
+}
+
+.transparent-green-border-button {
+  @apply border border-greens-900 rounded font-semibold text-black py-3.5 block text-center mt-8 hover:text-white hover:bg-greens-900 duration-300
 }

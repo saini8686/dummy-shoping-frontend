@@ -16,7 +16,7 @@ const ProductCategory = ({ category, productList }) => {
         </h3>
         <button
           onClick={() => showToggle()}
-          className="flex text-nowrap items-center gap-2.5 text-base font-medium leading_100 text-reds-900"
+          className="flex text-nowrap items-center gap-2.5 text-base font-medium !leading-130 text-reds-900"
         >
           See {show === 4 ? "All" : "Less"} <Icon icon="seeMore" />
         </button>

@@ -6,7 +6,7 @@ const Navbar = () => {
   return (
     <div className="pt-8 pb-4 rounded-b-3xl  bg-greens-900 px-4">
       <Image
-        src="./assets/images/svg/logo.svg"
+        src="/assets/images/svg/logo.svg"
         width={86}
         height={39}
         sizes="100vw"
@@ -18,9 +18,11 @@ const Navbar = () => {
           <span className="bg-white rounded-full flex justify-center items-center min-w-[34px] h-[34px]">
             <Icon icon="locationNavbar" />
           </span>
-          <p className="text-white font-roboto font-medium block text-sm leading_100">
+          <p className="text-white font-roboto font-medium block text-sm !leading-130">
             <span className="block font-roboto">HOME</span>
-            <span className="block font-roboto mt-0.5">Sultan Bhag, Erraga...</span>
+            <span className="block font-roboto mt-0.5">
+              Sultan Bhag, Erraga...
+            </span>
           </p>
         </div>
         <div className="flex items-center gap-2">
@@ -38,7 +40,7 @@ const Navbar = () => {
           </Link>
         </div>
       </div>
-      <p className="text-lg text-white font-roboto mt-4 font-medium leading_100">
+      <p className="text-lg text-white font-roboto mt-4 font-medium !leading-130">
         Your Order will be packed in 11 minutes
       </p>
     </div>

@@ -7,7 +7,7 @@ const SearchBar = () => {
         <input
           type="text"
           placeholder="Search Anything"
-          className="py-4 text-sm border-0 w-full outline-0 pl-6 leading_100 font-normal placeholder:text-greys-400 text-greys-400"
+          className="py-4 text-sm border-0 w-full outline-0 pl-6 !leading-130 font-normal placeholder:text-greys-400 text-greys-400"
         />
         <span className="h-6 w-[1px] bg-greys-500"></span>
         <Icon icon="mic" />

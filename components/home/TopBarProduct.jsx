@@ -31,7 +31,7 @@ const TopBarProduct = () => {
               className="w-[59px] h-[59px] rounded-md shadow_low_black"
             />
 
-            <p className="text-black mt-2 text-sm text-center leading_100 font-semibold">
+            <p className="text-black mt-2 text-sm text-center !leading-130 font-semibold">
               {obj.name}
             </p>
           </Link>
@@ -65,7 +65,9 @@ const TopBarProduct = () => {
           </button>
         )}
       </div>
-      <CustomButton customClass="ml-auto flex w-fit mt-6" url="#">Nearby Shops</CustomButton>
+      <CustomButton customClass="ml-auto flex w-fit mt-6" url="#">
+        Nearby Shops
+      </CustomButton>
     </div>
   );
 };

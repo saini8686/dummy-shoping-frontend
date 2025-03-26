@@ -1,7 +1,6 @@
 "use client";
 import { INSTRUCTION_LIST } from "@/utils/helper";
 import Link from "next/link";
-import { useState } from "react";
 import "swiper/css";
 import "swiper/css/effect-fade";
 import "swiper/css/navigation";
@@ -13,6 +12,7 @@ const InstructionStep = ({ activeIndex, setActiveIndex }) => {
   return (
     <div>
       <Swiper
+        allowTouchMove={false}
         spaceBetween={30}
         pagination={{
           el: ".swiper-pagination",
@@ -29,7 +29,7 @@ const InstructionStep = ({ activeIndex, setActiveIndex }) => {
         {INSTRUCTION_LIST.map((obj, i) => (
           <SwiperSlide key={i}>
             <div className="bg-greens-900">
-              <h2 className="text-2xl font-semibold mb-3.5 text-white text-center leading_100">
+              <h2 className="text-2xl font-semibold mb-3.5 text-white text-center !leading-130">
                 {obj.title}
               </h2>
               <p className="max-w-[319px] mx-auto text-center text-sm  text-white">
@@ -39,7 +39,7 @@ const InstructionStep = ({ activeIndex, setActiveIndex }) => {
           </SwiperSlide>
         ))}
       </Swiper>
-      <div className="flex text-lg font-semibold text-white leading_100 justify-between mt-[68px] relative">
+      <div className="flex text-lg font-semibold text-white !leading-130 justify-between mt-[68px] relative">
         <button id="prevDetail" className="border-0 outline-0 bg-transparent">
           Prev
         </button>
