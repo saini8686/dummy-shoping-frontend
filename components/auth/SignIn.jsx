@@ -26,7 +26,6 @@ const SignIn = () => {
     signInWithGoogle,
     loading,
     error: authError,
-    userProfile,
   } = useAuthStore();
 
   // Handle sign in with email and password
@@ -37,17 +36,8 @@ const SignIn = () => {
     if (formDetails.email && formDetails.password) {
       try {
         setIsLoading(true);
-        const { user, userProfile } = await signInWithEmailPassword(
-          formDetails.email,
-          formDetails.password
-        );
-
-        // If user has a role, redirect to appropriate dashboard
-        if (userProfile && userProfile.role === "admin") {
-          router.push("/admin");
-        } else {
-          router.push("/customer");
-        }
+        await signInWithEmailPassword(formDetails.email, formDetails.password);
+        router.push("/customer");
       } catch (err) {
         console.error(err);
       } finally {
@@ -60,14 +50,8 @@ const SignIn = () => {
   const handleGoogleSignIn = async () => {
     try {
       setIsLoading(true);
-      const { user, userProfile } = await signInWithGoogle();
-
-      // If user has a role, redirect to appropriate dashboard
-      if (userProfile && userProfile.role === "admin") {
-        router.push("/admin");
-      } else {
-        router.push("/customer");
-      }
+      await signInWithGoogle();
+      router.push("/customer");
     } catch (err) {
       console.error(err);
     } finally {
@@ -77,24 +61,21 @@ const SignIn = () => {
 
   return (
     <div className="px-4">
-      <h2 className="mt-3 text-2xl font-semibold text-black !leading-130">
+      <h2 className="mt-6 text-2xl font-semibold text-black !leading-130">
         Sign In
       </h2>
 
       {/* Google Sign-in Button */}
-      <div className="mt-4">
+      {/* <div className="mt-4">
         <CustomButton
           customClass="w-full gap-3 justify-center flex items-center !py-3.5"
           onClick={handleGoogleSignIn}
           disabled={isLoading}>
           <Icon icon="google" /> Sign in with Google
         </CustomButton>
-      </div>
+      </div> */}
 
-      <LoginWay />
-      <OptionWay />
-
-      <form onSubmit={submitHandler}>
+      <form className="mt-8" onSubmit={(e) => submitHandler(e)}>
         <CustomInput
           placeholder="Email"
           name="email"
@@ -141,6 +122,8 @@ const SignIn = () => {
           {isLoading || loading ? "Loading..." : "Sign In"}
         </CustomButton>
       </form>
+      <OptionWay />
+      <LoginWay />
 
       <AgreementConfirm />
 

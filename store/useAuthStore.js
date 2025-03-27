@@ -87,36 +87,14 @@ const useAuthStore = create((set) => ({
     }
   },
 
-  resetPassword: async (email, newPassword) => {
+  resetPassword: async (email) => {
     set({ loading: true, error: null });
     try {
-      // For the regular "forgot password" flow without a new password
-      if (!newPassword) {
-        await sendPasswordResetEmail(auth, email);
-        set({ loading: false });
-        return true;
-      }
-
-      // For OTP verified password reset (handled through custom logic)
-      // In a real app, you'd validate the OTP before allowing this
-      const user = auth.currentUser;
-
-      if (!user) {
-        // Handle specific logic for non-logged in users (after OTP verification)
-        // This would typically involve a custom backend endpoint
-        // For this example, we'll just show how to handle logged-in users
-        set({
-          error: "User must be logged in to reset password",
-          loading: false,
-        });
-        throw new Error("User must be logged in to reset password");
-      }
-
-      // Update the password for a logged-in user
-      await firebaseUpdatePassword(user, newPassword);
+      await sendPasswordResetEmail(auth, email);
       set({ loading: false });
       return true;
     } catch (error) {
+      console.error("Password reset error:", error);
       set({ error: error.message, loading: false });
       throw error;
     }
