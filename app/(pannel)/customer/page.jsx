@@ -1,15 +1,15 @@
 import BottomBar from "@/components/common/BottomBar";
 import Navbar from "@/components/common/Navbar";
 import SearchBar from "@/components/common/SearchBar";
-import OfferSlider from "@/components/home/OfferSlider";
-import ProductCategory from "@/components/home/ProductCategory";
-import TopBarProduct from "@/components/home/TopBarProduct";
+import OfferSlider from "@/components/customer/OfferSlider";
+import ProductCategory from "@/components/customer/ProductCategory";
+import TopBarProduct from "@/components/customer/TopBarProduct";
 import { BEST_SELLER_LIST } from "@/utils/helper";
 import React from "react";
 
 const page = () => {
   return (
-    <div>
+    <div className="bg-white-low">
       <Navbar />
       <div className="px-4 mt-8">
         <SearchBar />

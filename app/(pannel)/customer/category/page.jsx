@@ -1,9 +1,14 @@
-import React from 'react'
+import CategoryList from "@/components/customer/category/CategoryList";
+import HeaderCustomer from "@/components/customer/HeaderCustomer";
+import React from "react";
 
 const page = () => {
   return (
-    <div>page</div>
-  )
-}
+    <div className="bg-white-low">
+      <HeaderCustomer />
+      <CategoryList />
+    </div>
+  );
+};
 
-export default page
+export default page;

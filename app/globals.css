@@ -23,6 +23,7 @@ button {
 }
 
 @theme inline {
+  --color-white-low: #FDFDFD;
   --color-greens-100: #53B175;
   --color-greens-900: #01BE62;
   --color-blacks-100: #181725;
@@ -41,6 +42,7 @@ button {
   --color-reds-900: #FF3131;
   --spacing-130: 130%;
   --shadow-bottom-bar: 0px -12px 37px 0px #E6EBF380;
+  --shadow-category: 0px 4px 88px 0px #0000000D;
 }
 
 

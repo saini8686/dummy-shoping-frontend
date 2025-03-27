@@ -146,3 +146,32 @@ export const BOTTOM_BAR_LIST = [
   { icon: "wallet", path: "#" },
   { icon: "other", path: "/customer/category" },
 ];
+export const CATEGORY_LIST = [
+  {
+    image: "/assets/images/png/category/fruits-veg.png",
+    path: "#",
+    name: "Fruits & Vegetables",
+  },
+  {
+    image: "/assets/images/png/category/break-fast.png",
+    path: "#",
+    name: "Breakfast",
+  },
+  { image: "/assets/images/png/category/beverages-item.png", path: "#", name: "Beverages" },
+  { image: "/assets/images/png/category/", path: "#", name: "Meat & Fish" },
+  {
+    image: "/assets/images/png/category/",
+    path: "#",
+    name: "Snacks",
+  },
+  {
+    image: "/assets/images/png/category/",
+    path: "#",
+    name: "Dairy",
+  },
+  {
+    image: "/assets/images/png/category/",
+    path: "#",
+    name: "Medical",
+  },
+];
