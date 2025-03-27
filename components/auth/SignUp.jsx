@@ -27,12 +27,10 @@ const SignUp = () => {
   };
   return (
     <div className="px-4">
-      <h2 className="mt-3 text-2xl font-semibold text-black !leading-130">
-        SignUp
+      <h2 className="mt-6 text-2xl font-semibold text-black !leading-130">
+        Sign Up
       </h2>
-      <LoginWay />
-      <OptionWay />
-      <form onSubmit={(e) => submitHandler(e)}>
+      <form className='mt-8' onSubmit={(e) => submitHandler(e)}>
         <CustomInput
           placeholder="Phone number or Email"
           name="loginId"
@@ -93,6 +91,8 @@ const SignUp = () => {
           Continue
         </CustomButton>
       </form>
+      <OptionWay />
+      <LoginWay />
       <AgreementConfirm />
       <Link
         href={`/sign-in?auth=${auth}`}

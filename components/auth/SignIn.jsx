@@ -25,7 +25,7 @@ const SignIn = () => {
     <div>
       <div className="px-4">
         <h2 className="mt-3 text-2xl font-semibold text-black !leading-130">
-          SignIn
+          Sign In
         </h2>
 
         <form className="mt-8" onSubmit={(e) => submitHandler(e)}>
