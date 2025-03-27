@@ -103,6 +103,11 @@ const Navbar = () => {
               className="text-greens-900 hover:underline mb-1">
               Settings
             </Link>
+            <Link
+              href="/change-password"
+              className="text-greens-900 hover:underline mb-1">
+              Change Password
+            </Link>
             <button
               onClick={handleSignOut}
               className="text-red-500 hover:underline pt-2 border-t text-left">
