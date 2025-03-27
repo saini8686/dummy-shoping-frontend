@@ -127,7 +127,7 @@ const SignIn = () => {
         />
 
         <div className="flex justify-end mt-2">
-          <Link href="/forgot-password" className="text-greens-900 text-sm">
+          <Link href="/reset-password" className="text-greens-900 text-sm">
             Forgot Password?
           </Link>
         </div>
