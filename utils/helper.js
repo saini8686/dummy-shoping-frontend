@@ -126,7 +126,6 @@ export const INSTRUCTION_LIST = [
 ];
 export const LOGIN_WAY_LIST = [
   { image: "/assets/images/png/google.png", name: "Google" },
-  { image: "/assets/images/png/facebook.png", name: "Facebook" },
   { image: "/assets/images/png/apple.png", name: "Apple" },
 ];
 export const OFFER_LIST = [

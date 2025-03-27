@@ -4,7 +4,7 @@ import React from "react";
 
 const LoginWay = () => {
   return (
-    <div className="flex items-center mt-8 justify-between  gap-5">
+    <div className="flex items-center mt-8 justify-center  gap-5">
       {LOGIN_WAY_LIST.map((obj, i) => (
         <div
           key={i}

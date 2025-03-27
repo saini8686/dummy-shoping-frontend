@@ -12,7 +12,7 @@ export const AgreementConfirm = () => {
 };
 export const OptionWay = () => {
   return (
-    <p className="text-greens-900 mt-10 mb-8 font-medium leading-130 text-center">
+    <p className="text-greens-900 my-8 font-medium leading-130 text-center">
       Or
     </p>
   );

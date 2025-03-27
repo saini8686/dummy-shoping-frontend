@@ -7,7 +7,7 @@
 }
 
 body {
-  @apply max-w-[640px] bg-white mx-auto
+  @apply max-w-[540px] bg-white mx-auto
 }
 
 .font-roboto {
