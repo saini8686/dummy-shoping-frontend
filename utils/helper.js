@@ -130,8 +130,19 @@ export const LOGIN_WAY_LIST = [
   { image: "/assets/images/png/apple.png", name: "Apple" },
 ];
 export const OFFER_LIST = [
-  { image: "/assets/images/png/cart.png", name: "Groceries", discount: 100, },
-  { image: "/assets/images/png/cart.png", name: "Home Requirment", discount: 400, },
-  { image: "/assets/images/png/cart.png", name: "Clothes", discount: 300, },
-  { image: "/assets/images/png/cart.png", name: "Medical", discount: 200, },
+  { image: "/assets/images/png/cart.png", name: "Groceries", discount: 100 },
+  {
+    image: "/assets/images/png/cart.png",
+    name: "Home Requirment",
+    discount: 400,
+  },
+  { image: "/assets/images/png/cart.png", name: "Clothes", discount: 300 },
+  { image: "/assets/images/png/cart.png", name: "Medical", discount: 200 },
+];
+export const BOTTOM_BAR_LIST = [
+  { icon: "home", path: "#" },
+  { icon: "shop", path: "#" },
+  { icon: "scaner", path: "#" },
+  { icon: "wallet", path: "#" },
+  { icon: "other", path: "#" },
 ];

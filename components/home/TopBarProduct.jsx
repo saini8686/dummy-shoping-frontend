@@ -19,7 +19,7 @@ const TopBarProduct = () => {
   };
   return (
     <div>
-      <div className="flex gap-2.5 mt-8 items-center justify-content-between">
+      <div className="flex gap-2.5 mt-8 items-center justify-between">
         {TOPBAR_ITEM_LIST.map((obj, i) => (
           <Link key={i} href={obj.url}>
             <Image

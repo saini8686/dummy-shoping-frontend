@@ -1,3 +1,4 @@
+import BottomBar from "@/components/common/BottomBar";
 import Navbar from "@/components/common/Navbar";
 import SearchBar from "@/components/common/SearchBar";
 import OfferSlider from "@/components/home/OfferSlider";
@@ -26,7 +27,7 @@ const page = () => {
 
       {/* slider */}
       <OfferSlider />
-      <div className="px-4">
+      <div className="px-4 pb-16">
         <ProductCategory
           category="Stationery Store"
           productList={BEST_SELLER_LIST}
@@ -68,6 +69,7 @@ const page = () => {
           productList={BEST_SELLER_LIST}
         />
       </div>
+      <BottomBar/>
     </div>
   );
 };

@@ -40,6 +40,7 @@ button {
   --color-reds-200: #FFE8E8;
   --color-reds-900: #FF3131;
   --spacing-130: 130%;
+  --shadow-bottom-bar: 0px -12px 37px 0px #E6EBF380;
 }
 
 
