@@ -144,5 +144,5 @@ export const BOTTOM_BAR_LIST = [
   { icon: "shop", path: "#" },
   { icon: "scaner", path: "#" },
   { icon: "wallet", path: "#" },
-  { icon: "other", path: "#" },
+  { icon: "other", path: "/customer/category" },
 ];
