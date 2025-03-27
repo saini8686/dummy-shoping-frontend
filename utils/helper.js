@@ -158,19 +158,19 @@ export const CATEGORY_LIST = [
     name: "Breakfast",
   },
   { image: "/assets/images/png/category/beverages-item.png", path: "#", name: "Beverages" },
-  { image: "/assets/images/png/category/", path: "#", name: "Meat & Fish" },
+  { image: "/assets/images/png/category/fish-meat.png", path: "#", name: "Meat & Fish" },
   {
-    image: "/assets/images/png/category/",
+    image: "/assets/images/png/category/snacks-pack.png",
     path: "#",
     name: "Snacks",
   },
   {
-    image: "/assets/images/png/category/",
+    image: "/assets/images/png/category/dairy.png",
     path: "#",
     name: "Dairy",
   },
   {
-    image: "/assets/images/png/category/",
+    image: "/assets/images/png/category/medicalBox.png",
     path: "#",
     name: "Medical",
   },
