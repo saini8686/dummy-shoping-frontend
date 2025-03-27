@@ -17,7 +17,6 @@ const SignUp = () => {
     address: "",
     refferCode: "",
     password: "",
-    name: "",
   });
   const [isChecked, setIsChecked] = useState(false);
   const [showOtpVerification, setShowOtpVerification] = useState(false);
@@ -49,12 +48,7 @@ const SignUp = () => {
     e.preventDefault();
     setError(true);
 
-    if (
-      formDetails.loginId &&
-      formDetails.password &&
-      formDetails.address &&
-      formDetails.name
-    ) {
+    if (formDetails.loginId && formDetails.password && formDetails.address) {
       try {
         setIsLoading(true);
         // Check if loginId is an email
@@ -82,26 +76,10 @@ const SignUp = () => {
   const handleOtpVerified = async () => {
     try {
       setIsLoading(true);
-
-      // Prepare additional user data for Firestore
-      const additionalData = {
-        displayName: formDetails.name,
-        address: formDetails.address,
-        referralCode: formDetails.refferCode || "",
-        signUpMethod: "email",
-        registrationDate: new Date().toISOString(),
-      };
-
       // Register with email and password after OTP verification
-      await signUpWithEmailPassword(
-        formDetails.loginId,
-        formDetails.password,
-        additionalData
-      );
-
+      await signUpWithEmailPassword(formDetails.loginId, formDetails.password);
       // Reset OTP state
       resetOtpState();
-
       // Redirect to customer page
       router.push("/customer");
     } catch (err) {
@@ -165,22 +143,6 @@ const SignUp = () => {
 
       <form className="mt-8" onSubmit={handleRequestOtp}>
         <CustomInput
-          placeholder="Full Name"
-          name="name"
-          type="text"
-          error={!formDetails.name && error}
-          errorText="Name Is Required"
-          value={formDetails.name}
-          onChange={(e) =>
-            setFormDetails({
-              ...formDetails,
-              name: e.target.value,
-            })
-          }
-        />
-
-        <CustomInput
-          customClass="mt-4"
           placeholder="Email"
           name="loginId"
           type="text"
