@@ -7,10 +7,12 @@ import {
   signInWithEmailAndPassword,
   signOut,
 } from "../utils/firebase";
+import { createUserProfile, getUserProfile } from "../utils/userService";
 
 const useAuthStore = create((set) => ({
   // State
   user: null,
+  userProfile: null,
   loading: false,
   error: null,
 
@@ -19,15 +21,16 @@ const useAuthStore = create((set) => ({
     set({ loading: true, error: null });
     try {
       const result = await signInWithPopup(auth, googleProvider);
-      set({ user: result.user, loading: false });
-      return result.user;
+      const userProfile = await createUserProfile(result.user);
+      set({ user: result.user, userProfile, loading: false });
+      return { user: result.user, userProfile };
     } catch (error) {
       set({ error: error.message, loading: false });
       throw error;
     }
   },
 
-  signUpWithEmailPassword: async (email, password) => {
+  signUpWithEmailPassword: async (email, password, additionalData = {}) => {
     set({ loading: true, error: null });
     try {
       const result = await createUserWithEmailAndPassword(
@@ -35,8 +38,9 @@ const useAuthStore = create((set) => ({
         email,
         password
       );
-      set({ user: result.user, loading: false });
-      return result.user;
+      const userProfile = await createUserProfile(result.user, additionalData);
+      set({ user: result.user, userProfile, loading: false });
+      return { user: result.user, userProfile };
     } catch (error) {
       set({ error: error.message, loading: false });
       throw error;
@@ -47,8 +51,9 @@ const useAuthStore = create((set) => ({
     set({ loading: true, error: null });
     try {
       const result = await signInWithEmailAndPassword(auth, email, password);
-      set({ user: result.user, loading: false });
-      return result.user;
+      const userProfile = await createUserProfile(result.user);
+      set({ user: result.user, userProfile, loading: false });
+      return { user: result.user, userProfile };
     } catch (error) {
       set({ error: error.message, loading: false });
       throw error;
@@ -59,13 +64,27 @@ const useAuthStore = create((set) => ({
     set({ loading: true });
     try {
       await signOut(auth);
-      set({ user: null, loading: false });
+      set({ user: null, userProfile: null, loading: false });
     } catch (error) {
       set({ error: error.message, loading: false });
       throw error;
     }
   },
 
+  fetchUserProfile: async (uid) => {
+    set({ loading: true });
+    try {
+      const userProfile = await getUserProfile(uid);
+      set({ userProfile, loading: false });
+      return userProfile;
+    } catch (error) {
+      set({ error: error.message, loading: false });
+      throw error;
+    }
+  },
+
+  setUser: (user) => set({ user }),
+  setUserProfile: (userProfile) => set({ userProfile }),
   clearError: () => set({ error: null }),
 }));
 

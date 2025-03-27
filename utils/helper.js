@@ -124,14 +124,7 @@ export const INSTRUCTION_LIST = [
       "Amet minim mollit non deserunt ullamco est sit aliqua dolor do amet sint. Velit officia consequat duis enim velit mollit.",
   },
 ];
-export const LOGIN_WAY_LIST = [
-  {
-    image: "/assets/images/png/google.png",
-    name: "Google",
-    onClick: signInWithGoogle,
-  },
-  { image: "/assets/images/png/apple.png", name: "Apple" },
-];
+
 export const OFFER_LIST = [
   { image: "/assets/images/png/cart.png", name: "Groceries", discount: 100 },
   {
