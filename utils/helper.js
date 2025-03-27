@@ -125,7 +125,11 @@ export const INSTRUCTION_LIST = [
   },
 ];
 export const LOGIN_WAY_LIST = [
-  { image: "/assets/images/png/google.png", name: "Google" },
+  {
+    image: "/assets/images/png/google.png",
+    name: "Google",
+    onClick: signInWithGoogle,
+  },
   { image: "/assets/images/png/apple.png", name: "Apple" },
 ];
 export const OFFER_LIST = [
@@ -156,8 +160,16 @@ export const CATEGORY_LIST = [
     path: "#",
     name: "Breakfast",
   },
-  { image: "/assets/images/png/category/beverages-item.png", path: "#", name: "Beverages" },
-  { image: "/assets/images/png/category/fish-meat.png", path: "#", name: "Meat & Fish" },
+  {
+    image: "/assets/images/png/category/beverages-item.png",
+    path: "#",
+    name: "Beverages",
+  },
+  {
+    image: "/assets/images/png/category/fish-meat.png",
+    path: "#",
+    name: "Meat & Fish",
+  },
   {
     image: "/assets/images/png/category/snacks-pack.png",
     path: "#",
