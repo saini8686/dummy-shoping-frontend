@@ -11,7 +11,7 @@ const page = () => {
   return (
     <div className="bg-white-low">
       <Navbar />
-      <div className="px-4 mt-8">
+      <div className="px-4">
         <SearchBar />
         <TopBarProduct />
         <ProductCategory category="Bestseller" productList={BEST_SELLER_LIST} />

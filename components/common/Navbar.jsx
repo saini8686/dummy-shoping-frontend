@@ -27,7 +27,7 @@ const Navbar = () => {
         </div>
         <div className="flex items-center gap-2">
           <Link
-            href="#"
+            href="/customer/notification"
             className="bg-white flex rounded-full justify-center items-center min-w-[34px] h-[34px]"
           >
             <Icon icon="notification" />

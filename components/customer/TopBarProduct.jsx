@@ -65,7 +65,10 @@ const TopBarProduct = () => {
           </button>
         )}
       </div>
-      <CustomButton customClass="ml-auto flex w-fit mt-6" url="#">
+      <CustomButton
+        customClass="ml-auto flex w-fit mt-6"
+        url="/customer/nearby-shop"
+      >
         Nearby Shops
       </CustomButton>
     </div>

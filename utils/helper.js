@@ -139,7 +139,7 @@ export const OFFER_LIST = [
   { image: "/assets/images/png/cart.png", name: "Medical", discount: 200 },
 ];
 export const BOTTOM_BAR_LIST = [
-  { icon: "home", path: "#" },
+  { icon: "home", path: "/customer" },
   { icon: "shop", path: "#" },
   { icon: "scaner", path: "#" },
   { icon: "wallet", path: "#" },
@@ -156,8 +156,16 @@ export const CATEGORY_LIST = [
     path: "#",
     name: "Breakfast",
   },
-  { image: "/assets/images/png/category/beverages-item.png", path: "#", name: "Beverages" },
-  { image: "/assets/images/png/category/fish-meat.png", path: "#", name: "Meat & Fish" },
+  {
+    image: "/assets/images/png/category/beverages-item.png",
+    path: "#",
+    name: "Beverages",
+  },
+  {
+    image: "/assets/images/png/category/fish-meat.png",
+    path: "#",
+    name: "Meat & Fish",
+  },
   {
     image: "/assets/images/png/category/snacks-pack.png",
     path: "#",
@@ -172,5 +180,55 @@ export const CATEGORY_LIST = [
     image: "/assets/images/png/category/medicalBox.png",
     path: "#",
     name: "Medical",
+  },
+];
+export const NEARBY_SHOP_LIST = [
+  {
+    image: "/assets/images/png/shop/shop-1.png",
+    path: "#",
+    name: "Shop Name",
+    category: "Category",
+    distance: "800 m",
+    review: 5,
+  },
+  {
+    image: "/assets/images/png/shop/shop-1.png",
+    path: "#",
+    name: "Shop Name",
+    category: "Category",
+    distance: "1.2 km",
+    review: 5,
+  },
+  {
+    image: "/assets/images/png/shop/shop-1.png",
+    path: "#",
+    name: "Shop Name",
+    category: "Category",
+    distance: "1.5 km",
+    review: 2.9,
+  },
+  {
+    image: "/assets/images/png/shop/shop-1.png",
+    path: "#",
+    name: "Shop Name",
+    category: "Category",
+    distance: "1.8 km",
+    review: 3.6,
+  },
+  {
+    image: "/assets/images/png/shop/shop-1.png",
+    path: "#",
+    name: "Shop Name",
+    category: "Category",
+    distance: "2.2 km",
+    review: 4.5,
+  },
+  {
+    image: "/assets/images/png/shop/shop-1.png",
+    path: "#",
+    name: "Shop Name",
+    category: "Category",
+    distance: "8.2 km",
+    review: 4,
   },
 ];
