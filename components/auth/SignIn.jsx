@@ -27,9 +27,8 @@ const SignIn = () => {
         <h2 className="mt-3 text-2xl font-semibold text-black !leading-130">
           SignIn
         </h2>
-        <LoginWay />
-        <OptionWay />
-        <form onSubmit={(e) => submitHandler(e)}>
+
+        <form className="mt-8" onSubmit={(e) => submitHandler(e)}>
           <CustomInput
             placeholder="Phone number or Email"
             name="loginId"
@@ -43,10 +42,12 @@ const SignIn = () => {
               })
             }
           />
-          <CustomButton customClass="w-full !py-3.5 mt-[122px]" isSubmit>
+          <CustomButton customClass="w-full !py-3.5 mt-7" isSubmit>
             Continue
           </CustomButton>
         </form>
+        <OptionWay />
+        <LoginWay />
         <AgreementConfirm />
         <Link
           href={`/sign-up?auth=${auth}`}
