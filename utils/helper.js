@@ -229,3 +229,97 @@ export const NEARBY_SHOP_LIST = [
     review: 4,
   },
 ];
+export const NOTIFICATION_LIST = [
+  {
+    orderId: "345",
+    about: "Your Order is Confirmed. Please check everything is okay",
+    icon: "checkNotification",
+  },
+  {
+    orderId: "340",
+    about: "Your Order is Delivering to your home",
+    icon: "deliveringNotification",
+  },
+  {
+    orderId: "344",
+    about: "Your Order is Completed. Please  rate the experince",
+    icon: "checkNotification",
+  },
+  {
+    orderId: "339",
+    about: "Your Order is Confirmed. Please check everything is okay",
+    icon: "rateNotification",
+  },
+  {
+    orderId: "345",
+    about: "Your Order is Confirmed. Please check everything is okay",
+    icon: "checkNotification",
+  },
+  {
+    orderId: "340",
+    about: "Your Order is Delivering to your home",
+    icon: "deliveringNotification",
+  },
+  {
+    orderId: "344",
+    about: "Your Order is Completed. Please  rate the experince",
+    icon: "checkNotification",
+  },
+  {
+    orderId: "339",
+    about: "Your Order is Confirmed. Please check everything is okay",
+    icon: "rateNotification",
+  },
+];
+
+export const LIST_PRODUCT_FILTER = [
+  {
+    name: "all",
+    path: "#",
+  },
+  {
+    name: "Vegetables",
+    path: "#",
+  },
+  {
+    name: "Fruits",
+    path: "#",
+  },
+  {
+    name: "cooldrinks",
+    path: "#",
+  },
+  {
+    name: "Masala",
+    path: "#",
+  },
+  {
+    name: "Vegetables",
+    path: "#",
+  },
+  {
+    name: "Fruits",
+    path: "#",
+  },
+];
+
+export const GROSERY_SLIDER_LIST = [
+  {
+    productName: "Fresh Vegetables",
+    offer: "Get Up To 40% off",
+    image: "/assets/images/png/growsery/vegetables.png",
+    bgImage: "/assets/images/png/growsery/veg-bg.png",
+  },
+  {
+    productName: "Fresh Vegetables",
+    offer: "Get Up To 80% off",
+    image: "/assets/images/png/growsery/vegetables.png",
+    bgImage: "/assets/images/png/growsery/veg-bg.png",
+  },
+  {
+    productName: "Fresh Vegetables",
+    offer: "Get Up To 10% off",
+    image: "/assets/images/png/growsery/vegetables.png",
+    bgImage: "/assets/images/png/growsery/veg-bg.png",
+  },
+];

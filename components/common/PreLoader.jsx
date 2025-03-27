@@ -25,7 +25,7 @@ const PreLoader = () => {
   return (
     <div>
       {loading && (
-        <div className="w-full max-w-[640px] flex justify-center items-center mx-auto min-h-screen bg-white fixed inset-0 z-[51]">
+        <div className="w-full max-w-[540px] flex justify-center items-center mx-auto min-h-screen bg-white fixed inset-0 z-[51]">
           <Image
             src="/assets/images/svg/main-logo.svg"
             width={205}
