@@ -39,6 +39,7 @@ button {
 @theme inline {
   --color-white-low: #FDFDFD;
   --color-white-100: #F0F0F0;
+  --color-white-200: #F0F1F2;
   --color-greens-100: #53B175;
   --color-greens-200: #12E77F;
   --color-greens-900: #01BE62;
@@ -57,6 +58,7 @@ button {
   --color-greys-900: #E1E1E1;
   --color-greys-1000: #3E423F;
   --color-greys-1100: #8E8E8E;
+  --color-greys-1200: #575757;
   --color-yellows-100: #FEF700;
   --color-yellows-200: #F8A44C;
   --color-reds-100: #FFE8E8;
@@ -104,4 +106,12 @@ button {
 
 .slider-grocery .swiper-pagination-bullet-active {
   @apply !bg-greens-900 !w-3.5 !rounded !opacity-100
+}
+
+input[type=number]::-webkit-inner-spin-button,
+input[type=number]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  margin: 0;
 }

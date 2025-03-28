@@ -462,3 +462,8 @@ export const SETTING_LIST = [
     path: "#",
   },
 ];
+export const USER_PROFILE_DATA = [
+  { label: "Name", name: "fullName", icon: "profileInput", type: "text" },
+  { label: "Password", name: "password", icon: "password", type: "password" },
+  { label: "Phone Number", name: "number", icon: "call", type: "number" },
+];
