@@ -37,7 +37,7 @@ const PreLoader = () => {
         </div>
       )}
       {/* show */}
-      <div className="w-full max-w-[640px] mx-auto min-h-screen bg-white fixed inset-0 z-50">
+      <div className="w-full max-w-[540px] mx-auto min-h-screen bg-white fixed inset-0 z-50">
         <div className="relative justify-between gap-10 flex-col flex z-10 min-h-screen">
           <div className="mt-10 px-4 flex w-full  justify-between items-center">
             {steps === "0" && (

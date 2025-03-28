@@ -323,3 +323,142 @@ export const GROSERY_SLIDER_LIST = [
     bgImage: "/assets/images/png/growsery/veg-bg.png",
   },
 ];
+export const EXCLUSIVE_OFFER_LIST = [
+  {
+    path: "#",
+    productName: "Red Apple",
+    price: 200,
+    image: "/assets/images/png/growsery/apple.png",
+    amount: "1kg",
+    deliveryType: "self",
+    delivery: true,
+  },
+  {
+    path: "#",
+    productName: "Organic Bananas",
+    price: 40,
+    image: "/assets/images/png/growsery/banana.png",
+    amount: "7pcs",
+    deliveryType: "self",
+    delivery: true,
+  },
+  {
+    path: "#",
+    productName: "Ginger",
+    price: 60,
+    image: "/assets/images/png/growsery/ginger.png",
+    amount: "250gm",
+    deliveryType: "self",
+    delivery: false,
+  },
+  {
+    path: "#",
+    productName: "Bell Pepper Red",
+    price: 90,
+    image: "/assets/images/png/growsery/pepper-red.png",
+    amount: "1kg",
+    deliveryType: "self",
+    delivery: true,
+  },
+  {
+    path: "#",
+    productName: "Red Apple",
+    price: 200,
+    image: "/assets/images/png/growsery/apple.png",
+    amount: "1kg",
+    deliveryType: "self",
+    delivery: true,
+  },
+  {
+    path: "#",
+    productName: "Organic Bananas",
+    price: 40,
+    image: "/assets/images/png/growsery/banana.png",
+    amount: "7pcs",
+    deliveryType: "self",
+    delivery: true,
+  },
+  {
+    path: "#",
+    productName: "Ginger",
+    price: 60,
+    image: "/assets/images/png/growsery/ginger.png",
+    amount: "250gm",
+    deliveryType: "self",
+    delivery: false,
+  },
+  {
+    path: "#",
+    productName: "Bell Pepper Red",
+    price: 90,
+    image: "/assets/images/png/growsery/pepper-red.png",
+    amount: "1kg",
+    deliveryType: "self",
+    delivery: true,
+  },
+];
+
+export const GROSERY_LIST = [
+  {
+    image: "/assets/images/png/growsery/pulses.png",
+    name: "Pulses",
+    path: "#",
+  },
+  {
+    image: "/assets/images/png/growsery/rice.png",
+    name: "rice",
+    path: "#",
+  },
+  {
+    image: "/assets/images/png/growsery/pulses.png",
+    name: "Pulses",
+    path: "#",
+  },
+  {
+    image: "/assets/images/png/growsery/rice.png",
+    name: "rice",
+    path: "#",
+  },
+  {
+    image: "/assets/images/png/growsery/pulses.png",
+    name: "Pulses",
+    path: "#",
+  },
+];
+export const SETTING_LIST = [
+  {
+    icon: "profilePencil",
+    name: "Edit Profile",
+    path: "/customer/profile/edit-profile",
+  },
+  {
+    icon: "profileLocation",
+    name: "My Address",
+    path: "/customer/profile/my-address",
+  },
+  {
+    icon: "profileOrder",
+    name: "My Orders",
+    path: "#",
+  },
+  {
+    icon: "profileWishList",
+    name: "My Wishlist",
+    path: "#",
+  },
+  {
+    icon: "profileChat",
+    name: "Chat with us",
+    path: "#",
+  },
+  {
+    icon: "profileWallet",
+    name: "My Wallet",
+    path: "/customer/profile/my-wallet",
+  },
+  {
+    icon: "profileLogout",
+    name: "Log out",
+    path: "#",
+  },
+];

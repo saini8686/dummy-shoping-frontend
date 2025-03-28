@@ -1,7 +1,5 @@
 import BottomBar from "@/components/common/BottomBar";
-import SearchBar from "@/components/common/SearchBar";
 import HeaderCustomer from "@/components/customer/HeaderCustomer";
-import NearByShare from "@/components/customer/nearby-share/NearByShare";
 import Notification from "@/components/customer/notification/Notification";
 
 const page = () => {

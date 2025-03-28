@@ -39,7 +39,7 @@ const TopBarProduct = () => {
 
         {/* vedio */}
       </div>
-      <div className="relative max-w-[640] w-full mx-auto mt-8">
+      <div className="relative max-w-[540px] w-full mx-auto mt-8">
         <video
           ref={videoRef}
           height={160}

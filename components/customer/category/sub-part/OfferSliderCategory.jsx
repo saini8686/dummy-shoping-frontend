@@ -24,10 +24,13 @@ const OfferSliderCategory = () => {
         spaceBetween={16}
         modules={[EffectFade, Autoplay, Pagination]}
       >
-        {GROSERY_SLIDER_LIST.map((obj, i) => ( 
+        {GROSERY_SLIDER_LIST.map((obj, i) => (
           <SwiperSlide key={i}>
             <div
-              className={`bg-[url(${obj.bgImage})] bg-100 bg-no-repeat bg-contain relative overflow-hidden min-h-[115px] pt-6 pb-4 px-4  rounded-lg`}
+              style={{
+                backgroundImage: `url(${obj.bgImage})`,
+              }}
+              className={`bg-100 bg-no-repeat bg-contain relative overflow-hidden min-h-[115px] pt-6 pb-4 px-4  rounded-lg`}
             >
               <div className="flex items-center justify-center gap-4">
                 <Image

@@ -38,6 +38,7 @@ button {
 
 @theme inline {
   --color-white-low: #FDFDFD;
+  --color-white-100: #F0F0F0;
   --color-greens-100: #53B175;
   --color-greens-200: #12E77F;
   --color-greens-900: #01BE62;
@@ -54,10 +55,14 @@ button {
   --color-greys-700: #E9ECE9;
   --color-greys-800: #D9D9D9;
   --color-greys-900: #E1E1E1;
+  --color-greys-1000: #3E423F;
+  --color-greys-1100: #8E8E8E;
   --color-yellows-100: #FEF700;
+  --color-yellows-200: #F8A44C;
   --color-reds-100: #FFE8E8;
   --color-reds-200: #FFE8E8;
   --color-reds-900: #FF3131;
+  --color-blues-300: #37474F;
   --spacing-130: 130%;
   --shadow-bottom-bar: 0px -12px 37px 0px #E6EBF380;
   --shadow-category: 0px 4px 88px 0px #0000000D;
@@ -73,25 +78,19 @@ button {
 
 
 .landing_hero_swiper .swiper-pagination-bullet {
-  width: 10px !important;
-  height: 10px !important;
-  opacity: 0.28 !important;
-  background: #ffffff !important;
+  @apply !w-2.5 !h-2.5 !opacity-30 !bg-white
 }
 
 .landing_hero_swiper .swiper-button-disabled {
-  display: none;
+  @apply hidden
 }
 
 .landing_hero_swiper #nextDetail.swiper-button-disabled~a {
-  display: block;
+  @apply block
 }
 
 .landing_hero_swiper .swiper-pagination-bullet-active {
-  width: 40px !important;
-  border-radius: 10px !important;
-  opacity: 1 !important;
-  background: #ffffff !important;
+  @apply w-10 !rounded-lg !opacity-100 !bg-white
 }
 
 .transparent-green-border-button {
@@ -100,15 +99,9 @@ button {
 
 
 .slider-grocery .swiper-pagination-bullet {
-  width: 5px !important;
-  height: 5px !important;
-  opacity: 0.30 !important;
-  background: #030303 !important;
+  @apply !w-1 !h-1 !opacity-30 !bg-blacks-300
 }
 
 .slider-grocery .swiper-pagination-bullet-active {
-  width: 15px !important;
-  border-radius: 5px !important;
-  opacity: 1 !important;
-  background: #53B175 !important;
+  @apply !bg-greens-900 !w-3.5 !rounded !opacity-100
 }
