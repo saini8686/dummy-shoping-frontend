@@ -1,15 +1,15 @@
 "use client";
 import Link from "next/link";
-import { useSearchParams, useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useState } from "react";
+import useAuthStore from "../../store/useAuthStore";
+import useOtpStore from "../../store/useOtpStore";
 import { CustomButton } from "../common/CustomButton";
 import Icon from "../common/Icons";
+import OtpVerification from "./OtpVerification";
 import { CustomInput } from "./common/CustomInput";
 import LoginWay from "./common/LoginWay";
 import { AgreementConfirm, OptionWay } from "./common/common";
-import useAuthStore from "../../store/useAuthStore";
-import useOtpStore from "../../store/useOtpStore";
-import OtpVerification from "./OtpVerification";
 
 const SignUp = () => {
   const [formDetails, setFormDetails] = useState({
@@ -81,7 +81,7 @@ const SignUp = () => {
       // Reset OTP state
       resetOtpState();
       // Redirect to customer page
-      router.push("/customer");
+      router.push(`/${auth}`);
     } catch (err) {
       console.error(err);
     } finally {
@@ -98,19 +98,6 @@ const SignUp = () => {
   const handleCancelOtp = () => {
     setShowOtpVerification(false);
     resetOtpState();
-  };
-
-  // Handle Google sign-in
-  const handleGoogleSignIn = async () => {
-    try {
-      setIsLoading(true);
-      await signInWithGoogle();
-      router.push("/customer");
-    } catch (err) {
-      console.error(err);
-    } finally {
-      setIsLoading(false);
-    }
   };
 
   // Show OTP verification screen if OTP has been sent
@@ -130,16 +117,6 @@ const SignUp = () => {
       <h2 className="mt-6 text-2xl font-semibold text-black !leading-130">
         Sign Up
       </h2>
-
-      {/* Google Sign-in Button */}
-      {/* <div className="mt-4">
-        <CustomButton
-          customClass="w-full gap-3 justify-center flex items-center !py-3.5"
-          onClick={handleGoogleSignIn}
-          disabled={isLoading}>
-          <Icon icon="google" /> Sign up with Google
-        </CustomButton>
-      </div> */}
 
       <form className="mt-8" onSubmit={handleRequestOtp}>
         <CustomInput

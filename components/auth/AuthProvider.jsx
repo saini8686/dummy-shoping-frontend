@@ -1,21 +1,30 @@
 "use client";
-import { useEffect, useState } from "react";
 import { onAuthStateChanged } from "firebase/auth";
-import { auth } from "../../utils/firebase";
+import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
 import useAuthStore from "../../store/useAuthStore";
 import useUserStore from "../../store/useUserStore";
+import { auth } from "../../utils/firebase";
 
 const AuthProvider = ({ children }) => {
-  const { setUser } = useAuthStore();
+  const { setUser, user } = useAuthStore();
   const { fetchUserByUid, setUserData, clearUserData } = useUserStore();
   const [isInitialized, setIsInitialized] = useState(false);
   const [error, setError] = useState(null);
+  const { userData } = useUserStore();
+  const router = useRouter();
+  useEffect(() => {
+    if (userData && userData.userRole) {
+      router.push(`/${userData.userRole}`);
+    } else if (userData) {
+      router.push(`/customer`);
+    }
+  }, [userData]);
 
+  console.log(userData, "ffgfgf");
   useEffect(() => {
     console.log("AuthProvider mounted - setting up auth listener");
-
     let unsubscribe = () => {};
-
     try {
       // Set up auth state listener
       unsubscribe = onAuthStateChanged(
