@@ -46,14 +46,16 @@ const Navbar = () => {
 
   return (
     <div className="pt-8 pb-4 rounded-b-3xl bg-greens-900 px-4 relative">
-      <Image
-        src="/assets/images/svg/logo.svg"
-        width={86}
-        height={39}
-        sizes="100vw"
-        className="mb-5 w-[86px] h-[39px] object-cover"
-        alt="logo"
-      />
+      <Link href="/customer">
+        <Image
+          src="/assets/images/svg/logo.svg"
+          width={86}
+          height={39}
+          sizes="100vw"
+          className="mb-5 w-[86px] h-[39px] object-cover"
+          alt="logo"
+        />
+      </Link>
       <div className="flex justify-between gap-5 items-center">
         <div className="flex items-center gap-1">
           <span className="bg-white rounded-full flex justify-center items-center min-w-[34px] h-[34px]">

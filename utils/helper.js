@@ -467,3 +467,7 @@ export const USER_PROFILE_DATA = [
   { label: "Password", name: "password", icon: "password", type: "password" },
   { label: "Phone Number", name: "number", icon: "call", type: "number" },
 ];
+export const USER_ADDRESSE_DATA = [
+  { label: "Home", name: "home", icon: "profileInput" },
+  { label: "Work", name: "work", icon: "password" },
+];

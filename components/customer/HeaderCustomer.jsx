@@ -1,17 +1,31 @@
 "use client";
 import Icon from "@/components/common/Icons";
+import Image from "next/image";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 
 const HeaderCustomer = ({ name, location }) => {
   const router = useRouter();
   return (
     <div className="pt-[50px] pb-4 h-[176px] rounded-b-3xl  bg-greens-900 px-4">
-      <button
-        onClick={() => router.back()}
-        className="border-0 outline-0 bg-transparent"
-      >
-        <Icon icon="back" className="invert" />
-      </button>
+      <div className="flex justify-between items-center">
+        <button
+          onClick={() => router.back()}
+          className="border-0 outline-0 bg-transparent"
+        >
+          <Icon icon="back" className="invert" />
+        </button>
+        <Link href="/customer">
+          <Image
+            src="/assets/images/svg/logo.svg"
+            width={86}
+            height={39}
+            sizes="100vw"
+            className="w-[86px] h-[39px] object-cover"
+            alt="logo"
+          />
+        </Link>
+      </div>
       <div className={`mt-2 ${!location && "!mt-8"}`}>
         {location && (
           <div className="flex gap-1.5 items-center">
