@@ -29,11 +29,6 @@ const CartAddCard = ({ product }) => {
           <Icon icon="plus" />
         </button>
       </div>
-      {product.delivery && (
-        <span className="text-[7px] font-normal text-white justify-center -rotate-45 items-center w-[122px] absolute top-4 -left-8 flex h-[18px] bg-greens-900 !leading-130">
-          Delivery Available
-        </span>
-      )}
     </Link>
   );
 };

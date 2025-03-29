@@ -8,7 +8,7 @@ const NearByShare = () => {
   return (
     <>
       {NEARBY_SHOP_LIST.map((obj, i) => (
-        <div className="h-[175px] mt-6 shadow-category rounded-lg py-4 px-3">
+        <div key={i} className="h-[175px] mt-6 shadow-category rounded-lg py-4 px-3">
           <div className="flex items-start gap-5">
             <Image
               src={obj.image}

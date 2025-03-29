@@ -1,3 +1,4 @@
+import ProgressBar from "@/components/common/ProgressBar";
 import "./globals.css";
 import AuthProvider from "@/components/auth/AuthProvider";
 
@@ -10,7 +11,10 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en">
       <body>
-        <AuthProvider>{children}</AuthProvider>
+        <AuthProvider>
+          <ProgressBar />
+          {children}
+        </AuthProvider>
       </body>
     </html>
   );

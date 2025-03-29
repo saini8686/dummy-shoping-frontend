@@ -331,7 +331,6 @@ export const EXCLUSIVE_OFFER_LIST = [
     image: "/assets/images/png/growsery/apple.png",
     amount: "1kg",
     deliveryType: "self",
-    delivery: true,
   },
   {
     path: "#",
@@ -340,7 +339,6 @@ export const EXCLUSIVE_OFFER_LIST = [
     image: "/assets/images/png/growsery/banana.png",
     amount: "7pcs",
     deliveryType: "self",
-    delivery: true,
   },
   {
     path: "#",
@@ -349,7 +347,6 @@ export const EXCLUSIVE_OFFER_LIST = [
     image: "/assets/images/png/growsery/ginger.png",
     amount: "250gm",
     deliveryType: "self",
-    delivery: false,
   },
   {
     path: "#",
@@ -358,7 +355,6 @@ export const EXCLUSIVE_OFFER_LIST = [
     image: "/assets/images/png/growsery/pepper-red.png",
     amount: "1kg",
     deliveryType: "self",
-    delivery: true,
   },
   {
     path: "#",
@@ -367,7 +363,6 @@ export const EXCLUSIVE_OFFER_LIST = [
     image: "/assets/images/png/growsery/apple.png",
     amount: "1kg",
     deliveryType: "self",
-    delivery: true,
   },
   {
     path: "#",
@@ -376,7 +371,6 @@ export const EXCLUSIVE_OFFER_LIST = [
     image: "/assets/images/png/growsery/banana.png",
     amount: "7pcs",
     deliveryType: "self",
-    delivery: true,
   },
   {
     path: "#",
@@ -394,7 +388,6 @@ export const EXCLUSIVE_OFFER_LIST = [
     image: "/assets/images/png/growsery/pepper-red.png",
     amount: "1kg",
     deliveryType: "self",
-    delivery: true,
   },
 ];
 
@@ -439,11 +432,6 @@ export const SETTING_LIST = [
   {
     icon: "profileOrder",
     name: "My Orders",
-    path: "#",
-  },
-  {
-    icon: "profileWishList",
-    name: "My Wishlist",
     path: "#",
   },
   {
