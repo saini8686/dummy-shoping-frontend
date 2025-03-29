@@ -1,3 +1,4 @@
+import { usePathname } from "next/navigation";
 import {
   db,
   collection,
@@ -9,7 +10,8 @@ import {
   uuidv4,
   generateAppId,
 } from "./firebase";
-
+const urlParams = new URLSearchParams(window.location.search);
+const userRole = urlParams.get("auth");
 // Create a new user in Firestore
 export async function createUserProfile(user, additionalData = {}) {
   if (!user) return;
@@ -36,6 +38,7 @@ export async function createUserProfile(user, additionalData = {}) {
         address: additionalData.address || "",
         referralCode: additionalData.referralCode || "",
         createdAt,
+        userRole: userRole,
         lastLoginAt: createdAt,
         ...additionalData,
       };

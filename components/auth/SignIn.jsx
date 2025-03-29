@@ -37,7 +37,7 @@ const SignIn = () => {
       try {
         setIsLoading(true);
         await signInWithEmailPassword(formDetails.email, formDetails.password);
-        router.push("/customer");
+        router.push(`/${auth}`);
       } catch (err) {
         console.error(err);
       } finally {
@@ -51,7 +51,7 @@ const SignIn = () => {
     try {
       setIsLoading(true);
       await signInWithGoogle();
-      router.push("/customer");
+      router.push(`/${auth}`);
     } catch (err) {
       console.error(err);
     } finally {

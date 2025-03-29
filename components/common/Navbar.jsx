@@ -71,15 +71,13 @@ const Navbar = () => {
         <div className="flex items-center gap-2">
           <Link
             href="/customer/notification"
-            className="bg-white flex rounded-full justify-center items-center min-w-[34px] h-[34px]"
-          >
+            className="bg-white flex rounded-full justify-center items-center min-w-[34px] h-[34px]">
             <Icon icon="notification" />
           </Link>
           <Link
-            href="/customer/profile"
+            href="#"
             onClick={toggleProfileMenu}
-            className="bg-white flex rounded-full justify-center items-center min-w-[34px] h-[34px]"
-          >
+            className="bg-white flex rounded-full justify-center items-center min-w-[34px] h-[34px]">
             <Icon icon="profile" />
           </Link>
         </div>
@@ -100,26 +98,22 @@ const Navbar = () => {
             )}
             <Link
               href="/profile"
-              className="text-greens-900 hover:underline mb-1"
-            >
+              className="text-greens-900 hover:underline mb-1">
               My Profile
             </Link>
             <Link
               href="/settings"
-              className="text-greens-900 hover:underline mb-1"
-            >
+              className="text-greens-900 hover:underline mb-1">
               Settings
             </Link>
             <Link
               href="/change-password"
-              className="text-greens-900 hover:underline mb-1"
-            >
+              className="text-greens-900 hover:underline mb-1">
               Change Password
             </Link>
             <button
               onClick={handleSignOut}
-              className="text-red-500 hover:underline pt-2 border-t text-left"
-            >
+              className="text-red-500 hover:underline pt-2 border-t text-left">
               Sign Out
             </button>
           </div>
