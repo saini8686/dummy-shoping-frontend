@@ -456,6 +456,10 @@ export const USER_PROFILE_DATA = [
   { label: "Phone Number", name: "number", icon: "call", type: "number" },
 ];
 export const USER_ADDRESSE_DATA = [
-  { label: "Home", name: "home", icon: "profileInput" },
-  { label: "Work", name: "work", icon: "password" },
+  {
+    label: "Home",
+    name: "51/5A, Road: 7, Pallabi, Dhaka",
+    icon: "profileInput",
+  },
+  { label: "Work", name: "Dingi Technologies Ltd, Wakil T", icon: "password" },
 ];

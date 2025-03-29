@@ -1,7 +1,19 @@
-import Image from 'next/image'
-import React from 'react'
+"use client";
+import useAuthStore from "@/store/useAuthStore";
+import useUserStore from "@/store/useUserStore";
+import Image from "next/image";
+import React, { useEffect } from "react";
 
 const UserInfo = () => {
+  const { user } = useAuthStore();
+  const { userData, fetchUserByUid } = useUserStore();
+  useEffect(() => {
+    if (user && !userData && user.uid) {
+      console.log("Fetching user data in Navbar for:", user.uid);
+      fetchUserByUid(user.uid);
+    }
+  }, [user, userData, fetchUserByUid]);
+
   return (
     <div className="flex gap-4 items-center">
       <Image
@@ -14,12 +26,14 @@ const UserInfo = () => {
       />
       <p>
         <span className="font-semibold block text-blacks-200 !leading-130">
-          Shafikul Islam
+          {userData.displayName}
         </span>
-        <span className="text-sm font-medium block !leading-130 text-greys-1100">01XXXXXXXXXXXX</span>
+        <span className="text-sm font-medium block !leading-130 text-greys-1100">
+          {userData.appId}
+        </span>
       </p>
     </div>
   );
-}
+};
 
-export default UserInfo
+export default UserInfo;

@@ -661,6 +661,31 @@ const Icon = ({ icon, className }) => {
         <g mask="url(#mask0_397_8210)"></g>
       </svg>
     ),
+    saveAddress: (
+      <svg
+        width="36"
+        height="36"
+        viewBox="0 0 36 36"
+        fill="none"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <g clipPath="url(#clip0_4018_1111)">
+          <path
+            d="M18 36C27.9411 36 36 27.9411 36 18C36 8.05887 27.9411 0 18 0C8.05887 0 0 8.05887 0 18C0 27.9411 8.05887 36 18 36Z"
+            fill="#4CAF50"
+          />
+          <path
+            d="M22.8 9H13.2C12.5373 9 12 9.52491 12 10.1724V25.4138C12 25.4751 12.5373 26 13.2 26H22.8C23.4628 26 24 25.4751 24 25.4138V10.1724C24 9.52491 23.4628 9 22.8 9ZM15.6 10.1724H20.4V13.6897H15.6V10.1724ZM13.2 14.8621H22.8V24.2414H13.2V14.8621ZM16.8 17.2069H19.2V21.8966H16.8V17.2069Z"
+            fill="white"
+          />
+        </g>
+        <defs>
+          <clipPath id="clip0_4018_1111">
+            <rect width="36" height="36" fill="white" />
+          </clipPath>
+        </defs>
+      </svg>
+    ),
   };
 
   return icon && iconsList[icon];
