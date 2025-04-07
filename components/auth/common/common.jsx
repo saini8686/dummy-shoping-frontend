@@ -10,9 +10,11 @@ export const AgreementConfirm = () => {
     </p>
   );
 };
-export const OptionWay = () => {
+export const OptionWay = ({className}) => {
   return (
-    <p className="text-greens-900 my-8 font-medium leading-130 text-center">
+    <p
+      className={`text-greens-900 my-8 font-medium leading-130 text-center ${className}`}
+    >
       Or
     </p>
   );

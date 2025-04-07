@@ -42,15 +42,15 @@ const UserProfile = () => {
       <div className="bg-white shadow rounded-lg p-4">
         <div className="mb-4">
           <h3 className="text-lg font-semibold">Basic Information</h3>
-          <p>Name: {userData.displayName || "Not set"}</p>
-          <p>Email: {userData.email || "Not set"}</p>
-          <p>Address: {userData.address || "Not set"}</p>
+          <p>Name: {userData?.displayName || "Not set"}</p>
+          <p>Email: {userData?.email || "Not set"}</p>
+          <p>Address: {userData?.address || "Not set"}</p>
         </div>
 
         <div className="mb-4">
           <h3 className="text-lg font-semibold">App Information</h3>
-          <p>App ID: {userData.appId || "Not set"}</p>
-          <p>UUID: {userData.uuid || "Not set"}</p>
+          <p>App ID: {userData?.appId || "Not set"}</p>
+          <p>UUID: {userData?.uuid || "Not set"}</p>
         </div>
 
         {userData.referralCode && (

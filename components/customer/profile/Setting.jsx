@@ -3,17 +3,20 @@ import Icon from "@/components/common/Icons";
 import useAuthStore from "@/store/useAuthStore";
 import { SETTING_LIST } from "@/utils/helper";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import * as NProgress from "nprogress";
 
 const Setting = () => {
   const { signOut } = useAuthStore();
   const router = useRouter();
+  const pathName = usePathname();
+  const firstRoute = pathName.split("/")[1];
+  console.log(firstRoute);
   const handleSignOut = async () => {
     NProgress.start();
     try {
       await signOut();
-      router.push("/sign-in");
+      router.push(`/sign-in?auth=${firstRoute}`);
     } catch (error) {
       console.error("Error signing out:", error);
     }

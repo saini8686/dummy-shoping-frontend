@@ -4,10 +4,12 @@ import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 
-const HeaderCustomer = ({ name, location }) => {
+const HeaderCustomer = ({ name, location ,classCard }) => {
   const router = useRouter();
   return (
-    <div className="pt-[50px] pb-4 h-[176px] rounded-b-3xl  bg-greens-900 px-4">
+    <div
+      className={`pt-[50px] pb-4 h-[176px] rounded-b-3xl  bg-greens-900 px-4 ${classCard}`}
+    >
       <div className="flex justify-between items-center">
         <button
           onClick={() => router.back()}
@@ -21,7 +23,7 @@ const HeaderCustomer = ({ name, location }) => {
             width={86}
             height={39}
             sizes="100vw"
-            className="w-[86px] h-[39px] object-cover"
+            className="w-[85px] h-[32px] object-cover"
             alt="logo"
           />
         </Link>
