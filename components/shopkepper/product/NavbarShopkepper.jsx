@@ -3,13 +3,9 @@ import Image from "next/image";
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import useAuthStore from "@/store/useAuthStore";
-import useUserStore from "@/store/useUserStore";
 import { useRouter } from "next/navigation";
 import Icon from "@/components/common/Icons";
 const NavbarShopkepper = () => {
-  const { user, signOut } = useAuthStore();
-  const { userData, loading, fetchUserByUid } = useUserStore();
-  const [showProfileMenu, setShowProfileMenu] = useState(false);
   const router = useRouter();
   return (
     <div className="pt-8 pb-4 rounded-b-3xl bg-greens-900 px-4 relative">
