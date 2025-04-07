@@ -1,0 +1,82 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Roboto:ital,wght@0,100..900;1,100..900&display=swap');
+@config "../tailwind.config.js";
+@import "tailwindcss";
+
+* {
+  font-family: "Poppins", sans-serif;
+}
+
+body {
+  @apply max-w-[540px] bg-white mx-auto
+}
+
+.font-roboto {
+  font-family: "Roboto", sans-serif !important;
+}
+
+button {
+  @apply cursor-pointer
+}
+
+.custom_button {
+  @apply bg-greens-900 hover:bg-white hover:text-greens-900 border border-greens-900 duration-300
+}
+
+@theme inline {
+  --color-white-low: #FDFDFD;
+  --color-greens-100: #53B175;
+  --color-greens-900: #01BE62;
+  --color-blacks-100: #181725;
+  --color-blacks-200: #010101;
+  --color-greys-dark-400: #575C57;
+  --color-greys-100: #F2F3F1;
+  --color-greys-200: #7C7C7C;
+  --color-greys-300: #E2E2E2;
+  --color-greys-400: #838483;
+  --color-greys-500: #C1C6C3;
+  --color-greys-600: #A0A0A1;
+  --color-greys-700: #E9ECE9;
+  --color-yellows-200: #FEF700;
+  --color-reds-100: #FFE8E8;
+  --color-reds-200: #FFE8E8;
+  --color-reds-900: #FF3131;
+  --spacing-130: 130%;
+  --shadow-bottom-bar: 0px -12px 37px 0px #E6EBF380;
+  --shadow-category: 0px 4px 88px 0px #0000000D;
+}
+
+
+
+/* Shadows */
+.shadow_low_black {
+  @apply shadow-low_black;
+}
+
+
+
+.landing_hero_swiper .swiper-pagination-bullet {
+  width: 10px !important;
+  height: 10px !important;
+  opacity: 0.28 !important;
+  background: #ffffff !important;
+}
+
+.landing_hero_swiper .swiper-button-disabled {
+  display: none;
+}
+
+.landing_hero_swiper #nextDetail.swiper-button-disabled~a {
+  display: block;
+}
+
+
+.landing_hero_swiper .swiper-pagination-bullet-active {
+  width: 40px !important;
+  border-radius: 10px !important;
+  opacity: 1 !important;
+  background: #ffffff !important;
+}
+
+.transparent-green-border-button {
+  @apply border border-greens-900 rounded font-semibold text-black py-3.5 block text-center mt-8 hover:text-white hover:bg-greens-900 duration-300
+}
