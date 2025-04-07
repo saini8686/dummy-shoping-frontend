@@ -16,8 +16,14 @@ const CustomUploadImage = ({ name, image, onChange }) => {
   };
 
   return (
-    <div className="h-[198px] py-3.5 mt-[18px] px-3 rounded-lg bg-greys-100 w-full">
-      <h3 className="text-blacks-200 font-semibold text-base">{name}</h3>
+    <div
+      className={`${
+        name && "h-[198px] py-3.5 mt-[18px] px-3 rounded-lg bg-greys-100 w-full"
+      }`}
+    >
+      {name && (
+        <h3 className="text-blacks-200 font-semibold text-base">{name}</h3>
+      )}
       <label className="h-[130px] rounded-lg flex justify-center items-center border border-dashed border-black w-full mt-4 cursor-pointer overflow-hidden">
         <input
           type="file"

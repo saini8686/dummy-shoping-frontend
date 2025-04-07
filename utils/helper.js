@@ -475,3 +475,111 @@ export const BAISC_DETAILS_FORM = [
     title: "Contact & Location",
   },
 ];
+
+export const SHOPKEPPER_PRODUCT_LIST = [
+  {
+    image: "/assets/images/png/shopkepper/product/mama-gold-rice.png",
+    name: "Mama Gold Rice",
+    amount: 45000,
+    inStock: true,
+  },
+  {
+    image: "/assets/images/png/shopkepper/product/tatashe.png",
+    name: "Tatashe",
+    amount: 45000,
+    inStock: false,
+  },
+  {
+    image: "/assets/images/png/shopkepper/product/ricci-paste.png",
+    name: "Mama Gold Rice",
+    amount: 45000,
+    inStock: true,
+  },
+  {
+    image: "/assets/images/png/shopkepper/product/rodo.png",
+    name: "Mama Gold Rice",
+    amount: 45000,
+    inStock: false,
+  },
+  {
+    image: "/assets/images/png/shopkepper/product/mama-gold-rice.png",
+    name: "Mama Gold Rice",
+    amount: 45000,
+    inStock: true,
+  },
+  {
+    image: "/assets/images/png/shopkepper/product/tatashe.png",
+    name: "Tatashe",
+    amount: 45000,
+    inStock: false,
+  },
+  {
+    image: "/assets/images/png/shopkepper/product/ricci-paste.png",
+    name: "Mama Gold Rice",
+    amount: 45000,
+    inStock: true,
+  },
+  {
+    image: "/assets/images/png/shopkepper/product/rodo.png",
+    name: "Mama Gold Rice",
+    amount: 45000,
+    inStock: false,
+  },
+  {
+    image: "/assets/images/png/shopkepper/product/mama-gold-rice.png",
+    name: "Mama Gold Rice",
+    amount: 45000,
+    inStock: true,
+  },
+  {
+    image: "/assets/images/png/shopkepper/product/tatashe.png",
+    name: "Tatashe",
+    amount: 45000,
+    inStock: false,
+  },
+  {
+    image: "/assets/images/png/shopkepper/product/ricci-paste.png",
+    name: "Mama Gold Rice",
+    amount: 45000,
+    inStock: true,
+  },
+  {
+    image: "/assets/images/png/shopkepper/product/rodo.png",
+    name: "Mama Gold Rice",
+    amount: 45000,
+    inStock: false,
+  },
+  {
+    image: "/assets/images/png/shopkepper/product/mama-gold-rice.png",
+    name: "Mama Gold Rice",
+    amount: 45000,
+    inStock: true,
+  },
+  {
+    image: "/assets/images/png/shopkepper/product/tatashe.png",
+    name: "Tatashe",
+    amount: 45000,
+    inStock: false,
+  },
+  {
+    image: "/assets/images/png/shopkepper/product/ricci-paste.png",
+    name: "Mama Gold Rice",
+    amount: 45000,
+    inStock: true,
+  },
+  {
+    image: "/assets/images/png/shopkepper/product/rodo.png",
+    name: "Mama Gold Rice",
+    amount: 45000,
+    inStock: false,
+  },
+  
+];
+
+export const BOTTOM_BAR_SHOPKEPPER_LIST = [
+  { icon: "shopkepperCarryBag", path: "#" },
+  { icon: "shopkepperOption", path: "#" },
+  { icon: "shopkepperWallet", path: "#" },
+  { icon: "shopkepperChartL", path: "#" },
+  { icon: "shopkepperProfile", path: "#" },
+];
