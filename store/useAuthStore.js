@@ -1,152 +1,52 @@
-import { create } from "zustand";
-import {
-  auth,
-  googleProvider,
-  signInWithPopup,
-  createUserWithEmailAndPassword,
-  signInWithEmailAndPassword,
-  signOut as firebaseSignOut,
-  updatePassword as firebaseUpdatePassword,
-  reauthenticateWithCredential,
-  EmailAuthProvider,
-  sendPasswordResetEmail,
-} from "../utils/firebase";
-import { createUserProfile, getUserProfile } from "../utils/userService";
+import { create } from 'zustand';
 
 const useAuthStore = create((set) => ({
-  // State
   user: null,
-  userProfile: null,
   loading: false,
   error: null,
-
-  // Actions
-  signInWithGoogle: async () => {
-    set({ loading: true, error: null });
-    try {
-      const result = await signInWithPopup(auth, googleProvider);
-      const userProfile = await createUserProfile(result.user);
-      set({ user: result.user, userProfile, loading: false });
-      return { user: result.user, userProfile };
-    } catch (error) {
-      set({ error: error.message, loading: false });
-      throw error;
-    }
-  },
-
-  signUpWithEmailPassword: async (email, password, additionalData = {}) => {
-    set({ loading: true, error: null });
-    try {
-      const result = await createUserWithEmailAndPassword(
-        auth,
-        email,
-        password
-      );
-      const userProfile = await createUserProfile(result.user, additionalData);
-      set({ user: result.user, userProfile, loading: false });
-      return { user: result.user, userProfile };
-    } catch (error) {
-      set({ error: error.message, loading: false });
-      throw error;
-    }
-  },
+  isAuthenticated: false,
 
   signInWithEmailPassword: async (email, password) => {
     set({ loading: true, error: null });
     try {
-      const result = await signInWithEmailAndPassword(auth, email, password);
-      const userProfile = await createUserProfile(result.user);
-      set({ user: result.user, userProfile, loading: false });
-      return { user: result.user, userProfile };
+      // Mock authentication
+      const mockUser = { email, id: Date.now() };
+      localStorage.setItem('user', JSON.stringify(mockUser));
+      set({ user: mockUser, isAuthenticated: true });
     } catch (error) {
-      set({ error: error.message, loading: false });
+      set({ error: error.message });
       throw error;
+    } finally {
+      set({ loading: false });
     }
   },
 
-  signOut: async () => {
-    set({ loading: true });
-    try {
-      await firebaseSignOut(auth);
-      set({ user: null, userProfile: null, loading: false });
-    } catch (error) {
-      set({ error: error.message, loading: false });
-      throw error;
-    }
-  },
-
-  fetchUserProfile: async (uid) => {
-    set({ loading: true });
-    try {
-      const userProfile = await getUserProfile(uid);
-      set({ userProfile, loading: false });
-      return userProfile;
-    } catch (error) {
-      set({ error: error.message, loading: false });
-      throw error;
-    }
-  },
-
-  resetPassword: async (email) => {
+  signUpWithEmailPassword: async (email, password) => {
     set({ loading: true, error: null });
     try {
-      await sendPasswordResetEmail(auth, email);
-      set({ loading: false });
-      return true;
+      // Mock registration
+      const mockUser = { email, id: Date.now() };
+      localStorage.setItem('user', JSON.stringify(mockUser));
+      set({ user: mockUser, isAuthenticated: true });
     } catch (error) {
-      console.error("Password reset error:", error);
-      set({ error: error.message, loading: false });
+      set({ error: error.message });
       throw error;
+    } finally {
+      set({ loading: false });
     }
   },
 
-  updatePassword: async (currentPassword, newPassword, verifyOnly = false) => {
-    set({ loading: true, error: null });
-    try {
-      const user = auth.currentUser;
-
-      if (!user) {
-        set({
-          error: "User must be logged in to update password",
-          loading: false,
-        });
-        throw new Error("User must be logged in to update password");
-      }
-
-      if (!user.email) {
-        set({
-          error: "User must have an email to update password",
-          loading: false,
-        });
-        throw new Error("User must have an email to update password");
-      }
-
-      // Re-authenticate user with current password
-      const credential = EmailAuthProvider.credential(
-        user.email,
-        currentPassword
-      );
-      await reauthenticateWithCredential(user, credential);
-
-      // If only verifying current password, we're done
-      if (verifyOnly) {
-        set({ loading: false });
-        return true;
-      }
-
-      // Update the password
-      await firebaseUpdatePassword(user, newPassword);
-      set({ loading: false });
-      return true;
-    } catch (error) {
-      set({ error: error.message, loading: false });
-      throw error;
-    }
+  logout: () => {
+    localStorage.removeItem('user');
+    set({ user: null, isAuthenticated: false });
   },
 
-  setUser: (user) => set({ user }),
-  setUserProfile: (userProfile) => set({ userProfile }),
-  clearError: () => set({ error: null }),
+  initialize: () => {
+    const storedUser = localStorage.getItem('user');
+    if (storedUser) {
+      set({ user: JSON.parse(storedUser), isAuthenticated: true });
+    }
+  }
 }));
 
 export default useAuthStore;

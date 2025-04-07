@@ -1,118 +1,104 @@
-import { usePathname } from "next/navigation";
 import {
   db,
-  collection,
   doc,
-  setDoc,
-  getDoc,
-  updateDoc,
-  serverTimestamp,
-  uuidv4,
   generateAppId,
+  getDoc,
+  serverTimestamp,
+  setDoc,
+  updateDoc,
+  uuidv4
 } from "./firebase";
-const urlParams = new URLSearchParams(window.location.search);
-const userRole = urlParams.get("auth");
-// Create a new user in Firestore
-export async function createUserProfile(user, additionalData = {}) {
-  if (!user) return;
+// Remove all Firebase imports and use only local storage functionality
 
-  const userRef = doc(db, "users", user.uid);
-  const userSnap = await getDoc(userRef);
-
-  if (!userSnap.exists()) {
-    const { email, displayName, photoURL } = user;
-    const createdAt = serverTimestamp();
-
-    try {
-      // Generate unique identifiers
-      const uuid = uuidv4();
-      const appId = generateAppId();
-
-      // Prepare user data
-      const userData = {
-        uuid,
-        appId,
-        email,
-        displayName: displayName || additionalData.displayName || "",
-        photoURL: photoURL || "",
-        address: additionalData.address || "",
-        referralCode: additionalData.referralCode || "",
-        createdAt,
-        userRole: userRole,
-        lastLoginAt: createdAt,
-        ...additionalData,
-      };
-
-      // Save to Firestore
-      await setDoc(userRef, userData);
-
-      return {
-        uid: user.uid,
-        ...userData,
-      };
-    } catch (error) {
-      console.error("Error creating user profile:", error);
-      throw error;
-    }
-  } else {
-    // User already exists, update last login time
-    try {
-      await updateDoc(userRef, {
-        lastLoginAt: serverTimestamp(),
-      });
-
-      const updatedUserSnap = await getDoc(userRef);
-      return {
-        uid: user.uid,
-        ...updatedUserSnap.data(),
-      };
-    } catch (error) {
-      console.error("Error updating user login time:", error);
-      throw error;
-    }
+// Fix window reference issue
+export const getUserRole = () => {
+  if (typeof window !== 'undefined') {
+    const urlParams = new URLSearchParams(window.location.search);
+    return urlParams.get("auth") || 'customer';
   }
-}
+  return 'customer';
+};
 
-// Get user profile from Firestore
-export async function getUserProfile(uid) {
-  if (!uid) return null;
-
-  try {
-    const userRef = doc(db, "users", uid);
-    const userSnap = await getDoc(userRef);
-
-    if (userSnap.exists()) {
-      return {
-        uid,
-        ...userSnap.data(),
-      };
-    }
-
-    return null;
-  } catch (error) {
-    console.error("Error fetching user profile:", error);
-    throw error;
+// Generate and log OTP instead of sending email
+export const generateAndSendOTP = (email) => {
+  const otp = Math.floor(100000 + Math.random() * 900000).toString();
+  if (typeof window !== 'undefined') {
+    localStorage.setItem('current_otp', otp);
+    console.log(`OTP for ${email}: ${otp}`); // Just log to console instead of sending email
   }
-}
+  return otp;
+};
 
-// Update user profile in Firestore
-export async function updateUserProfile(uid, data) {
-  if (!uid || !data) return;
+// Verify OTP
+export const verifyOTP = (inputOTP) => {
+  if (typeof window !== 'undefined') {
+    const storedOTP = localStorage.getItem('current_otp');
+    return storedOTP === inputOTP;
+  }
+  return false;
+};
 
-  try {
-    const userRef = doc(db, "users", uid);
-    await updateDoc(userRef, {
-      ...data,
-      updatedAt: serverTimestamp(),
-    });
-
-    const updatedUserSnap = await getDoc(userRef);
-    return {
-      uid,
-      ...updatedUserSnap.data(),
+// Replace Firebase functions with local storage
+export const createUserProfile = async (userData) => {
+  if (typeof window !== 'undefined') {
+    const userId = generateLocalId();
+    const userWithId = {
+      ...userData,
+      uid: userId,
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString()
     };
+    localStorage.setItem(`user_${userId}`, JSON.stringify(userWithId));
+    // Also store in a users index
+    const usersIndex = JSON.parse(localStorage.getItem('users_index') || '[]');
+    usersIndex.push(userId);
+    localStorage.setItem('users_index', JSON.stringify(usersIndex));
+    return userWithId;
+  }
+  return userData;
+};
+
+export const getUserProfile = (uid) => {
+  if (typeof window !== 'undefined') {
+    if (uid) {
+      const profile = localStorage.getItem(`user_${uid}`);
+      return profile ? JSON.parse(profile) : null;
+    } else {
+      // Get current user from auth storage
+      const currentUser = localStorage.getItem('auth_user');
+      return currentUser ? JSON.parse(currentUser) : null;
+    }
+  }
+  return null;
+};
+
+// Update user profile in local storage
+export const updateUserProfile = async (uid, data) => {
+  if (!uid || !data) return null;
+
+  try {
+    if (typeof window !== 'undefined') {
+      const existingUser = localStorage.getItem(`user_${uid}`);
+      if (existingUser) {
+        const userData = JSON.parse(existingUser);
+        const updatedUser = {
+          ...userData,
+          ...data,
+          updatedAt: new Date().toISOString()
+        };
+        localStorage.setItem(`user_${uid}`, JSON.stringify(updatedUser));
+        return updatedUser;
+      }
+    }
+    return null;
   } catch (error) {
     console.error("Error updating user profile:", error);
     throw error;
   }
-}
+};
+
+// Helper function to generate a unique ID
+const generateLocalId = () => {
+  return 'user_' + Math.random().toString(36).substring(2, 15) + 
+         Math.random().toString(36).substring(2, 15);
+};

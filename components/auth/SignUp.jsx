@@ -3,10 +3,8 @@ import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useState } from "react";
 import useAuthStore from "../../store/useAuthStore";
-import useOtpStore from "../../store/useOtpStore";
 import { CustomButton } from "../common/CustomButton";
 import Icon from "../common/Icons";
-import OtpVerification from "./OtpVerification";
 import { CustomInput } from "./common/CustomInput";
 import LoginWay from "./common/LoginWay";
 import { AgreementConfirm, OptionWay } from "./common/common";
@@ -18,52 +16,31 @@ const SignUp = () => {
     refferCode: "",
     password: "",
   });
-  const [isChecked, setIsChecked] = useState(false);
-  const [showOtpVerification, setShowOtpVerification] = useState(false);
   const searchParams = useSearchParams();
   const router = useRouter();
   let auth = searchParams.get("auth");
   const [error, setError] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
-  // Get auth functions from Zustand store
   const {
     signUpWithEmailPassword,
-    signInWithGoogle,
-    loading: authLoading,
+    loading,
     error: authError,
   } = useAuthStore();
 
-  // Get OTP functions from Zustand store
-  const {
-    sendOtp,
-    loading: otpLoading,
-    error: otpError,
-    otpVerified,
-    resetOtpState,
-  } = useOtpStore();
-
-  // Handle request OTP
-  const handleRequestOtp = async (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     setError(true);
 
     if (formDetails.loginId && formDetails.password && formDetails.address) {
       try {
         setIsLoading(true);
-        // Check if loginId is an email
-        const isEmail = formDetails.loginId.includes("@");
-
-        if (isEmail) {
-          // Send OTP to email
-          const success = await sendOtp(formDetails.loginId);
-          if (success) {
-            setShowOtpVerification(true);
-          }
-        } else {
-          // Show error for non-email login ID
-          setError("Please use a valid email address");
-        }
+        // Generate OTP and log it to console
+        const otp = Math.floor(100000 + Math.random() * 900000).toString();
+        console.log(`OTP for ${formDetails.loginId}: ${otp}`);
+        
+        await signUpWithEmailPassword(formDetails.loginId, formDetails.password);
+        router.push(`/${auth}`);
       } catch (err) {
         console.error(err);
       } finally {
@@ -72,57 +49,17 @@ const SignUp = () => {
     }
   };
 
-  // Handle OTP verification success
-  const handleOtpVerified = async () => {
-    try {
-      setIsLoading(true);
-      // Register with email and password after OTP verification
-      await signUpWithEmailPassword(formDetails.loginId, formDetails.password);
-      // Reset OTP state
-      resetOtpState();
-      // Redirect to customer page
-      router.push(`/${auth}`);
-    } catch (err) {
-      console.error(err);
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  // Handle resend OTP
-  const handleResendOtp = async () => {
-    await sendOtp(formDetails.loginId);
-  };
-
-  // Handle cancel OTP verification
-  const handleCancelOtp = () => {
-    setShowOtpVerification(false);
-    resetOtpState();
-  };
-
-  // Show OTP verification screen if OTP has been sent
-  if (showOtpVerification) {
-    return (
-      <OtpVerification
-        email={formDetails.loginId}
-        onOtpVerified={handleOtpVerified}
-        onResendOtp={handleResendOtp}
-        onCancel={handleCancelOtp}
-      />
-    );
-  }
-
   return (
     <div className="px-4">
       <h2 className="mt-6 text-2xl font-semibold text-black !leading-130">
         Sign Up
       </h2>
 
-      <form className="mt-8" onSubmit={handleRequestOtp}>
+      <form className="mt-8" onSubmit={handleSubmit}>
         <CustomInput
           placeholder="Email"
           name="loginId"
-          type="text"
+          type="email"
           error={!formDetails.loginId && error}
           errorText="Email Is Required"
           value={formDetails.loginId}
@@ -156,7 +93,7 @@ const SignUp = () => {
           name="address"
           type="text"
           error={!formDetails.address && error}
-          errorText={"Address Is Required"}
+          errorText="Address Is Required"
           value={formDetails.address}
           onChange={(e) =>
             setFormDetails({
@@ -166,46 +103,13 @@ const SignUp = () => {
           }
         />
 
-        <OptionWay />
-
-        <CustomButton customClass="w-full gap-3 justify-center flex items-center !py-3.5">
-          <Icon icon="locationWhite" /> Choose Location from Google
-        </CustomButton>
-
-        <label className="flex w-fit ml-auto gap-2 mt-4 items-center">
-          <input
-            checked={isChecked}
-            onChange={(e) => setIsChecked(e.target.checked)}
-            type="checkbox"
-            className="w-[18px] h-[18px] checked:bg-greens-900 checked:border-transparent accent-greens-900/50"
-          />
-          <p>Any Refer Code</p>
-        </label>
-
-        {isChecked && (
-          <CustomInput
-            customClass="mt-4"
-            placeholder="Referral Code"
-            name="refferCode"
-            value={formDetails.refferCode}
-            onChange={(e) =>
-              setFormDetails({
-                ...formDetails,
-                refferCode: e.target.value,
-              })
-            }
-          />
-        )}
-
-        {(authError || otpError) && (
-          <p className="text-red-500 mt-2">{authError || otpError}</p>
-        )}
+        {authError && <p className="text-red-500 mt-2">{authError}</p>}
 
         <CustomButton
           customClass="w-full !py-3.5 mt-7"
           isSubmit
-          disabled={isLoading || authLoading || otpLoading}>
-          {isLoading || authLoading || otpLoading ? "Loading..." : "Continue"}
+          disabled={isLoading || loading}>
+          {isLoading || loading ? "Loading..." : "Sign Up"}
         </CustomButton>
       </form>
       <OptionWay />
@@ -215,7 +119,7 @@ const SignUp = () => {
       <Link
         href={`/sign-in?auth=${auth}`}
         className="transparent-green-border-button mb-5">
-        Are you Customer ? Sign in
+        Already have an account? Sign In
       </Link>
     </div>
   );
