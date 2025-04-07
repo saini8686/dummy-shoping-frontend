@@ -10,7 +10,7 @@ const ProductIn = () => {
             <div className="border rounded-lg w-[60px] h-[60px] flex justify-center items-center border-white-100">
               <Image
                 src={obj.image}
-                alt={obj.name}
+                alt="list image"
                 className="w-full h-full"
                 width={60}
                 height={60}

@@ -3,6 +3,7 @@ import Image from "next/image";
 import React from "react";
 import ProductCategory from "../../ProductCategory";
 import { BEST_SELLER_LIST } from "@/utils/helper";
+import { CustomButton } from "@/components/common/CustomButton";
 
 const ProductDetails = () => {
   return (
@@ -13,7 +14,7 @@ const ProductDetails = () => {
           height={271}
           sizes="100vw"
           src="/assets/images/png/cart/powder.png"
-          alt="#"
+          alt="powder"
           className="h-full mx-auto"
         />
       </div>
@@ -65,7 +66,8 @@ const ProductDetails = () => {
         <p className="font-bold text-2xl text-blacks-200 !leading-130">1 KG</p>
         <p className="font-bold text-2xl text-greens-900 !leading-130">₹ 182</p>
       </div>
-      <p className="text-base font-medium text-blacks-200 !leading-130">
+      <CustomButton customClass="mt-4 ml-auto">Add to Cardt</CustomButton>
+      <p className="text-base font-medium mt-4 text-blacks-200 !leading-130">
         Shop Location
       </p>
       <div className="flex items-center mt-4 gap-4">
@@ -78,7 +80,7 @@ const ProductDetails = () => {
       <h2 className="text-xl font-semibold text-blacks-200 !leading-130 my-10">
         See Similar Products
       </h2>
-      <ProductCategory  productList={BEST_SELLER_LIST} />
+      <ProductCategory productList={BEST_SELLER_LIST} />
     </div>
   );
 };

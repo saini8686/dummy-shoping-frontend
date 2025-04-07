@@ -390,8 +390,8 @@ const Icon = ({ icon, className }) => {
     ),
     plus: (
       <svg
-        width="18"
-        height="18"
+        width="12"
+        height="12"
         viewBox="0 0 18 18"
         fill="none"
         xmlns="http://www.w3.org/2000/svg"
@@ -830,7 +830,7 @@ const Icon = ({ icon, className }) => {
           d="M9.31968 1.99912L8.79 1.46945L9.31968 1.99912Z"
           fill="currentColor"
           stroke="currentColor"
-          strokeWwidth="1.5"
+          strokeWidth="1.5"
         />
         <path
           d="M19.31 6.37945C19.12 6.37945 18.93 6.30945 18.78 6.15945L15.15 2.52945C14.86 2.23945 14.86 1.75945 15.15 1.46945C15.44 1.17945 15.92 1.17945 16.21 1.46945L19.84 5.09945C20.13 5.38945 20.13 5.86945 19.84 6.15945C19.7 6.29945 19.5 6.37945 19.31 6.37945Z"
@@ -983,6 +983,24 @@ const Icon = ({ icon, className }) => {
           d="M16 24V8"
           stroke="currentColor"
           strokeWidth="1.5"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        />
+      </svg>
+    ),
+    arrowNext: (
+      <svg
+        width="24"
+        height="24"
+        viewBox="0 0 24 24"
+        fill="none"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <path
+          d="M8.90991 19.9201L15.4299 13.4001C16.1999 12.6301 16.1999 11.3701 15.4299 10.6001L8.90991 4.08008"
+          stroke="#228B22"
+          strokeWidth="1.5"
+          strokeMiterlimit="10"
           strokeLinecap="round"
           strokeLinejoin="round"
         />

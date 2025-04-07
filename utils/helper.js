@@ -573,13 +573,276 @@ export const SHOPKEPPER_PRODUCT_LIST = [
     amount: 45000,
     inStock: false,
   },
-  
 ];
 
 export const BOTTOM_BAR_SHOPKEPPER_LIST = [
-  { icon: "shopkepperCarryBag", path: "#" },
-  { icon: "shopkepperOption", path: "#" },
+  { icon: "shopkepperCarryBag", path: "/shopkepper/order" },
+  { icon: "shopkepperOption", path: "/shopkepper/product" },
   { icon: "shopkepperWallet", path: "#" },
   { icon: "shopkepperChartL", path: "#" },
   { icon: "shopkepperProfile", path: "#" },
+];
+
+export const SHOPKEPPER_ORDER_FILTER = [
+  {
+    name: "all",
+  },
+  {
+    name: "New Order",
+  },
+  {
+    name: "Awaiting Pickup",
+  },
+  {
+    name: "In Transit",
+  },
+  {
+    name: "Complete",
+  },
+  {
+    name: "Cancelled",
+  },
+];
+
+export const SHOPKEPPER_ORDER_LIST = [
+  {
+    orderId: "#452323",
+    time: "Today | 9:00 am",
+    item: 3,
+    category: "New Order",
+  },
+  {
+    orderId: "#871323",
+    time: "Today | 9:00 am",
+    item: 3,
+    category: "Awaiting Pickup",
+  },
+  {
+    orderId: "#217571",
+    time: "Today | 9:00 am",
+    item: 3,
+    category: "In Transit",
+  },
+  {
+    orderId: "#281723",
+    time: "Today | 9:00 am",
+    item: 3,
+    category: "Cancelled",
+  },
+  {
+    orderId: "#452323",
+    time: "Today | 9:00 am",
+    item: 3,
+    category: "New Order",
+  },
+  {
+    orderId: "#871323",
+    time: "Today | 9:00 am",
+    item: 3,
+    category: "Awaiting Pickup",
+  },
+  {
+    orderId: "#217571",
+    time: "Today | 9:00 am",
+    item: 3,
+    category: "In Transit",
+  },
+  {
+    orderId: "#281723",
+    time: "Today | 9:00 am",
+    item: 3,
+    category: "Cancelled",
+  },
+  {
+    orderId: "#452323",
+    time: "Today | 9:00 am",
+    item: 3,
+    category: "New Order",
+  },
+  {
+    orderId: "#871323",
+    time: "Today | 9:00 am",
+    item: 3,
+    category: "Awaiting Pickup",
+  },
+  {
+    orderId: "#217571",
+    time: "Today | 9:00 am",
+    item: 3,
+    category: "In Transit",
+  },
+  {
+    orderId: "#281723",
+    time: "Today | 9:00 am",
+    item: 3,
+    category: "Cancelled",
+  },
+  {
+    orderId: "#452323",
+    time: "Today | 9:00 am",
+    item: 3,
+    category: "New Order",
+  },
+  {
+    orderId: "#871323",
+    time: "Today | 9:00 am",
+    item: 3,
+    category: "Awaiting Pickup",
+  },
+  {
+    orderId: "#217571",
+    time: "Today | 9:00 am",
+    item: 3,
+    category: "In Transit",
+  },
+  {
+    orderId: "#281723",
+    time: "Today | 9:00 am",
+    item: 3,
+    category: "Complete",
+  },
+  {
+    orderId: "#452323",
+    time: "Today | 9:00 am",
+    item: 3,
+    category: "New Order",
+  },
+  {
+    orderId: "#871323",
+    time: "Today | 9:00 am",
+    item: 3,
+    category: "Awaiting Pickup",
+  },
+  {
+    orderId: "#217571",
+    time: "Today | 9:00 am",
+    item: 3,
+    category: "In Transit",
+  },
+  {
+    orderId: "#281723",
+    time: "Today | 9:00 am",
+    item: 3,
+    category: "Complete",
+  },
+  {
+    orderId: "#452323",
+    time: "Today | 9:00 am",
+    item: 3,
+    category: "New Order",
+  },
+  {
+    orderId: "#871323",
+    time: "Today | 9:00 am",
+    item: 3,
+    category: "Awaiting Pickup",
+  },
+  {
+    orderId: "#217571",
+    time: "Today | 9:00 am",
+    item: 3,
+    category: "In Transit",
+  },
+  {
+    orderId: "#281723",
+    time: "Today | 9:00 am",
+    item: 3,
+    category: "Complete",
+  },
+  {
+    orderId: "#452323",
+    time: "Today | 9:00 am",
+    item: 3,
+    category: "New Order",
+  },
+  {
+    orderId: "#871323",
+    time: "Today | 9:00 am",
+    item: 3,
+    category: "Awaiting Pickup",
+  },
+  {
+    orderId: "#217571",
+    time: "Today | 9:00 am",
+    item: 3,
+    category: "In Transit",
+  },
+  {
+    orderId: "#281723",
+    time: "Today | 9:00 am",
+    item: 3,
+    category: "Complete",
+  },
+  {
+    orderId: "#452323",
+    time: "Today | 9:00 am",
+    item: 3,
+    category: "New Order",
+  },
+  {
+    orderId: "#871323",
+    time: "Today | 9:00 am",
+    item: 3,
+    category: "Awaiting Pickup",
+  },
+  {
+    orderId: "#217571",
+    time: "Today | 9:00 am",
+    item: 3,
+    category: "In Transit",
+  },
+  {
+    orderId: "#281723",
+    time: "Today | 9:00 am",
+    item: 3,
+    category: "Complete",
+  },
+  {
+    orderId: "#452323",
+    time: "Today | 9:00 am",
+    item: 3,
+    category: "New Order",
+  },
+  {
+    orderId: "#871323",
+    time: "Today | 9:00 am",
+    item: 3,
+    category: "Awaiting Pickup",
+  },
+  {
+    orderId: "#217571",
+    time: "Today | 9:00 am",
+    item: 3,
+    category: "In Transit",
+  },
+  {
+    orderId: "#281723",
+    time: "Today | 9:00 am",
+    item: 3,
+    category: "Complete",
+  },
+  {
+    orderId: "#452323",
+    time: "Today | 9:00 am",
+    item: 3,
+    category: "New Order",
+  },
+  {
+    orderId: "#871323",
+    time: "Today | 9:00 am",
+    item: 3,
+    category: "Awaiting Pickup",
+  },
+  {
+    orderId: "#217571",
+    time: "Today | 9:00 am",
+    item: 3,
+    category: "In Transit",
+  },
+  {
+    orderId: "#281723",
+    time: "Today | 9:00 am",
+    item: 3,
+    category: "Complete",
+  },
 ];
