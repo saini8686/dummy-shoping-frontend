@@ -14,20 +14,18 @@ const Navbar = () => {
 
   // Fetch user data when component mounts if we have a user but no userData
   useEffect(() => {
-    if (user && !userData && user.uid) {
-      console.log("Fetching user data in Navbar for:", user.uid);
-      fetchUserByUid(user.uid);
+    if (user && user.uid) {
+      console.log("Fetching user data in Navbar for:", user);
     }
-  }, [user, userData, fetchUserByUid]);
+  }, [user]);
 
   // Display user's name or email if available
-  const displayName = userData?.displayName || user?.displayName || "User";
-  const userEmail = userData?.email || user?.email || "";
+  const displayName =  user?.displayName || "User";
+  const userEmail =  user?.email || "";
 
   const toggleProfileMenu = () => {
     setShowProfileMenu(!showProfileMenu);
     console.log("Toggle Profile Menu");
-    console.log("User Data:", userData);
     console.log("Auth User:", user);
     console.log("Display Name:", displayName);
     console.log("Email:", userEmail);
