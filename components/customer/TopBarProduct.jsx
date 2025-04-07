@@ -39,7 +39,7 @@ const TopBarProduct = () => {
 
         {/* vedio */}
       </div>
-      <div className="relative max-w-[640] w-full mx-auto mt-8">
+      <div className="relative max-w-[540px] w-full mx-auto mt-8">
         <video
           ref={videoRef}
           height={160}
@@ -65,7 +65,10 @@ const TopBarProduct = () => {
           </button>
         )}
       </div>
-      <CustomButton customClass="ml-auto flex w-fit mt-6" url="#">
+      <CustomButton
+        customClass="ml-auto flex w-fit mt-6"
+        url="/customer/nearby-shop"
+      >
         Nearby Shops
       </CustomButton>
     </div>

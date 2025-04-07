@@ -46,14 +46,16 @@ const Navbar = () => {
 
   return (
     <div className="pt-8 pb-4 rounded-b-3xl bg-greens-900 px-4 relative">
-      <Image
-        src="/assets/images/svg/logo.svg"
-        width={86}
-        height={39}
-        sizes="100vw"
-        className="mb-5 w-[86px] h-[39px] object-cover"
-        alt="logo"
-      />
+      <Link href="/customer">
+        <Image
+          src="/assets/images/svg/logo.svg"
+          width={86}
+          height={39}
+          sizes="100vw"
+          className="mb-5 w-[86px] h-[39px] object-cover"
+          alt="logo"
+        />
+      </Link>
       <div className="flex justify-between gap-5 items-center">
         <div className="flex items-center gap-1">
           <span className="bg-white rounded-full flex justify-center items-center min-w-[34px] h-[34px]">
@@ -68,15 +70,17 @@ const Navbar = () => {
         </div>
         <div className="flex items-center gap-2">
           <Link
-            href="#"
-            className="bg-white flex rounded-full justify-center items-center min-w-[34px] h-[34px]">
+            href="/customer/notification"
+            className="bg-white flex rounded-full justify-center items-center min-w-[34px] h-[34px]"
+          >
             <Icon icon="notification" />
           </Link>
-          <button
-            onClick={toggleProfileMenu}
-            className="bg-white flex rounded-full justify-center items-center min-w-[34px] h-[34px]">
+          <Link
+            href="/customer/profile"
+            className="bg-white flex rounded-full justify-center items-center min-w-[34px] h-[34px]"
+          >
             <Icon icon="profile" />
-          </button>
+          </Link>
         </div>
       </div>
 
@@ -95,22 +99,26 @@ const Navbar = () => {
             )}
             <Link
               href="/profile"
-              className="text-greens-900 hover:underline mb-1">
+              className="text-greens-900 hover:underline mb-1"
+            >
               My Profile
             </Link>
             <Link
               href="/settings"
-              className="text-greens-900 hover:underline mb-1">
+              className="text-greens-900 hover:underline mb-1"
+            >
               Settings
             </Link>
             <Link
               href="/change-password"
-              className="text-greens-900 hover:underline mb-1">
+              className="text-greens-900 hover:underline mb-1"
+            >
               Change Password
             </Link>
             <button
               onClick={handleSignOut}
-              className="text-red-500 hover:underline pt-2 border-t text-left">
+              className="text-red-500 hover:underline pt-2 border-t text-left"
+            >
               Sign Out
             </button>
           </div>

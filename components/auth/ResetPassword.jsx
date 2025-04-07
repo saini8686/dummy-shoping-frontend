@@ -2,35 +2,55 @@
 import { useState } from "react";
 import { CustomButton } from "../common/CustomButton";
 import { CustomInput } from "./common/CustomInput";
-import useOtpStore from "@/store/useOtpStore";
 import useAuthStore from "@/store/useAuthStore";
-import OtpVerification from "./OtpVerification";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 
 const ResetPassword = () => {
   const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
-  const [step, setStep] = useState("email"); // email, otp, password
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [success, setSuccess] = useState(false);
   const router = useRouter();
 
-  const {
-    sendOtp,
-    verifyOtp,
-    resetOtpState,
-    loading: otpLoading,
-    error: otpError,
-  } = useOtpStore();
   const {
     resetPassword,
     loading: authLoading,
     error: authError,
   } = useAuthStore();
 
-  const handleSendOtp = async (e) => {
+  // Function to check if user exists in Firestore
+  const checkUserExists = async (email) => {
+    try {
+      // Import Firebase directly in component
+      const { getFirestore, collection, query, where, getDocs } = await import(
+        "firebase/firestore"
+      );
+      const { db } = await import("@/app/firebase/config");
+
+      console.log("Checking if user exists:", email);
+      console.log("Firebase db initialized:", !!db);
+
+      // Query Firestore users collection
+      const usersRef = collection(db, "users");
+      const q = query(usersRef, where("email", "==", email));
+
+      console.log("Query created, attempting to fetch documents");
+      const querySnapshot = await getDocs(q);
+
+      const exists = !querySnapshot.empty;
+      console.log("User exists:", exists);
+
+      // Return true if user exists, false otherwise
+      return exists;
+    } catch (error) {
+      console.error("Error checking user existence:", error);
+      // Return false instead of throwing error to gracefully handle the issue
+      return false;
+    }
+  };
+
+  const handleResetPassword = async (e) => {
     e.preventDefault();
 
     if (!email) {
@@ -40,98 +60,100 @@ const ResetPassword = () => {
 
     setError("");
     setIsLoading(true);
+    setSuccess(false);
 
     try {
-      const success = await sendOtp(email);
-      if (success) {
-        setStep("otp");
+      console.log("Starting password reset process for:", email);
+
+      let userExists = false;
+      try {
+        // Check if user exists using our local function
+        userExists = await checkUserExists(email);
+      } catch (checkError) {
+        console.error("Error during user check:", checkError);
+        // Continue anyway since Firebase Auth will also validate the email
       }
+
+      if (!userExists) {
+        console.log("User check failed or user doesn't exist");
+        // We'll still try to send a reset email through Firebase Auth
+        // Firebase will handle non-existent users gracefully
+      }
+
+      // Send password reset email via Firebase Auth
+      console.log("Sending password reset email");
+      await resetPassword(email);
+      console.log("Password reset email sent successfully");
+      setSuccess(true);
     } catch (err) {
-      setError("Failed to send OTP. Please try again.");
-      console.error(err);
+      console.error("Password reset error:", err);
+
+      // Provide better error messages
+      if (err.message?.includes("fetch")) {
+        setError(
+          "Network error. Please check your internet connection and try again."
+        );
+      } else if (err.code === "auth/user-not-found") {
+        setError(
+          "No account found with this email. Please check your email or sign up."
+        );
+      } else if (err.code === "auth/invalid-email") {
+        setError("Invalid email format. Please enter a valid email address.");
+      } else if (err.code === "auth/network-request-failed") {
+        setError(
+          "Network error. Please check your internet connection and try again."
+        );
+      } else {
+        setError(
+          err.message || "Failed to send reset email. Please try again."
+        );
+      }
     } finally {
       setIsLoading(false);
     }
   };
-
-  const handleOtpVerified = async () => {
-    setStep("password");
-  };
-
-  const handleResendOtp = async () => {
-    try {
-      await sendOtp(email);
-    } catch (err) {
-      console.error(err);
-    }
-  };
-
-  const handleCancelOtp = () => {
-    setStep("email");
-    resetOtpState();
-  };
-
-  const handleResetPassword = async (e) => {
-    e.preventDefault();
-
-    if (!password) {
-      setError("Password is required");
-      return;
-    }
-
-    if (password !== confirmPassword) {
-      setError("Passwords do not match");
-      return;
-    }
-
-    if (password.length < 6) {
-      setError("Password must be at least 6 characters");
-      return;
-    }
-
-    setError("");
-    setIsLoading(true);
-
-    try {
-      await resetPassword(email, password);
-      resetOtpState();
-      // Show success message and redirect to login page
-      alert(
-        "Password reset successfully! Please login with your new password."
-      );
-      router.push("/sign-in");
-    } catch (err) {
-      setError("Failed to reset password. Please try again.");
-      console.error(err);
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  // Render based on current step
-  if (step === "otp") {
-    return (
-      <OtpVerification
-        email={email}
-        onOtpVerified={handleOtpVerified}
-        onResendOtp={handleResendOtp}
-        onCancel={handleCancelOtp}
-      />
-    );
-  }
 
   return (
     <div className="px-4">
       <h2 className="mt-3 text-2xl font-semibold text-black !leading-130">
-        {step === "email" ? "Reset Password" : "Create New Password"}
+        Reset Password
       </h2>
 
-      {step === "email" ? (
-        // Step 1: Enter email to receive OTP
-        <form onSubmit={handleSendOtp} className="mt-6">
+      {success ? (
+        <div className="mt-6 text-center">
+          <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              className="h-8 w-8 text-green-500"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor">
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M5 13l4 4L19 7"
+              />
+            </svg>
+          </div>
+          <h3 className="text-xl font-semibold text-black mb-2">
+            Check Your Email
+          </h3>
+          <p className="text-gray-600 mb-6">
+            We've sent a password reset link to <strong>{email}</strong>. Please
+            check your email and follow the instructions to reset your password.
+          </p>
+          <CustomButton
+            customClass="w-full !py-3.5"
+            onClick={() => router.push("/sign-in")}>
+            Back to Sign In
+          </CustomButton>
+        </div>
+      ) : (
+        <form onSubmit={handleResetPassword} className="mt-6">
           <p className="text-gray-600 mb-4">
-            Enter your email address and we'll send you a verification code to
-            reset your password.
+            Enter your email address and we'll send you a link to reset your
+            password.
           </p>
 
           <CustomInput
@@ -145,69 +167,19 @@ const ResetPassword = () => {
           />
 
           {error && <p className="text-red-500 mt-2">{error}</p>}
-          {otpError && <p className="text-red-500 mt-2">{otpError}</p>}
-
-          <CustomButton
-            customClass="w-full !py-3.5 mt-6"
-            isSubmit
-            disabled={isLoading || otpLoading}>
-            {isLoading || otpLoading ? "Sending..." : "Send Verification Code"}
-          </CustomButton>
-
-          <div className="mt-4 text-center">
-            <Link href="/sign-in" className="text-greens-900 hover:underline">
-              Back to Sign In
-            </Link>
-          </div>
-        </form>
-      ) : (
-        // Step 3: Enter new password
-        <form onSubmit={handleResetPassword} className="mt-6">
-          <p className="text-gray-600 mb-4">
-            Create a new password for your account.
-          </p>
-
-          <CustomInput
-            placeholder="New Password"
-            name="password"
-            type="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            error={!password && error}
-            errorText="Password is required"
-          />
-
-          <CustomInput
-            customClass="mt-4"
-            placeholder="Confirm Password"
-            name="confirmPassword"
-            type="password"
-            value={confirmPassword}
-            onChange={(e) => setConfirmPassword(e.target.value)}
-            error={password !== confirmPassword && error}
-            errorText="Passwords do not match"
-          />
-
-          {error && <p className="text-red-500 mt-2">{error}</p>}
           {authError && <p className="text-red-500 mt-2">{authError}</p>}
 
           <CustomButton
             customClass="w-full !py-3.5 mt-6"
             isSubmit
             disabled={isLoading || authLoading}>
-            {isLoading || authLoading ? "Updating..." : "Reset Password"}
+            {isLoading || authLoading ? "Sending..." : "Send Reset Link"}
           </CustomButton>
 
           <div className="mt-4 text-center">
-            <button
-              type="button"
-              onClick={() => {
-                setStep("email");
-                resetOtpState();
-              }}
-              className="text-greens-900 hover:underline">
-              Back to Email Entry
-            </button>
+            <Link href="/sign-in" className="text-greens-900 hover:underline">
+              Back to Sign In
+            </Link>
           </div>
         </form>
       )}

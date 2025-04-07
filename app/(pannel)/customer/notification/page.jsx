@@ -1,13 +1,13 @@
 import BottomBar from "@/components/common/BottomBar";
-import CategoryList from "@/components/customer/category/CategoryList";
 import HeaderCustomer from "@/components/customer/HeaderCustomer";
+import Notification from "@/components/customer/notification/Notification";
 
 const page = () => {
   return (
     <div className="bg-white-low">
-      <HeaderCustomer name="category" />
+      <HeaderCustomer name="Notifications" />
       <div className="pb-20 px-4">
-        <CategoryList />
+        <Notification />
       </div>
       <BottomBar />
     </div>

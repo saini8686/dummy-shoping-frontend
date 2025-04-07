@@ -136,7 +136,7 @@ export const OFFER_LIST = [
   { image: "/assets/images/png/cart.png", name: "Medical", discount: 200 },
 ];
 export const BOTTOM_BAR_LIST = [
-  { icon: "home", path: "#" },
+  { icon: "home", path: "/customer" },
   { icon: "shop", path: "#" },
   { icon: "scaner", path: "#" },
   { icon: "wallet", path: "#" },
@@ -178,4 +178,288 @@ export const CATEGORY_LIST = [
     path: "#",
     name: "Medical",
   },
+];
+export const NEARBY_SHOP_LIST = [
+  {
+    image: "/assets/images/png/shop/shop-1.png",
+    path: "#",
+    name: "Shop Name",
+    category: "Category",
+    distance: "800 m",
+    review: 5,
+  },
+  {
+    image: "/assets/images/png/shop/shop-1.png",
+    path: "#",
+    name: "Shop Name",
+    category: "Category",
+    distance: "1.2 km",
+    review: 5,
+  },
+  {
+    image: "/assets/images/png/shop/shop-1.png",
+    path: "#",
+    name: "Shop Name",
+    category: "Category",
+    distance: "1.5 km",
+    review: 2.9,
+  },
+  {
+    image: "/assets/images/png/shop/shop-1.png",
+    path: "#",
+    name: "Shop Name",
+    category: "Category",
+    distance: "1.8 km",
+    review: 3.6,
+  },
+  {
+    image: "/assets/images/png/shop/shop-1.png",
+    path: "#",
+    name: "Shop Name",
+    category: "Category",
+    distance: "2.2 km",
+    review: 4.5,
+  },
+  {
+    image: "/assets/images/png/shop/shop-1.png",
+    path: "#",
+    name: "Shop Name",
+    category: "Category",
+    distance: "8.2 km",
+    review: 4,
+  },
+];
+export const NOTIFICATION_LIST = [
+  {
+    orderId: "345",
+    about: "Your Order is Confirmed. Please check everything is okay",
+    icon: "checkNotification",
+  },
+  {
+    orderId: "340",
+    about: "Your Order is Delivering to your home",
+    icon: "deliveringNotification",
+  },
+  {
+    orderId: "344",
+    about: "Your Order is Completed. Please  rate the experince",
+    icon: "checkNotification",
+  },
+  {
+    orderId: "339",
+    about: "Your Order is Confirmed. Please check everything is okay",
+    icon: "rateNotification",
+  },
+  {
+    orderId: "345",
+    about: "Your Order is Confirmed. Please check everything is okay",
+    icon: "checkNotification",
+  },
+  {
+    orderId: "340",
+    about: "Your Order is Delivering to your home",
+    icon: "deliveringNotification",
+  },
+  {
+    orderId: "344",
+    about: "Your Order is Completed. Please  rate the experince",
+    icon: "checkNotification",
+  },
+  {
+    orderId: "339",
+    about: "Your Order is Confirmed. Please check everything is okay",
+    icon: "rateNotification",
+  },
+];
+
+export const LIST_PRODUCT_FILTER = [
+  {
+    name: "all",
+    path: "#",
+  },
+  {
+    name: "Vegetables",
+    path: "#",
+  },
+  {
+    name: "Fruits",
+    path: "#",
+  },
+  {
+    name: "cooldrinks",
+    path: "#",
+  },
+  {
+    name: "Masala",
+    path: "#",
+  },
+  {
+    name: "Vegetables",
+    path: "#",
+  },
+  {
+    name: "Fruits",
+    path: "#",
+  },
+];
+
+export const GROSERY_SLIDER_LIST = [
+  {
+    productName: "Fresh Vegetables",
+    offer: "Get Up To 40% off",
+    image: "/assets/images/png/growsery/vegetables.png",
+    bgImage: "/assets/images/png/growsery/veg-bg.png",
+  },
+  {
+    productName: "Fresh Vegetables",
+    offer: "Get Up To 80% off",
+    image: "/assets/images/png/growsery/vegetables.png",
+    bgImage: "/assets/images/png/growsery/veg-bg.png",
+  },
+  {
+    productName: "Fresh Vegetables",
+    offer: "Get Up To 10% off",
+    image: "/assets/images/png/growsery/vegetables.png",
+    bgImage: "/assets/images/png/growsery/veg-bg.png",
+  },
+];
+export const EXCLUSIVE_OFFER_LIST = [
+  {
+    path: "#",
+    productName: "Red Apple",
+    price: 200,
+    image: "/assets/images/png/growsery/apple.png",
+    amount: "1kg",
+    deliveryType: "self",
+  },
+  {
+    path: "#",
+    productName: "Organic Bananas",
+    price: 40,
+    image: "/assets/images/png/growsery/banana.png",
+    amount: "7pcs",
+    deliveryType: "self",
+  },
+  {
+    path: "#",
+    productName: "Ginger",
+    price: 60,
+    image: "/assets/images/png/growsery/ginger.png",
+    amount: "250gm",
+    deliveryType: "self",
+  },
+  {
+    path: "#",
+    productName: "Bell Pepper Red",
+    price: 90,
+    image: "/assets/images/png/growsery/pepper-red.png",
+    amount: "1kg",
+    deliveryType: "self",
+  },
+  {
+    path: "#",
+    productName: "Red Apple",
+    price: 200,
+    image: "/assets/images/png/growsery/apple.png",
+    amount: "1kg",
+    deliveryType: "self",
+  },
+  {
+    path: "#",
+    productName: "Organic Bananas",
+    price: 40,
+    image: "/assets/images/png/growsery/banana.png",
+    amount: "7pcs",
+    deliveryType: "self",
+  },
+  {
+    path: "#",
+    productName: "Ginger",
+    price: 60,
+    image: "/assets/images/png/growsery/ginger.png",
+    amount: "250gm",
+    deliveryType: "self",
+    delivery: false,
+  },
+  {
+    path: "#",
+    productName: "Bell Pepper Red",
+    price: 90,
+    image: "/assets/images/png/growsery/pepper-red.png",
+    amount: "1kg",
+    deliveryType: "self",
+  },
+];
+
+export const GROSERY_LIST = [
+  {
+    image: "/assets/images/png/growsery/pulses.png",
+    name: "Pulses",
+    path: "#",
+  },
+  {
+    image: "/assets/images/png/growsery/rice.png",
+    name: "rice",
+    path: "#",
+  },
+  {
+    image: "/assets/images/png/growsery/pulses.png",
+    name: "Pulses",
+    path: "#",
+  },
+  {
+    image: "/assets/images/png/growsery/rice.png",
+    name: "rice",
+    path: "#",
+  },
+  {
+    image: "/assets/images/png/growsery/pulses.png",
+    name: "Pulses",
+    path: "#",
+  },
+];
+export const SETTING_LIST = [
+  {
+    icon: "profilePencil",
+    name: "Edit Profile",
+    path: "/customer/profile/edit-profile",
+  },
+  {
+    icon: "profileLocation",
+    name: "My Address",
+    path: "/customer/profile/my-address",
+  },
+  {
+    icon: "profileOrder",
+    name: "My Orders",
+    path: "#",
+  },
+  {
+    icon: "profileChat",
+    name: "Chat with us",
+    path: "#",
+  },
+  {
+    icon: "profileWallet",
+    name: "My Wallet",
+    path: "/customer/profile/my-wallet",
+  },
+  {
+    icon: "profileLogout",
+    name: "Log out",
+    path: "#",
+  },
+];
+export const USER_PROFILE_DATA = [
+  { label: "Name", name: "fullName", icon: "profileInput", type: "text" },
+  { label: "Password", name: "password", icon: "password", type: "password" },
+  { label: "Phone Number", name: "number", icon: "call", type: "number" },
+];
+export const USER_ADDRESSE_DATA = [
+  {
+    label: "Home",
+    name: "51/5A, Road: 7, Pallabi, Dhaka",
+    icon: "profileInput",
+  },
+  { label: "Work", name: "Dingi Technologies Ltd, Wakil T", icon: "password" },
 ];

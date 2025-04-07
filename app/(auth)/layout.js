@@ -1,4 +1,5 @@
 import Header from "@/components/auth/common/Header";
+import ProgressBar from "@/components/common/ProgressBar";
 
 export const metadata = {
   title: "Sow-pay",
@@ -9,6 +10,7 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en">
       <body>
+        <ProgressBar />
         <Header />
         {children}
       </body>

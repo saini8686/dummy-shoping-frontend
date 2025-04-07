@@ -25,7 +25,7 @@ const PreLoader = () => {
   return (
     <div>
       {loading && (
-        <div className="w-full max-w-[640px] flex justify-center items-center mx-auto min-h-screen bg-white fixed inset-0 z-[51]">
+        <div className="w-full max-w-[540px] flex justify-center items-center mx-auto min-h-screen bg-white fixed inset-0 z-[51]">
           <Image
             src="/assets/images/svg/main-logo.svg"
             width={205}
@@ -37,7 +37,7 @@ const PreLoader = () => {
         </div>
       )}
       {/* show */}
-      <div className="w-full max-w-[640px] mx-auto min-h-screen bg-white fixed inset-0 z-50">
+      <div className="w-full max-w-[540px] mx-auto min-h-screen bg-white fixed inset-0 z-50">
         <div className="relative justify-between gap-10 flex-col flex z-10 min-h-screen">
           <div className="mt-10 px-4 flex w-full  justify-between items-center">
             {steps === "0" && (
