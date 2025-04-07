@@ -578,7 +578,7 @@ export const SHOPKEPPER_PRODUCT_LIST = [
 export const BOTTOM_BAR_SHOPKEPPER_LIST = [
   { icon: "shopkepperCarryBag", path: "/shopkepper/order" },
   { icon: "shopkepperOption", path: "/shopkepper/product" },
-  { icon: "shopkepperWallet", path: "#" },
+  { icon: "shopkepperWallet", path: "/shopkepper/wallet" },
   { icon: "shopkepperChartL", path: "#" },
   { icon: "shopkepperProfile", path: "#" },
 ];
