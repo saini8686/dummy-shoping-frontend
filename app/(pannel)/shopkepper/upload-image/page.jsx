@@ -1,12 +1,12 @@
 import HeaderCustomer from "@/components/customer/HeaderCustomer";
-import BasicDetailForm from "@/components/shopkepper/detail/BasicDetailForm";
+import UploadShopImage from "@/components/shopkepper/detail/UploadShopImage";
 
 const page = () => {
   return (
     <div className="bg-white-low">
-      <HeaderCustomer />
+      <HeaderCustomer classCard="!h-[120px]" />
       <div className="pb-20 mt-10 px-4">
-        <BasicDetailForm />
+        <UploadShopImage />
       </div>
     </div>
   );

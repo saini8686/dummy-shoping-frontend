@@ -137,7 +137,7 @@ export const OFFER_LIST = [
 ];
 export const BOTTOM_BAR_LIST = [
   { icon: "home", path: "/customer" },
-  { icon: "shop", path: "#" },
+  { icon: "shop", path: "/customer/item-details" },
   { icon: "scaner", path: "#" },
   { icon: "wallet", path: "#" },
   { icon: "other", path: "/customer/category" },
@@ -145,37 +145,37 @@ export const BOTTOM_BAR_LIST = [
 export const CATEGORY_LIST = [
   {
     image: "/assets/images/png/category/fruits-veg.png",
-    path: "#",
+    path: "/customer/category/fruit-vegetable",
     name: "Fruits & Vegetables",
   },
   {
     image: "/assets/images/png/category/break-fast.png",
-    path: "#",
+    path: "/customer/category/fruit-vegetable",
     name: "Breakfast",
   },
   {
     image: "/assets/images/png/category/beverages-item.png",
-    path: "#",
+    path: "/customer/category/fruit-vegetable",
     name: "Beverages",
   },
   {
     image: "/assets/images/png/category/fish-meat.png",
-    path: "#",
+    path: "/customer/category/fruit-vegetable",
     name: "Meat & Fish",
   },
   {
     image: "/assets/images/png/category/snacks-pack.png",
-    path: "#",
+    path: "/customer/category/fruit-vegetable",
     name: "Snacks",
   },
   {
     image: "/assets/images/png/category/dairy.png",
-    path: "#",
+    path: "/customer/category/fruit-vegetable",
     name: "Dairy",
   },
   {
     image: "/assets/images/png/category/medicalBox.png",
-    path: "#",
+    path: "/customer/category/fruit-vegetable",
     name: "Medical",
   },
 ];
@@ -325,7 +325,7 @@ export const GROSERY_SLIDER_LIST = [
 ];
 export const EXCLUSIVE_OFFER_LIST = [
   {
-    path: "#",
+    path: "/customer/category/fruit-vegetable/detaile",
     productName: "Red Apple",
     price: 200,
     image: "/assets/images/png/growsery/apple.png",
@@ -333,7 +333,7 @@ export const EXCLUSIVE_OFFER_LIST = [
     deliveryType: "self",
   },
   {
-    path: "#",
+    path: "/customer/category/fruit-vegetable/detaile",
     productName: "Organic Bananas",
     price: 40,
     image: "/assets/images/png/growsery/banana.png",
@@ -341,7 +341,7 @@ export const EXCLUSIVE_OFFER_LIST = [
     deliveryType: "self",
   },
   {
-    path: "#",
+    path: "/customer/category/fruit-vegetable/detaile",
     productName: "Ginger",
     price: 60,
     image: "/assets/images/png/growsery/ginger.png",
@@ -349,7 +349,7 @@ export const EXCLUSIVE_OFFER_LIST = [
     deliveryType: "self",
   },
   {
-    path: "#",
+    path: "/customer/category/fruit-vegetable/detaile",
     productName: "Bell Pepper Red",
     price: 90,
     image: "/assets/images/png/growsery/pepper-red.png",
@@ -357,7 +357,7 @@ export const EXCLUSIVE_OFFER_LIST = [
     deliveryType: "self",
   },
   {
-    path: "#",
+    path: "/customer/category/fruit-vegetable/detaile",
     productName: "Red Apple",
     price: 200,
     image: "/assets/images/png/growsery/apple.png",
@@ -365,7 +365,7 @@ export const EXCLUSIVE_OFFER_LIST = [
     deliveryType: "self",
   },
   {
-    path: "#",
+    path: "/customer/category/fruit-vegetable/detaile",
     productName: "Organic Bananas",
     price: 40,
     image: "/assets/images/png/growsery/banana.png",
@@ -373,7 +373,7 @@ export const EXCLUSIVE_OFFER_LIST = [
     deliveryType: "self",
   },
   {
-    path: "#",
+    path: "/customer/category/fruit-vegetable/detaile",
     productName: "Ginger",
     price: 60,
     image: "/assets/images/png/growsery/ginger.png",
@@ -382,7 +382,7 @@ export const EXCLUSIVE_OFFER_LIST = [
     delivery: false,
   },
   {
-    path: "#",
+    path: "/customer/category/fruit-vegetable/detaile",
     productName: "Bell Pepper Red",
     price: 90,
     image: "/assets/images/png/growsery/pepper-red.png",
@@ -462,4 +462,16 @@ export const USER_ADDRESSE_DATA = [
     icon: "profileInput",
   },
   { label: "Work", name: "Dingi Technologies Ltd, Wakil T", icon: "password" },
+];
+
+export const BAISC_DETAILS_FORM = [
+  {
+    title: "Basic Information",
+  },
+  {
+    title: "Shop Details",
+  },
+  {
+    title: "Contact & Location",
+  },
 ];

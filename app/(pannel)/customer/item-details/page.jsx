@@ -1,12 +1,12 @@
 import HeaderCustomer from "@/components/customer/HeaderCustomer";
-import BasicDetailForm from "@/components/shopkepper/detail/BasicDetailForm";
+import CartCard from "@/components/customer/item-details/CartCard";
 
 const page = () => {
   return (
     <div className="bg-white-low">
-      <HeaderCustomer />
-      <div className="pb-20 mt-10 px-4">
-        <BasicDetailForm />
+      <HeaderCustomer name="Item Details" />
+      <div className="pb-20 px-4">
+        <CartCard />
       </div>
     </div>
   );

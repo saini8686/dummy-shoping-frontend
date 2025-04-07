@@ -52,7 +52,7 @@ const Navbar = () => {
           width={86}
           height={39}
           sizes="100vw"
-          className="mb-5 w-[86px] h-[39px] object-cover"
+          className="mb-5 w-[85px] h-[32px] object-cover"
           alt="logo"
         />
       </Link>

@@ -31,7 +31,7 @@ const PreLoader = () => {
             width={205}
             height={97}
             sizes="100vw"
-            className="mb-5  w-[205px] mx-auto h-[97px] object-cover"
+            className="mb-5  w-[190x] mx-auto h-[71px] object-cover"
             alt="logo"
           />
         </div>
@@ -73,7 +73,7 @@ const PreLoader = () => {
             width={205}
             height={97}
             sizes="100vw"
-            className="mb-5  w-[205px] mx-auto h-[97px] object-cover"
+            className="mb-5  w-[190px] mx-auto h-[73px] object-cover"
             alt="logo"
           />
           <div className="bg-greens-900 landing_hero_swiper rounded-t-3xl h-[300px] mt-[]  w-full pt-[56px] pb-6 px-7">

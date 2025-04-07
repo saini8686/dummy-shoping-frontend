@@ -26,10 +26,10 @@ const UserInfo = () => {
       />
       <p>
         <span className="font-semibold block text-blacks-200 !leading-130">
-          {userData.displayName}
+          {userData?.displayName|| 'Jhon doe'}
         </span>
         <span className="text-sm font-medium block !leading-130 text-greys-1100">
-          {userData.appId}
+          {userData?.appId||'00009xxxx'}
         </span>
       </p>
     </div>
