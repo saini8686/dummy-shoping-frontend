@@ -53,7 +53,10 @@ const UsersList = () => {
                 className="flex items-center justify-between bg-[#F1FFF8] p-4 rounded-lg mb-3"
               >
                 <div className="flex items-center">
-                  <Link href="/admin/user-details" className="bg-white rounded-full me-6">
+                  <Link
+                    href="/admin/user-details"
+                    className="bg-white rounded-full me-6"
+                  >
                     <Icon icon="userProfile" />
                   </Link>
                   <div>
@@ -63,7 +66,7 @@ const UsersList = () => {
                     <p className="text-[#858585] text-xs">{user.description}</p>
                   </div>
                 </div>
-                <div className="flex items-center space-x-2">
+                <div className="flex items-center space-x-6">
                   <Pencil className="w-6 h-6 text-[#01BA5D] cursor-pointer" />
                   <Trash2 className="w-6 h-6 text-red-500 cursor-pointer" />
                 </div>
@@ -72,11 +75,8 @@ const UsersList = () => {
           </div>
         </div>
 
-        {/* Floating Add Button */}
-        <button className="bg-[#01BA5D] w-[70px] h-[70px] rounded-full text-white flex items-center justify-center shadow-md absolute bottom-6 right-4 z-10">
-          <div className="scale-[1.88]">
-            <Icon icon="plus" />
-          </div>
+        <button className="w-[60px] h-[60px] text-[#228B22] !shadow-xl hover:text-white duration-300 hover:bg-[#228B22] hover:border-transparent rounded-full flex justify-center items-center bg-[#FBFEFB] border-white-100 border-2 absolute bottom-6 right-4 z-10">
+          <Icon icon="plusGreen" />
         </button>
       </div>
     </div>

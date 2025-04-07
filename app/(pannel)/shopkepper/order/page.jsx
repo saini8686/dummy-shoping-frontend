@@ -1,11 +1,9 @@
-import Icon from "@/components/common/Icons";
+
 import SearchBar from "@/components/common/SearchBar";
 import BottomBarShopKepper from "@/components/shopkepper/common/BottomBarShopKepper";
 import Orders from "@/components/shopkepper/order/Orders";
 import OrderTabList from "@/components/shopkepper/order/OrderTabList";
 import NavbarShopkepper from "@/components/shopkepper/product/NavbarShopkepper";
-import ProductIn from "@/components/shopkepper/product/ProductIn";
-import Link from "next/link";
 import { Suspense } from "react";
 
 const page = () => {

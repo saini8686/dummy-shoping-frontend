@@ -5,7 +5,7 @@ const ProductIn = () => {
   return (
     <div className="mt-7">
       {SHOPKEPPER_PRODUCT_LIST.map((obj, i) => (
-        <div className="flex justify-between items-center mt-3 pb-1 border-b border-white-100 ">
+        <div key={i} className="flex justify-between items-center mt-3 pb-1 border-b border-white-100 ">
           <div className="flex items-center gap-1.5">
             <div className="border rounded-lg w-[60px] h-[60px] flex justify-center items-center border-white-100">
               <Image

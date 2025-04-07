@@ -16,7 +16,7 @@ const page = () => {
         <div className="fixed left-1/2 max-w-[540px] pr-3 w-full mx-auto flex ml-auto justify-end  -translate-x-1/2 bottom-20">
           <Link
             href="/shopkepper/product/add-product"
-            className="w-[60px]   h-[60px] text-[#228B22] hover:text-white duration-300 hover:bg-[#228B22] hover:border-transparent rounded-full flex justify-center items-center bg-[#FBFEFB] border-white-100 border-2"
+            className="w-[60px] h-[60px] text-[#228B22] !shadow-xl hover:text-white duration-300 hover:bg-[#228B22] hover:border-transparent rounded-full flex justify-center items-center bg-[#FBFEFB] border-white-100 border-2"
           >
             <Icon icon="plusGreen" />
           </Link>
