@@ -46,6 +46,7 @@ button {
   --color-blacks-100: #181725;
   --color-blacks-200: #010101;
   --color-blacks-300: #030303;
+  --color-blacks-400: #1A1A1A;
   --color-greys-dark-400: #575C57;
   --color-greys-100: #F2F3F1;
   --color-greys-200: #7C7C7C;
@@ -60,6 +61,8 @@ button {
   --color-greys-1100: #8E8E8E;
   --color-greys-1200: #575757;
   --color-greys-1300: #D1D1D1;
+  --color-greys-1400: #666666;
+  --color-greys-1500: #333333;
   --color-yellows-100: #FEF700;
   --color-yellows-200: #F8A44C;
   --color-reds-100: #FFE8E8;

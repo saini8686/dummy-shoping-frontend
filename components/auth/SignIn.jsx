@@ -6,7 +6,6 @@ import { CustomButton } from "../common/CustomButton";
 import { CustomInput } from "./common/CustomInput";
 import LoginWay from "./common/LoginWay";
 import { AgreementConfirm, OptionWay } from "./common/common";
-import useAuthStore from "../../store/useAuthStore";
 
 const SignIn = () => {
   const [formDetails, setFormDetails] = useState({
@@ -19,12 +18,6 @@ const SignIn = () => {
   const [error, setError] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
-  const {
-    signInWithEmailPassword,
-    loading,
-    error: authError,
-  } = useAuthStore();
-
   const submitHandler = async (e) => {
     e.preventDefault();
     setError(true);
@@ -32,26 +25,12 @@ const SignIn = () => {
     if (formDetails.email && formDetails.password) {
       try {
         setIsLoading(true);
-        await signInWithEmailPassword(formDetails.email, formDetails.password);
         router.push(`/${auth}`);
       } catch (err) {
         console.error(err);
       } finally {
         setIsLoading(false);
       }
-    }
-  };
-
-  // Handle Google sign-in
-  const handleGoogleSignIn = async () => {
-    try {
-      setIsLoading(true);
-      await signInWithGoogle();
-      router.push(`/${auth}`);
-    } catch (err) {
-      console.error(err);
-    } finally {
-      setIsLoading(false);
     }
   };
 
@@ -109,13 +88,12 @@ const SignIn = () => {
           </Link>
         </div>
 
-        {authError && <p className="text-red-500 mt-2">{authError}</p>}
-
         <CustomButton
           customClass="w-full !py-3.5 mt-7"
           isSubmit
-          disabled={isLoading || loading}>
-          {isLoading || loading ? "Loading..." : "Sign In"}
+          disabled={isLoading}
+        >
+          {isLoading ? "Loading..." : "Sign In"}
         </CustomButton>
       </form>
       <OptionWay />
@@ -124,7 +102,8 @@ const SignIn = () => {
 
       <Link
         href={`/sign-up?auth=${auth}`}
-        className="transparent-green-border-button mb-5">
+        className="transparent-green-border-button mb-5"
+      >
         Don't have an account? Sign Up
       </Link>
     </div>

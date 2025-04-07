@@ -38,7 +38,7 @@ const OfferSliderCategory = () => {
                   width={133}
                   height={105}
                   alt="cart"
-                  className="w-[113px] h-[105px] object-contain"
+                  className="w-[133px] h-[105px] object-contain"
                 />
                 <div>
                   <h3 className="font-aclonica text-center text-lg leading-130 text-blacks-300">

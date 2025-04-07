@@ -1,8 +1,8 @@
 "use client";
 import React from "react";
-import { Trash2 } from "lucide-react";
 import Icon from "../common/Icons";
 import { CustomButton } from "../common/CustomButton";
+import { useRouter } from "next/navigation";
 
 const locations = [
   { id: 1, name: "Location Name", detail: "ipsum dolo / ipsum dolo" },
@@ -12,6 +12,8 @@ const locations = [
 ];
 
 const UserDetails = () => {
+  const router = useRouter();
+
   return (
     <div className="w-full h-screen bg-white rounded-xl shadow-md">
       {/* Header */}
@@ -70,7 +72,9 @@ const UserDetails = () => {
                   {loc.detail}
                 </p>
               </div>
-              <CustomButton customClass="!py-2 !px-3 !text-xs">Delete</CustomButton>
+              <CustomButton customClass="!py-2 !px-3 !text-xs">
+                Delete
+              </CustomButton>
             </div>
           ))}
         </div>

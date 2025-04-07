@@ -5,7 +5,6 @@ import Icon from "@/components/common/Icons";
 import { useRouter } from "next/navigation";
 import { userData } from "@/utils/helper";
 import Link from "next/link";
-import UserDetails from "./UserDetails";
 
 const UsersList = () => {
   const router = useRouter();
