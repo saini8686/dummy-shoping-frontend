@@ -15,6 +15,7 @@ const AddProductForm = () => {
     productCategory: "",
     gstNumber: "",
     number: "",
+    inStock: false,
     address: "",
   });
   const handleImageUpload = (key, file) => {
@@ -113,6 +114,21 @@ const AddProductForm = () => {
             })
           }
         />
+        <div className="flex justify-between items-center">
+          <p>Mark Product in stock</p>
+          <input
+            type="checkbox"
+            className="w-5 h-5 cursor-pointer accent-greens-900"
+            id="inStock"
+            value={formDetails.inStock}
+            onChange={(e) =>
+              setFormDetails({
+                ...formDetails,
+                inStock: e.target.value,
+              })
+            }
+          />
+        </div>
       </div>
     </form>
   );
