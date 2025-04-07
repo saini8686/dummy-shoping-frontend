@@ -3,7 +3,6 @@ import Link from "next/link";
 import { useSearchParams, useRouter } from "next/navigation";
 import { useState } from "react";
 import { CustomButton } from "../common/CustomButton";
-import Icon from "../common/Icons";
 import { CustomInput } from "./common/CustomInput";
 import LoginWay from "./common/LoginWay";
 import { AgreementConfirm, OptionWay } from "./common/common";
@@ -20,15 +19,12 @@ const SignIn = () => {
   const [error, setError] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
-  // Get auth functions from Zustand store
   const {
     signInWithEmailPassword,
-    signInWithGoogle,
     loading,
     error: authError,
   } = useAuthStore();
 
-  // Handle sign in with email and password
   const submitHandler = async (e) => {
     e.preventDefault();
     setError(true);
@@ -124,7 +120,6 @@ const SignIn = () => {
       </form>
       <OptionWay />
       <LoginWay />
-
       <AgreementConfirm />
 
       <Link
