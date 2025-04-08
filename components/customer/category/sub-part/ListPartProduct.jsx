@@ -7,7 +7,7 @@ const ListPartProduct = () => {
     <div className="flex gap-2.5 mt-4 scroll-none flex-nowrap overflow-scroll">
       {LIST_PRODUCT_FILTER.map((obj, i) => (
         <Link
-          href={obj.path}
+          href={`?filterBy=${obj.name.toLowerCase().replace(/ /g, "-")}`}
           key={i}
           className="py-2 text-nowrap px-2.5 border hover:bg-greens-900 text-blacks-200 hover:text-white duration-300 border-greens-200 hover:border-transparent rounded"
         >

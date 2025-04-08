@@ -1,9 +1,10 @@
 import Image from "next/image";
+import Link from "next/link";
 import React from "react";
 
 const ProductCard = ({ product }) => {
   return (
-    <div className="max-w-[76px] mx-auto">
+    <Link href="/customer/category" className="max-w-[76px] mx-auto">
       <div className="bg-reds-200 w-[76px] max-w-[76px] flex justify-center items-center overflow-hidden rounded-xl min-w-[76px] h-[76px] max-h-[76px] min-h-[76px]">
         <Image
           src={product.image}
@@ -17,7 +18,7 @@ const ProductCard = ({ product }) => {
       <h2 className="text-xs text-center font-medium mt-2 !leading-[100%]">
         {product.name}
       </h2>
-    </div>
+    </Link>
   );
 };
 

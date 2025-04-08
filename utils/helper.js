@@ -2,27 +2,27 @@ export const TOPBAR_ITEM_LIST = [
   {
     image: "/assets/images/png/all.png",
     name: "All",
-    url: "#",
+    url: "/customer/category",
   },
   {
     image: "/assets/images/png/grocery.png",
     name: "Grocery",
-    url: "#",
+    url: "/customer/category",
   },
   {
     image: "/assets/images/png/clothes.png",
     name: "Clothes",
-    url: "#",
+    url: "/customer/category",
   },
   {
     image: "/assets/images/png/medical.png",
     name: "Medical",
-    url: "#",
+    url: "/customer/category",
   },
   {
     image: "/assets/images/png/food.png",
     name: "Food",
-    url: "#",
+    url: "/customer/category",
   },
 ];
 export const BEST_SELLER_LIST = [
@@ -302,34 +302,27 @@ export const NOTIFICATION_LIST = [
 export const LIST_PRODUCT_FILTER = [
   {
     name: "all",
-    path: "#",
   },
   {
     name: "Vegetables",
-    path: "#",
   },
   {
     name: "Fruits",
-    path: "#",
   },
   {
     name: "cooldrinks",
-    path: "#",
   },
   {
     name: "Masala",
-    path: "#",
   },
   {
     name: "Vegetables",
-    path: "#",
   },
   {
     name: "Fruits",
-    path: "#",
   },
 ];
-
+export const VEDIO_LIST= ["/assets/video/sow-pay.mp4","/assets/video/sow-pay.mp4","/assets/video/sow-pay.mp4"]
 export const GROSERY_SLIDER_LIST = [
   {
     productName: "Fresh Vegetables",
@@ -1059,4 +1052,24 @@ export const SHOPKEPPER_NOTIFICATION_LIST = [
     diescription:
       "Lorem ipsum dolor sit amet consectetur. Faucibus nulla lacinia sagittis viverra mauris vel condimentum. Tellus vel scelerisque vitae sagittis et. Posuere feugiat nisl ultricies ut dis ante ipsum. Purus arcu magna aliquam netus sit porta pellentesque pellentesque.",
   },
+];
+
+export const CART_ITEMS = [
+  {
+    id: 1,
+    name: "Arla DANO Full Cream Milk Powder Instant",
+    image: "/assets/images/png/cart/nido.png",
+    oldPrice: 200,
+    price: 182,
+    quantity: 1,
+  },
+  {
+    id: 1,
+    name: "Arla DANO Full Cream Milk Powder Instant",
+    image: "/assets/images/png/cart/nido.png",
+    oldPrice: 200,
+    price: 182,
+    quantity: 1,
+  },
+  // Add more items as needed
 ];

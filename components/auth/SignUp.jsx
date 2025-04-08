@@ -4,7 +4,6 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { useState } from "react";
 import useAuthStore from "../../store/useAuthStore";
 import { CustomButton } from "../common/CustomButton";
-import Icon from "../common/Icons";
 import { CustomInput } from "./common/CustomInput";
 import LoginWay from "./common/LoginWay";
 import { AgreementConfirm, OptionWay } from "./common/common";
@@ -13,6 +12,7 @@ const SignUp = () => {
   const [formDetails, setFormDetails] = useState({
     loginId: "",
     address: "",
+    number: "",
     refferCode: "",
     password: "",
   });
@@ -22,24 +22,28 @@ const SignUp = () => {
   const [error, setError] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
-  const {
-    signUpWithEmailPassword,
-    loading,
-    error: authError,
-  } = useAuthStore();
+  const { signUpWithEmailPassword, loading, error: authError } = useAuthStore();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError(true);
 
-    if (formDetails.loginId && formDetails.password && formDetails.address) {
+    if (
+      formDetails.loginId &&
+      formDetails.password &&
+      formDetails.address &&
+      formDetails.number.length === 10
+    ) {
       try {
         setIsLoading(true);
         // Generate OTP and log it to console
         const otp = Math.floor(100000 + Math.random() * 900000).toString();
         console.log(`OTP for ${formDetails.loginId}: ${otp}`);
-        
-        await signUpWithEmailPassword(formDetails.loginId, formDetails.password);
+
+        await signUpWithEmailPassword(
+          formDetails.loginId,
+          formDetails.password
+        );
         router.push(`/${auth}`);
       } catch (err) {
         console.error(err);
@@ -89,6 +93,23 @@ const SignUp = () => {
 
         <CustomInput
           customClass="mt-4"
+          placeholder="Number"
+          name="number"
+          type="number"
+          error={
+            (!formDetails.number || formDetails.number.length !== 10) && error
+          }
+          errorText="Number is required OR must be 10 digit"
+          value={formDetails.number}
+          onChange={(e) =>
+            setFormDetails({
+              ...formDetails,
+              number: e.target.value,
+            })
+          }
+        />
+        <CustomInput
+          customClass="mt-4"
           placeholder="Address"
           name="address"
           type="text"
@@ -108,7 +129,8 @@ const SignUp = () => {
         <CustomButton
           customClass="w-full !py-3.5 mt-7"
           isSubmit
-          disabled={isLoading || loading}>
+          disabled={isLoading || loading}
+        >
           {isLoading || loading ? "Loading..." : "Sign Up"}
         </CustomButton>
       </form>
@@ -118,7 +140,8 @@ const SignUp = () => {
 
       <Link
         href={`/sign-in?auth=${auth}`}
-        className="transparent-green-border-button mb-5">
+        className="transparent-green-border-button mb-5"
+      >
         Already have an account? Sign In
       </Link>
     </div>
