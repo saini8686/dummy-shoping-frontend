@@ -1,4 +1,5 @@
-export const TOPBAR_ITEM_LIST = [{
+export const TOPBAR_ITEM_LIST = [
+  {
     image: "/assets/images/png/all.png",
     name: "All",
     url: "#",
@@ -24,7 +25,8 @@ export const TOPBAR_ITEM_LIST = [{
     url: "#",
   },
 ];
-export const BEST_SELLER_LIST = [{
+export const BEST_SELLER_LIST = [
+  {
     image: "/assets/images/png/dairy.png",
     name: "Dairy, Bread & Eggs",
     url: "#",
@@ -105,24 +107,29 @@ export const BEST_SELLER_LIST = [{
     url: "#",
   },
 ];
-export const INSTRUCTION_LIST = [{
+export const INSTRUCTION_LIST = [
+  {
     title: "Choose Products",
-    description: "Amet minim mollit non deserunt ullamco est sit aliqua dolor do amet sint. Velit officia consequat duis enim velit mollit.",
+    description:
+      "Amet minim mollit non deserunt ullamco est sit aliqua dolor do amet sint. Velit officia consequat duis enim velit mollit.",
   },
   {
     title: "Make Payment",
-    description: "Amet minim mollit non deserunt ullamco est sit aliqua dolor do amet sint. Velit officia consequat duis enim velit mollit.",
+    description:
+      "Amet minim mollit non deserunt ullamco est sit aliqua dolor do amet sint. Velit officia consequat duis enim velit mollit.",
   },
   {
     title: "Get Your Order",
-    description: "Amet minim mollit non deserunt ullamco est sit aliqua dolor do amet sint. Velit officia consequat duis enim velit mollit.",
+    description:
+      "Amet minim mollit non deserunt ullamco est sit aliqua dolor do amet sint. Velit officia consequat duis enim velit mollit.",
   },
 ];
 
-export const OFFER_LIST = [{
+export const OFFER_LIST = [
+  {
     image: "/assets/images/png/cart.png",
     name: "Groceries",
-    discount: 100
+    discount: 100,
   },
   {
     image: "/assets/images/png/cart.png",
@@ -132,36 +139,38 @@ export const OFFER_LIST = [{
   {
     image: "/assets/images/png/cart.png",
     name: "Clothes",
-    discount: 300
+    discount: 300,
   },
   {
     image: "/assets/images/png/cart.png",
     name: "Medical",
-    discount: 200
+    discount: 200,
   },
 ];
-export const BOTTOM_BAR_LIST = [{
+export const BOTTOM_BAR_LIST = [
+  {
     icon: "home",
-    path: "/customer"
+    path: "/customer",
   },
   {
     icon: "shop",
-    path: "/customer/item-details"
+    path: "/customer/item-details",
   },
   {
     icon: "scaner",
-    path: "#"
+    path: "#",
   },
   {
     icon: "wallet",
-    path: "#"
+    path: "#",
   },
   {
     icon: "other",
-    path: "/customer/category"
+    path: "/customer/category",
   },
 ];
-export const CATEGORY_LIST = [{
+export const CATEGORY_LIST = [
+  {
     image: "/assets/images/png/category/fruits-veg.png",
     path: "/customer/category/fruit-vegetable",
     name: "Fruits & Vegetables",
@@ -197,7 +206,8 @@ export const CATEGORY_LIST = [{
     name: "Medical",
   },
 ];
-export const NEARBY_SHOP_LIST = [{
+export const NEARBY_SHOP_LIST = [
+  {
     image: "/assets/images/png/shop/shop-1.png",
     path: "#",
     name: "Shop Name",
@@ -246,7 +256,8 @@ export const NEARBY_SHOP_LIST = [{
     review: 4,
   },
 ];
-export const NOTIFICATION_LIST = [{
+export const NOTIFICATION_LIST = [
+  {
     orderId: "345",
     about: "Your Order is Confirmed. Please check everything is okay",
     icon: "checkNotification",
@@ -288,7 +299,8 @@ export const NOTIFICATION_LIST = [{
   },
 ];
 
-export const LIST_PRODUCT_FILTER = [{
+export const LIST_PRODUCT_FILTER = [
+  {
     name: "all",
     path: "#",
   },
@@ -318,7 +330,8 @@ export const LIST_PRODUCT_FILTER = [{
   },
 ];
 
-export const GROSERY_SLIDER_LIST = [{
+export const GROSERY_SLIDER_LIST = [
+  {
     productName: "Fresh Vegetables",
     offer: "Get Up To 40% off",
     image: "/assets/images/png/growsery/vegetables.png",
@@ -337,7 +350,8 @@ export const GROSERY_SLIDER_LIST = [{
     bgImage: "/assets/images/png/growsery/veg-bg.png",
   },
 ];
-export const EXCLUSIVE_OFFER_LIST = [{
+export const EXCLUSIVE_OFFER_LIST = [
+  {
     path: "/customer/category/fruit-vegetable/detaile",
     productName: "Red Apple",
     price: 200,
@@ -404,7 +418,8 @@ export const EXCLUSIVE_OFFER_LIST = [{
   },
 ];
 
-export const GROSERY_LIST = [{
+export const GROSERY_LIST = [
+  {
     image: "/assets/images/png/growsery/pulses.png",
     name: "Pulses",
     path: "#",
@@ -430,7 +445,8 @@ export const GROSERY_LIST = [{
     path: "#",
   },
 ];
-export const SETTING_LIST = [{
+export const SETTING_LIST = [
+  {
     icon: "profilePencil",
     name: "Edit Profile",
     path: "/customer/profile/edit-profile",
@@ -461,26 +477,28 @@ export const SETTING_LIST = [{
     path: "#",
   },
 ];
-export const USER_PROFILE_DATA = [{
+export const USER_PROFILE_DATA = [
+  {
     label: "Name",
     name: "fullName",
     icon: "profileInput",
-    type: "text"
+    type: "text",
   },
   {
     label: "Password",
     name: "password",
     icon: "password",
-    type: "password"
+    type: "password",
   },
   {
     label: "Phone Number",
     name: "number",
     icon: "call",
-    type: "number"
+    type: "number",
   },
 ];
-export const USER_ADDRESSE_DATA = [{
+export const USER_ADDRESSE_DATA = [
+  {
     label: "Home",
     name: "51/5A, Road: 7, Pallabi, Dhaka",
     icon: "profileInput",
@@ -488,11 +506,12 @@ export const USER_ADDRESSE_DATA = [{
   {
     label: "Work",
     name: "Dingi Technologies Ltd, Wakil T",
-    icon: "password"
+    icon: "password",
   },
 ];
 
-export const BAISC_DETAILS_FORM = [{
+export const BAISC_DETAILS_FORM = [
+  {
     title: "Basic Information",
   },
   {
@@ -503,59 +522,60 @@ export const BAISC_DETAILS_FORM = [{
   },
 ];
 
-
-export const userData = [{
+export const userData = [
+  {
     id: 1,
     name: "User 1",
-    description: "Jorem ipsum dolor, consectetur."
+    description: "Jorem ipsum dolor, consectetur.",
   },
   {
     id: 2,
     name: "User 2",
-    description: "Jorem ipsum dolor, consectetur."
+    description: "Jorem ipsum dolor, consectetur.",
   },
   {
     id: 3,
     name: "User 3",
-    description: "Jorem ipsum dolor, consectetur."
+    description: "Jorem ipsum dolor, consectetur.",
   },
   {
     id: 4,
     name: "User 4",
-    description: "Jorem ipsum dolor, consectetur."
+    description: "Jorem ipsum dolor, consectetur.",
   },
   {
     id: 5,
     name: "User 5",
-    description: "Jorem ipsum dolor, consectetur."
+    description: "Jorem ipsum dolor, consectetur.",
   },
   {
     id: 6,
     name: "User 6",
-    description: "Jorem ipsum dolor, consectetur."
+    description: "Jorem ipsum dolor, consectetur.",
   },
   {
     id: 7,
     name: "User 7",
-    description: "Jorem ipsum dolor, consectetur."
+    description: "Jorem ipsum dolor, consectetur.",
   },
   {
     id: 8,
     name: "User 8",
-    description: "Jorem ipsum dolor, consectetur."
+    description: "Jorem ipsum dolor, consectetur.",
   },
   {
     id: 9,
     name: "User 9",
-    description: "Jorem ipsum dolor, consectetur."
+    description: "Jorem ipsum dolor, consectetur.",
   },
   {
     id: 10,
     name: "User 10",
-    description: "Jorem ipsum dolor, consectetur."
+    description: "Jorem ipsum dolor, consectetur.",
   },
 ];
-export const SHOPKEPPER_PRODUCT_LIST = [{
+export const SHOPKEPPER_PRODUCT_LIST = [
+  {
     image: "/assets/images/png/shopkepper/product/mama-gold-rice.png",
     name: "Mama Gold Rice",
     amount: 45000,
@@ -653,29 +673,31 @@ export const SHOPKEPPER_PRODUCT_LIST = [{
   },
 ];
 
-export const BOTTOM_BAR_SHOPKEPPER_LIST = [{
+export const BOTTOM_BAR_SHOPKEPPER_LIST = [
+  {
     icon: "shopkepperCarryBag",
-    path: "/shopkepper/order"
+    path: "/shopkepper/order",
   },
   {
     icon: "shopkepperOption",
-    path: "/shopkepper/product"
+    path: "/shopkepper/product",
   },
   {
     icon: "shopkepperWallet",
-    path: "/shopkepper/wallet"
+    path: "/shopkepper/wallet",
   },
   {
     icon: "shopkepperChartL",
-    path: "#"
+    path: "#",
   },
   {
     icon: "shopkepperProfile",
-    path: "#"
+    path: "#",
   },
 ];
 
-export const SHOPKEPPER_ORDER_FILTER = [{
+export const SHOPKEPPER_ORDER_FILTER = [
+  {
     name: "all",
   },
   {
@@ -695,30 +717,7 @@ export const SHOPKEPPER_ORDER_FILTER = [{
   },
 ];
 
-export const SHOPKEPPER_ORDER_LIST = [{
-    orderId: "#452323",
-    time: "Today | 9:00 am",
-    item: 3,
-    category: "New Order",
-  },
-  {
-    orderId: "#871323",
-    time: "Today | 9:00 am",
-    item: 3,
-    category: "Awaiting Pickup",
-  },
-  {
-    orderId: "#217571",
-    time: "Today | 9:00 am",
-    item: 3,
-    category: "In Transit",
-  },
-  {
-    orderId: "#281723",
-    time: "Today | 9:00 am",
-    item: 3,
-    category: "Cancelled",
-  },
+export const SHOPKEPPER_ORDER_LIST = [
   {
     orderId: "#452323",
     time: "Today | 9:00 am",
@@ -789,7 +788,7 @@ export const SHOPKEPPER_ORDER_LIST = [{
     orderId: "#281723",
     time: "Today | 9:00 am",
     item: 3,
-    category: "Complete",
+    category: "Cancelled",
   },
   {
     orderId: "#452323",
@@ -934,5 +933,92 @@ export const SHOPKEPPER_ORDER_LIST = [{
     time: "Today | 9:00 am",
     item: 3,
     category: "Complete",
+  },
+  {
+    orderId: "#452323",
+    time: "Today | 9:00 am",
+    item: 3,
+    category: "New Order",
+  },
+  {
+    orderId: "#871323",
+    time: "Today | 9:00 am",
+    item: 3,
+    category: "Awaiting Pickup",
+  },
+  {
+    orderId: "#217571",
+    time: "Today | 9:00 am",
+    item: 3,
+    category: "In Transit",
+  },
+  {
+    orderId: "#281723",
+    time: "Today | 9:00 am",
+    item: 3,
+    category: "Complete",
+  },
+];
+
+export const TRANSITION_LIST = [
+  {
+    about: "Order Payment",
+    orderId: 212323,
+    amount: 50000,
+    date: "November 25th, 2023",
+  },
+  {
+    about: "Order Payment",
+    orderId: 212323,
+    amount: 50000,
+    date: "November 25th, 2023",
+  },
+  {
+    about: "Order Payment",
+    orderId: 212323,
+    amount: 50000,
+    date: "November 25th, 2023",
+  },
+  {
+    about: "Order Payment",
+    orderId: 212323,
+    amount: 50000,
+    date: "November 25th, 2023",
+  },
+  {
+    about: "Order Payment",
+    orderId: 212323,
+    amount: 50000,
+    date: "November 25th, 2023",
+  },
+  {
+    about: "Order Payment",
+    orderId: 212323,
+    amount: 50000,
+    date: "November 25th, 2023",
+  },
+  {
+    about: "Order Payment",
+    orderId: 212323,
+    amount: 50000,
+    date: "November 25th, 2023",
+  },
+  {
+    about: "Order Payment",
+    orderId: 212323,
+    amount: 50000,
+    date: "November 25th, 2023",
+  },
+  {
+    about: "Order Payment",
+    orderId: 212323,
+    amount: 50000,
+    date: "November 25th, 2023",
+  },
+  {
+    about: "Order Payment",
+    orderId: 212323,
+    amount: 50000,
+    date: "November 25th, 2023",
   },
 ];
