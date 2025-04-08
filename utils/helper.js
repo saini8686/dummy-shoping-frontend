@@ -1022,3 +1022,41 @@ export const TRANSITION_LIST = [
     date: "November 25th, 2023",
   },
 ];
+
+export const SHOPKEPPER_NOTIFICATION_LIST = [
+  {
+    read: true,
+    title: "Welcome to mart! 🚀",
+    time: "just now",
+    diescription:
+      "Lorem ipsum dolor sit amet consectetur. Faucibus nulla lacinia sagittis viverra mauris vel condimentum. Tellus vel scelerisque vitae sagittis et. Posuere feugiat nisl ultricies ut dis ante ipsum. Purus arcu magna aliquam netus sit porta pellentesque pellentesque.",
+  },
+  {
+    read: true,
+    title: "You've Made a Sale! 💰",
+    time: "just now",
+    diescription:
+      "Lorem ipsum dolor sit amet consectetur. Faucibus nulla lacinia sagittis viverra mauris vel condimentum. Tellus vel scelerisque vitae sagittis et. Posuere feugiat nisl ultricies ut dis ante ipsum. Purus arcu magna aliquam netus sit porta pellentesque pellentesque.",
+  },
+  {
+    read: true,
+    title: "Agent En Route to Pick Up Order! 🚗",
+    time: "just now",
+    diescription:
+      "Lorem ipsum dolor sit amet consectetur. Faucibus nulla lacinia sagittis viverra mauris vel condimentum. Tellus vel scelerisque vitae sagittis et. Posuere feugiat nisl ultricies ut dis ante ipsum. Purus arcu magna aliquam netus sit porta pellentesque pellentesque.",
+  },
+  {
+    read: false,
+    title: "Success! You've Withdrawn Funds 💸",
+    time: "just now",
+    diescription:
+      "Lorem ipsum dolor sit amet consectetur. Faucibus nulla lacinia sagittis viverra mauris vel condimentum. Tellus vel scelerisque vitae sagittis et. Posuere feugiat nisl ultricies ut dis ante ipsum. Purus arcu magna aliquam netus sit porta pellentesque pellentesque.",
+  },
+  {
+    read: false,
+    title: "You've Made a Sale! 💰",
+    time: "just now",
+    diescription:
+      "Lorem ipsum dolor sit amet consectetur. Faucibus nulla lacinia sagittis viverra mauris vel condimentum. Tellus vel scelerisque vitae sagittis et. Posuere feugiat nisl ultricies ut dis ante ipsum. Purus arcu magna aliquam netus sit porta pellentesque pellentesque.",
+  },
+];
