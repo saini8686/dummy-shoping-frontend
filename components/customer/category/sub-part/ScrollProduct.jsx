@@ -39,6 +39,7 @@ const ScrollProduct = () => {
             <Image
               src={obj.image}
               width={71}
+              alt="grosery-images"
               height={71}
               sizes="100vw"
               className="w-[71px] h-[71px] object-contain"

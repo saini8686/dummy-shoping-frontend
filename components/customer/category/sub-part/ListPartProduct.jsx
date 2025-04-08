@@ -9,7 +9,7 @@ const ListPartProduct = () => {
         <Link
           href={obj.path}
           key={i}
-          className="py-2 px-2.5 border hover:bg-greens-900 text-blacks-200 hover:text-white duration-300 border-greens-200 hover:border-transparent rounded"
+          className="py-2 text-nowrap px-2.5 border hover:bg-greens-900 text-blacks-200 hover:text-white duration-300 border-greens-200 hover:border-transparent rounded"
         >
           <p className="text-sm font-normal capitalize text-center  !leading-130">
             {obj.name}

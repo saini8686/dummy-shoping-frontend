@@ -30,7 +30,7 @@ const HeaderCustomer = ({ name, location ,classCard }) => {
       </div>
       <div className={`mt-2 ${!location && "!mt-8"}`}>
         {location && (
-          <div className="flex gap-1.5 items-center">
+          <div className="flex gap-1.5 text-white items-center">
             <Icon icon="locationWhite" />
             <p className="text-lg text-white font-semibold !leading-130">
               Dhaka, Banassre
