@@ -2,6 +2,7 @@
 import { OptionWay } from "@/components/auth/common/common";
 import { CustomInput } from "@/components/auth/common/CustomInput";
 import { CustomButton } from "@/components/common/CustomButton";
+import LocationPicker from "@/components/common/GetLocation";
 import Icon from "@/components/common/Icons";
 import { BAISC_DETAILS_FORM } from "@/utils/helper";
 import { useRouter } from "next/navigation";
@@ -18,8 +19,8 @@ const BasicDetailForm = () => {
     shopName: "",
     category: "",
     gstNumber: "",
+    smp: "",
     number: "",
-    address: "",
   });
   const [error, setError] = useState(false);
   const [openIndex, setOpenIndex] = useState(null);
@@ -33,6 +34,8 @@ const BasicDetailForm = () => {
     const isAnyFieldEmpty = Object.values(formDetails).some(
       (value) => value.trim() === ""
     );
+    console.log(isAnyFieldEmpty ,'isAnyFieldEmpty');
+    
     const isPhoneValid = /^\d{10}$/.test(formDetails.number);
     if (!isAnyFieldEmpty && isPhoneValid) {
       setError(false);
@@ -46,9 +49,9 @@ const BasicDetailForm = () => {
         state: "",
         shopName: "",
         category: "",
+        smp: "",
         gstNumber: "",
         number: "",
-        address: "",
       });
       router.push("/shopkepper/upload-image");
 
@@ -201,6 +204,20 @@ const BasicDetailForm = () => {
                       }
                     />
                     <CustomInput
+                      placeholder="SMP"
+                      name="SMP"
+                      type="number"
+                      error={!formDetails.smp && error}
+                      errorText="SMP Is Required"
+                      value={formDetails.smp}
+                      onChange={(e) =>
+                        setFormDetails({
+                          ...formDetails,
+                          smp: e.target.value,
+                        })
+                      }
+                    />
+                    <CustomInput
                       placeholder="Gst Number"
                       name="gstNumber"
                       type="number"
@@ -234,25 +251,7 @@ const BasicDetailForm = () => {
                         })
                       }
                     />
-                    <CustomInput
-                      customClass="mt-4"
-                      placeholder="Address"
-                      name="address"
-                      type="text"
-                      error={!formDetails.address && error}
-                      errorText={"Address Is Required"}
-                      value={formDetails.address}
-                      onChange={(e) =>
-                        setFormDetails({
-                          ...formDetails,
-                          address: e.target.value,
-                        })
-                      }
-                    />
-                    <OptionWay className="!my-4" />
-                    <CustomButton customClass="w-full gap-3 justify-center flex items-center !py-3.5">
-                      <Icon icon="locationWhite" /> Choose Location from Google
-                    </CustomButton>
+                    <LocationPicker/>
                   </div>
                 )}
               </div>
