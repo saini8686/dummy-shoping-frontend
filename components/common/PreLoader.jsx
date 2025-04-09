@@ -76,7 +76,7 @@ const PreLoader = () => {
             className="mb-5  w-[190px] mx-auto h-[73px] object-cover"
             alt="logo"
           />
-          <div className="bg-greens-900 landing_hero_swiper rounded-t-3xl h-[300px] mt-[]  w-full pt-[56px] pb-6 px-7">
+          <div className="bg-greens-900 landing_hero_swiper rounded-t-3xl  h-[400px]   w-full pt-[56px] pb-6 px-7">
             {steps === "0" ? (
               <InstructionStep
                 activeIndex={activeIndex}

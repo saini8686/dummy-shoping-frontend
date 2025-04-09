@@ -22,8 +22,8 @@ const OfferSlider = () => {
         modules={[EffectFade, Autoplay]}
       >
         {OFFER_LIST.map((obj, i) => (
-          <SwiperSlide key={i}>
-            <div className="bg-greens-900 relative overflow-hidden min-h-[160px] pt-6 pb-4 px-4  rounded-lg">
+          <SwiperSlide key={i} className="h-full">
+            <div className="bg-greens-900 relative overflow-hidden h-[160px] pt-6 pb-4 px-4  rounded-lg">
               <div>
                 <div className="relative w-fit z-[2]">
                   <span className="h-[18px] w-[134px] bg-white absolute -top-0.5 skew-x-[42deg] -left-8 z-[-1]"></span>
