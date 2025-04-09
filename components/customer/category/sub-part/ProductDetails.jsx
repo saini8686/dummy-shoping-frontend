@@ -66,7 +66,7 @@ const ProductDetails = () => {
         <p className="font-bold text-2xl text-blacks-200 !leading-130">1 KG</p>
         <p className="font-bold text-2xl text-greens-900 !leading-130">₹ 182</p>
       </div>
-      <CustomButton customClass="mt-4 ml-auto">Add to Cart</CustomButton>
+      <CustomButton customClass="mt-4 ml-auto" url='/customer/item-details'>Add to Cart</CustomButton>
       <p className="text-base font-medium mt-4 text-blacks-200 !leading-130">
         Shop Location
       </p>
