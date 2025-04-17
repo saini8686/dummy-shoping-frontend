@@ -25,7 +25,7 @@ const SelectRole = () => {
         Customer
       </Link>
       <Link
-        href="?steps=2&auth=admin"
+        href="?steps=2&auth=admin/user-list"
         className="block py-[15px] w-full border-white border rounded-lg text-center text-white font-semibold mt-3 hover:bg-white duration-300 hover:!text-greens-900"
       >
         Admin
