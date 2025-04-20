@@ -6,6 +6,7 @@ import CustomUploadImage from "../detail/CustomUploadImage";
 import { useRouter, useSearchParams } from "next/navigation";
 import ProductAddedModal from "./modal/ProductAddedModal";
 import ConfirmProduct from "./ConfirmProduct";
+import { createProduct } from "../../../services/product.service"
 
 const AddProductForm = () => {
   const router = useRouter();
@@ -27,42 +28,57 @@ const AddProductForm = () => {
   };
   const [error, setError] = useState(false);
   const [confirm, setConfirm] = useState(false);
+  const [productDetails, setProduct] = useState(false);
 
-  const submitHandler = (e) => {
+  const submitHandler = async (e) => {
     e.preventDefault();
+  
     const isFieldEmpty = (value) => {
       if (typeof value === "string") return value.trim() === "";
       if (Array.isArray(value)) return value.length === 0;
       if (value === null || value === undefined) return true;
       return false;
     };
-
+  
     const isAnyFieldEmpty = Object.values(formDetails).some(isFieldEmpty);
     if (!isAnyFieldEmpty) {
-      console.log(formDetails, "formDetails formDetails");
-      setError(false);
-      setFormDetails({
-        productName: "",
-        description: "",
-        productImage: null,
-        inStock: false,
-        discountPrize: "",
-        productCategory: "",
-        productUnit: "",
-        productPrize: "",
-      });
-      setConfirm(true);
-      //   router.push("/shopkepper/upload-image");
+      try {
+        setError(false);
+        const userId = localStorage.getItem("userId");
+        const productData = { ...formDetails, userId };
+  
+        const res = await createProduct(productData);
+        console.log("Product Created:", res);
+        setProduct(res);
+  
+        setFormDetails({
+          productName: "",
+          description: "",
+          productImage: null,
+          inStock: false,
+          discountPrize: "",
+          productCategory: "",
+          productUnit: "",
+          productPrize: "",
+        });
+  
+        setConfirm(true);
+      } catch (error) {
+        console.error("Error creating product:", error);
+        setError(true);
+        setConfirm(false);
+      }
     } else {
-      setConfirm(false);
       setError(true);
+      setConfirm(false);
     }
   };
+  
   const closeConfirm = () => {
     setConfirm(false);
   };
   const showProductDetail = () => {
-    router.push("/shopkepper/product/add-product?product=confirm");
+    router.push(`/shopkepper/product/add-product?product=confirm&id=${productDetails?.product?.id}`);
     setConfirm(false);
   };
   useEffect(() => {
@@ -172,6 +188,7 @@ const AddProductForm = () => {
                 type="checkbox"
                 className="w-5 h-5 cursor-pointer accent-greens-900"
                 id="inStock"
+                name="inStock"
                 value={formDetails.inStock}
                 onChange={(e) =>
                   setFormDetails({

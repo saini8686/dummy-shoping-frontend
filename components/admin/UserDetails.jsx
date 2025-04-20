@@ -3,6 +3,9 @@ import React from "react";
 import Icon from "../common/Icons";
 import { CustomButton } from "../common/CustomButton";
 import { useRouter } from "next/navigation";
+import { getUser } from "../../services/users.service"
+import { useState, useEffect } from "react";
+import { useSearchParams } from "next/navigation";
 
 const locations = [
   { id: 1, name: "Location Name", detail: "ipsum dolo / ipsum dolo" },
@@ -12,7 +15,30 @@ const locations = [
 ];
 
 const UserDetails = () => {
+  const searchParams = useSearchParams();
+  let id = searchParams.get("id");
   const router = useRouter();
+  const [userData, setUserData] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchUserDetails = async () => {
+      try {
+        const data = await getUser();
+        console.log(data, 'All user details data');
+
+        setUserData(data);
+      } catch (error) {
+        console.error('Error fetching user details:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchUserDetails();
+  }, []);
+
+  if (loading) return <p>Loading...</p>;
 
   return (
     <div className="w-full h-screen bg-white rounded-xl shadow-md">
@@ -38,7 +64,7 @@ const UserDetails = () => {
             </div>
           </div>
           <div>
-            <h3 className="text-[#01BE62] font-bold mb-2">User No.#</h3>
+            <h3 className="text-[#01BE62] font-bold mb-2">User No.#{userData.userId}</h3>
             <p className="text-[#858585] text-sm">
               <span className="font-bold text-[#010101]">Details:</span> Worem
               ipsum dolor sit amet, consectetur adipiscing elit. Nunc vulputate

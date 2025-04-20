@@ -8,17 +8,19 @@ import { BAISC_DETAILS_FORM } from "@/utils/helper";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { ToastContainer, toast } from "react-toastify";
+import { submitBasicDetails } from "../../../services/basic-details.service";
+
 const BasicDetailForm = () => {
   const router = useRouter();
   const [formDetails, setFormDetails] = useState({
-    name: "",
+    username: "",
     village: "",
     city: "",
     district: "",
     state: "",
-    shopName: "",
+    shopname: "",
     category: "",
-    gstNumber: "",
+    gst_number: "",
     smp: "",
     number: "",
   });
@@ -42,17 +44,19 @@ const BasicDetailForm = () => {
       console.log(formDetails, "formDetails formDetails");
       toast.success("Details submitted successfully");
       setFormDetails({
-        name: "",
+        username: "",
         village: "",
         city: "",
         district: "",
         state: "",
-        shopName: "",
+        shopname: "",
         category: "",
         smp: "",
-        gstNumber: "",
+        gst_number: "",
         number: "",
       });
+      formDetails.userId = localStorage.getItem("userId");
+      submitBasicDetails(formDetails);
       router.push("/shopkepper/upload-image");
 
     } else {
@@ -104,11 +108,11 @@ const BasicDetailForm = () => {
                   <div className="space-y-4">
                     <CustomInput
                       placeholder="Name"
-                      name="name"
+                      name="username"
                       type="text"
-                      error={!formDetails.name && error}
+                      error={!formDetails.username && error}
                       errorText="Name Is Required"
-                      value={formDetails.name}
+                      value={formDetails.username}
                       onChange={(e) =>
                         setFormDetails({
                           ...formDetails,
@@ -177,15 +181,15 @@ const BasicDetailForm = () => {
                   <div className="space-y-4">
                     <CustomInput
                       placeholder="shop Name"
-                      name="shopName"
+                      name="shopname"
                       type="text"
-                      error={!formDetails.shopName && error}
+                      error={!formDetails.shopname && error}
                       errorText="shop Name Is Required"
-                      value={formDetails.shopName}
+                      value={formDetails.shopname}
                       onChange={(e) =>
                         setFormDetails({
                           ...formDetails,
-                          shopName: e.target.value,
+                          shopname: e.target.value,
                         })
                       }
                     />
@@ -219,15 +223,15 @@ const BasicDetailForm = () => {
                     />
                     <CustomInput
                       placeholder="Gst Number"
-                      name="gstNumber"
+                      name="gst_number"
                       type="number"
-                      error={!formDetails.gstNumber && error}
+                      error={!formDetails.gst_number && error}
                       errorText="Gst Number Is Required"
-                      value={formDetails.gstNumber}
+                      value={formDetails.gst_number}
                       onChange={(e) =>
                         setFormDetails({
                           ...formDetails,
-                          gstNumber: e.target.value,
+                          gst_number: e.target.value,
                         })
                       }
                     />

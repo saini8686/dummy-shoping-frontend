@@ -7,10 +7,12 @@ import { CustomButton } from "../common/CustomButton";
 import { CustomInput } from "./common/CustomInput";
 import LoginWay from "./common/LoginWay";
 import { AgreementConfirm, OptionWay } from "./common/common";
+import { register } from '../../services/auth.service';
+import { toast } from "react-toastify";
 
 const SignUp = () => {
   const [formDetails, setFormDetails] = useState({
-    loginId: "",
+    email: "",
     address: "",
     number: "",
     refferCode: "",
@@ -29,7 +31,8 @@ const SignUp = () => {
     setError(true);
 
     if (
-      formDetails.loginId &&
+      formDetails.name &&
+      formDetails.email &&
       formDetails.password &&
       formDetails.address &&
       formDetails.number.length === 10
@@ -37,14 +40,34 @@ const SignUp = () => {
       try {
         setIsLoading(true);
         // Generate OTP and log it to console
-        const otp = Math.floor(100000 + Math.random() * 900000).toString();
-        console.log(`OTP for ${formDetails.loginId}: ${otp}`);
+        // const otp = Math.floor(100000 + Math.random() * 900000).toString();
+        // console.log(`OTP for ${formDetails.email}: ${otp}`);
 
-        await signUpWithEmailPassword(
-          formDetails.loginId,
-          formDetails.password
-        );
-        router.push(`/${auth}`);
+        // await signUpWithEmailPassword(
+        //   formDetails.email,
+        //   formDetails.password
+        // );
+        if (auth === "shopkepper") {
+          formDetails.isShopkeeper = true;
+        }
+        if (auth.includes('admin')) {
+          formDetails.isAdmin = true;
+          formDetails.type = "admin";
+        } else {
+          formDetails.type = auth;
+        }
+
+        let response = await register(formDetails);
+
+        toast.success('Success:', response);
+
+        // Example: Save token and redirect
+        if (response) {
+          localStorage.setItem("userId", response.userId);
+          router.push(`/${auth}`);
+        } else {
+          setError(true);
+        }
       } catch (err) {
         console.error(err);
       } finally {
@@ -61,16 +84,30 @@ const SignUp = () => {
 
       <form className="mt-8" onSubmit={handleSubmit}>
         <CustomInput
-          placeholder="Email"
-          name="loginId"
-          type="email"
-          error={!formDetails.loginId && error}
+          placeholder="Name"
+          name="name"
+          type="text"
+          error={!formDetails.name && error}
           errorText="Email Is Required"
-          value={formDetails.loginId}
+          value={formDetails.name}
           onChange={(e) =>
             setFormDetails({
               ...formDetails,
-              loginId: e.target.value,
+              name: e.target.value,
+            })
+          }
+        />
+        <CustomInput
+          placeholder="Email"
+          name="email"
+          type="email"
+          error={!formDetails.email && error}
+          errorText="Email Is Required"
+          value={formDetails.email}
+          onChange={(e) =>
+            setFormDetails({
+              ...formDetails,
+              email: e.target.value,
             })
           }
         />

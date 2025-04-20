@@ -6,6 +6,9 @@ import { CustomButton } from "../common/CustomButton";
 import { CustomInput } from "./common/CustomInput";
 import LoginWay from "./common/LoginWay";
 import { AgreementConfirm, OptionWay } from "./common/common";
+import { login, saveToken, isAuthenticated, authType } from '../../services/auth.service'; // Adjust the import path as necessary
+import { toast } from "react-toastify";
+
 
 const SignIn = () => {
   const [formDetails, setFormDetails] = useState({
@@ -20,17 +23,45 @@ const SignIn = () => {
 
   const submitHandler = async (e) => {
     e.preventDefault();
-    setError(true);
-
-    if (formDetails.email && formDetails.password) {
-      try {
-        setIsLoading(true);
-        router.push(`/${auth}`);
-      } catch (err) {
-        console.error(err);
-      } finally {
-        setIsLoading(false);
+    setError(false);
+  
+    if (!formDetails.email || !formDetails.password) {
+      setError(true);
+      return;
+    }
+  
+    try {
+      setIsLoading(true);
+      let response = await login(formDetails.email, formDetails.password);
+      if (response.token) {
+        saveToken(response.token);
+        localStorage.setItem('token', response.token);
+        console.log(authType(), 'authType');
+        
+        if(isAuthenticated()){
+          if(auth === authType()){
+            toast.success('Login Successful');
+            
+            if(authType() === 'shopkepper'){
+              router.push(`/${auth}/product`);
+            }else{
+              console.log(`/${auth}/product`,'user authType matched');
+              router.push(`/${auth}`);
+            }
+          }else {
+            toast.warning('Auth type not matched');            
+            localStorage.removeItem('token');            
+            setError(true);
+          }        
+        }
+      }else {
+        setError(true);
       }
+    } catch (err) {
+      console.error('Error:', err);
+      setError(true);
+    } finally {
+      setIsLoading(false);
     }
   };
 

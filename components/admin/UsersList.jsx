@@ -3,12 +3,33 @@ import React from "react";
 import { Pencil, Trash2, User } from "lucide-react";
 import Icon from "@/components/common/Icons";
 import { useRouter } from "next/navigation";
-import { userData } from "@/utils/helper";
 import Link from "next/link";
+import { getAllUserList } from "../../services/users.service"
+import { useState, useEffect } from "react";
 
 const UsersList = () => {
   const router = useRouter();
+  const [userData, setUserData] = useState([]);
+  const [loading, setLoading] = useState(true);
 
+  useEffect(() => {
+    const fetchUserDetails = async () => {
+      try {
+        const data = await getAllUserList();
+        console.log(data, 'All user details data');
+
+        setUserData(data);
+      } catch (error) {
+        console.error('Error fetching user details:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchUserDetails();
+  }, []);
+
+  if (loading) return <p>Loading...</p>;
   return (
     <div className="h-screen bg-gray-100 flex items-center justify-center">
       <div className="bg-white rounded-xl shadow-md h-full w-full flex flex-col relative">
@@ -49,21 +70,21 @@ const UsersList = () => {
           <div className="overflow-y-auto flex-1 pb-16 user-list">
             {userData.map((user) => (
               <div
-                key={user.id}
+                key={user.userId}
                 className="flex items-center justify-between bg-[#F1FFF8] p-4 rounded-lg mb-3"
               >
                 <div className="flex items-center">
                   <Link
-                    href="/admin/user-details"
+                    href={`/admin/user-details?id=${user.userId}`}
                     className="bg-white rounded-full me-6"
                   >
                     <Icon icon="userProfile" />
                   </Link>
                   <div>
                     <h4 className="text-[#01BE62] text-base font-bold !leading-130 mb-2">
-                      {user.name}
+                      {user?.name}
                     </h4>
-                    <p className="text-[#858585] text-xs">{user.description}</p>
+                    <p className="text-[#858585] text-xs">{user?.email}</p>
                   </div>
                 </div>
                 <div className="flex items-center space-x-6">
