@@ -157,10 +157,6 @@ export const BOTTOM_BAR_LIST = [
     path: "/customer/item-details",
   },
   {
-    icon: "scaner",
-    path: "#",
-  },
-  {
     icon: "wallet",
     path: "#",
   },
