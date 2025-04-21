@@ -1,6 +1,7 @@
 import api from './axiosInstance.service';
+import Cookies from 'js-cookie';
 
-var userId = localStorage.getItem("userId");
+var userId = Cookies.get("userId");
 
 export const submitUser = async (details) => {
   const res = await api.post('/api/users', details);

@@ -9,6 +9,8 @@ import LoginWay from "./common/LoginWay";
 import { AgreementConfirm, OptionWay } from "./common/common";
 import { register } from '../../services/auth.service';
 import { toast } from "react-toastify";
+import Cookies from 'js-cookie';
+
 
 const SignUp = () => {
   const [formDetails, setFormDetails] = useState({
@@ -63,7 +65,7 @@ const SignUp = () => {
 
         // Example: Save token and redirect
         if (response) {
-          localStorage.setItem("userId", response.userId);
+          Cookies.set('userId', response.userId, { secure: true, sameSite: 'Strict', expires: 7 });
           router.push(`/${auth}`);
         } else {
           setError(true);

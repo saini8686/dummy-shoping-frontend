@@ -9,6 +9,7 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { ToastContainer, toast } from "react-toastify";
 import { submitBasicDetails } from "../../../services/basic-details.service";
+import Cookies from 'js-cookie';
 
 const BasicDetailForm = () => {
   const router = useRouter();
@@ -55,7 +56,7 @@ const BasicDetailForm = () => {
         gst_number: "",
         number: "",
       });
-      formDetails.userId = localStorage.getItem("userId");
+      formDetails.userId = Cookies.get('userId');
       submitBasicDetails(formDetails);
       router.push("/shopkepper/upload-image");
 

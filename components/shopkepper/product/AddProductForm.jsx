@@ -7,6 +7,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import ProductAddedModal from "./modal/ProductAddedModal";
 import ConfirmProduct from "./ConfirmProduct";
 import { createProduct } from "../../../services/product.service"
+import Cookies from 'js-cookie';
 
 const AddProductForm = () => {
   const router = useRouter();
@@ -44,7 +45,7 @@ const AddProductForm = () => {
     if (!isAnyFieldEmpty) {
       try {
         setError(false);
-        const userId = localStorage.getItem("userId");
+        const userId = Cookies.get('userId');
         const productData = { ...formDetails, userId };
   
         const res = await createProduct(productData);

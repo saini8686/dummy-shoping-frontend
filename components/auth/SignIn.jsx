@@ -35,7 +35,6 @@ const SignIn = () => {
       let response = await login(formDetails.email, formDetails.password);
       if (response.token) {
         saveToken(response.token);
-        localStorage.setItem('token', response.token);
         console.log(authType(), 'authType');
         
         if(isAuthenticated()){
@@ -50,7 +49,7 @@ const SignIn = () => {
             }
           }else {
             toast.warning('Auth type not matched');            
-            localStorage.removeItem('token');            
+            Cookies.remove('userId');           
             setError(true);
           }        
         }
