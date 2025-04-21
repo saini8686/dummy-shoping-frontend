@@ -75,7 +75,7 @@ const UsersList = () => {
               >
                 <div className="flex items-center">
                   <Link
-                    href={`/admin/user-details?id=${user.userId}`}
+                    href={`/admin/user-details`}
                     className="bg-white rounded-full me-6"
                   >
                     <Icon icon="userProfile" />
