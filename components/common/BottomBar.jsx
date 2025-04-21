@@ -22,10 +22,7 @@ const BottomBar = () => {
             <Icon icon={obj.icon} />
           </Link>
         ))}
-      <main className="flex min-h-screen flex-col items-center justify-center p-4">
-      <h1 className="text-2xl font-bold mb-6">Welcome to UPI Pay App</h1>
       <UpiButton />
-    </main>
       </div>
     </div>
   );
