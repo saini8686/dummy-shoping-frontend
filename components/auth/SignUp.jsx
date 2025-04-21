@@ -100,6 +100,7 @@ const SignUp = () => {
           }
         />
         <CustomInput
+          customClass="mt-4"
           placeholder="Email"
           name="email"
           type="email"

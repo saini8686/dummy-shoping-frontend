@@ -1,11 +1,12 @@
 import UsersList from '@/components/admin/UsersList'
-import React from 'react'
+import PreLoader from '@/components/common/PreLoader'
+import React, { Suspense } from 'react'
 
 const page = () => {
   return (
-    <>
+    <Suspense>
     <UsersList/>
-    </>
+    </Suspense>
   )
 }
 

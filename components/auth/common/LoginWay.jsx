@@ -19,7 +19,6 @@ const LoginWay = () => {
       name: "Google",
       onClick: handleGoogleSignIn,
     },
-    { image: "/assets/images/png/apple.png", name: "Apple" },
   ];
   return (
     <div className="flex items-center mt-8 justify-center  gap-5">
