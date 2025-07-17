@@ -175,8 +175,6 @@ const SignUp = () => {
           placeholder="RefferCode (Optional)"
           name="refferCode"
           type="text"
-          error={!formDetails.refferCode && error}
-          errorText="RefferCode is required"
           value={formDetails.refferCode}
           onChange={(e) => setFormDetails({ ...formDetails, refferCode: e.target.value })}
         />
