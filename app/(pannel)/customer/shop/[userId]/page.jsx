@@ -56,7 +56,7 @@ const Page = () => {
 
     const fetchShopDetails = async () => {
       try {
-        const response = await getBasicDetails(3);
+        const response = await getBasicDetails(60);
         setShopDetails(response || null);
       } catch (error) {
         console.error("Error fetching shop details:", error);
