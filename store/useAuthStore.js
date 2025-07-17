@@ -1,4 +1,5 @@
 import { create } from 'zustand';
+import Cookies from 'js-cookie';
 
 const useAuthStore = create((set) => ({
   user: null,
@@ -39,6 +40,14 @@ const useAuthStore = create((set) => ({
   logout: () => {
     localStorage.removeItem('user');
     set({ user: null, isAuthenticated: false });
+  },
+
+  signOut: () => {
+    localStorage.removeItem('user');
+    Cookies.remove('token');
+    Cookies.remove('userRole');
+    Cookies.remove('userId');
+    set({ user: null, isAuthenticated: false, error: null });
   },
 
   initialize: () => {

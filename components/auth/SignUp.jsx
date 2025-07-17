@@ -1,103 +1,134 @@
 "use client";
+
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import Cookies from 'js-cookie';
+import { toast } from "react-toastify";
+
 import useAuthStore from "../../store/useAuthStore";
+import { register, verifyOtp } from "../../services/auth.service";
 import { CustomButton } from "../common/CustomButton";
 import { CustomInput } from "./common/CustomInput";
 import LoginWay from "./common/LoginWay";
 import { AgreementConfirm, OptionWay } from "./common/common";
-import { register } from '../../services/auth.service';
-import { toast } from "react-toastify";
-import Cookies from 'js-cookie';
-
 
 const SignUp = () => {
   const [formDetails, setFormDetails] = useState({
     email: "",
     address: "",
     number: "",
-    refferCode: "",
+    name: "",
     password: "",
+    refferCode: "",
   });
-  const searchParams = useSearchParams();
-  const router = useRouter();
-  let auth = searchParams.get("auth");
+
+  const [otp, setOtp] = useState('');
+  const [showOtpInput, setShowOtpInput] = useState(false);
+  const [userId, setUserId] = useState('');
   const [error, setError] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
-  const { signUpWithEmailPassword, loading, error: authError } = useAuthStore();
+  const searchParams = useSearchParams();
+  const router = useRouter();
+  const auth = searchParams.get("auth");
+
+  const { loading, error: authError } = useAuthStore();
+
+  useEffect(() => {
+    // Clear cookies and storage
+    Object.keys(Cookies.get()).forEach((cookieName) => Cookies.remove(cookieName));
+    localStorage.clear();
+    sessionStorage.clear();
+  }, []);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setError(true);
+    setError(false);
 
-    if (
+    const isValid =
       formDetails.name &&
       formDetails.email &&
       formDetails.password &&
       formDetails.address &&
-      formDetails.number.length === 10
-    ) {
-      try {
-        setIsLoading(true);
-        // Generate OTP and log it to console
-        // const otp = Math.floor(100000 + Math.random() * 900000).toString();
-        // console.log(`OTP for ${formDetails.email}: ${otp}`);
+      formDetails.number.length === 10;
 
-        // await signUpWithEmailPassword(
-        //   formDetails.email,
-        //   formDetails.password
-        // );
-        if (auth === "shopkepper") {
-          formDetails.isShopkeeper = true;
-        }
-        if (auth.includes('admin')) {
-          formDetails.isAdmin = true;
-          formDetails.type = "admin";
-        } else {
-          formDetails.type = auth;
-        }
+    if (!isValid) {
+      setError(true);
+      return;
+    }
 
-        let response = await register(formDetails);
+    try {
+      setIsLoading(true);
 
-        toast.success('Success:', response);
+      const data = {
+        ...formDetails,
+        userRole: auth || "customer",
+        isShopkeeper: auth === "shopkepper",
+        isAdmin: auth?.includes("admin") || false,
+      };
 
-        // Example: Save token and redirect
-        if (response) {
-          Cookies.set('userId', response.userId, { secure: true, sameSite: 'Strict', expires: 7 });
-          router.push(`/${auth}`);
-        } else {
-          setError(true);
-        }
-      } catch (err) {
-        console.error(err);
-      } finally {
-        setIsLoading(false);
+      const response = await register(data);
+
+      if (response?.userId) {
+        toast.success("OTP sent to your phone/email!");
+        setUserId(response.userId);
+        setShowOtpInput(true);
+      } else {
+        toast.error("Registration failed.");
+        setError(true);
       }
+    } catch (err) {
+      console.error("Registration error:", err);
+      toast.error("Something went wrong.");
+      setError(true);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleOtpSubmit = async () => {
+    if (!otp || otp.length !== 6) {
+      toast.error("Enter a valid 6-digit OTP");
+      return;
+    }
+    
+    try {
+      setIsLoading(true);
+      const result = await verifyOtp({ userId, otp });
+
+      if (result.userId === userId) {
+        toast.success("OTP Verified!");
+        if (auth === "shopkepper") Cookies.set("userId", userId, { secure: true, sameSite: "Strict", expires: 7 });
+
+        if (auth === "admin") router.push("/admin/dashboard");
+        else if (auth === "shopkepper") router.push(`/shopkepper`);
+        else router.push(`/sign-in?auth=${auth}`);
+      } else {
+        toast.error("Incorrect OTP");
+      }
+    } catch (err) {
+      console.error("OTP verification failed", err);
+      toast.error("Failed to verify OTP");
+    } finally {
+      setIsLoading(false);
     }
   };
 
   return (
     <div className="px-4">
-      <h2 className="mt-6 text-2xl font-semibold text-black !leading-130">
-        Sign Up
-      </h2>
+      {!showOtpInput &&(<h2 className="mt-6 text-2xl font-semibold text-black !leading-130">Sign Up</h2>)}
 
-      <form className="mt-8" onSubmit={handleSubmit}>
+      {!showOtpInput &&(
+        <form className="mt-8" onSubmit={handleSubmit}>
         <CustomInput
           placeholder="Name"
           name="name"
           type="text"
           error={!formDetails.name && error}
-          errorText="Email Is Required"
+          errorText="Name is required"
           value={formDetails.name}
-          onChange={(e) =>
-            setFormDetails({
-              ...formDetails,
-              name: e.target.value,
-            })
-          }
+          onChange={(e) => setFormDetails({ ...formDetails, name: e.target.value })}
         />
         <CustomInput
           customClass="mt-4"
@@ -105,48 +136,29 @@ const SignUp = () => {
           name="email"
           type="email"
           error={!formDetails.email && error}
-          errorText="Email Is Required"
+          errorText="Email is required"
           value={formDetails.email}
-          onChange={(e) =>
-            setFormDetails({
-              ...formDetails,
-              email: e.target.value,
-            })
-          }
+          onChange={(e) => setFormDetails({ ...formDetails, email: e.target.value })}
         />
-
         <CustomInput
           customClass="mt-4"
           placeholder="Password"
           name="password"
           type="password"
           error={!formDetails.password && error}
-          errorText="Password Is Required"
+          errorText="Password is required"
           value={formDetails.password}
-          onChange={(e) =>
-            setFormDetails({
-              ...formDetails,
-              password: e.target.value,
-            })
-          }
+          onChange={(e) => setFormDetails({ ...formDetails, password: e.target.value })}
         />
-
         <CustomInput
           customClass="mt-4"
           placeholder="Number"
           name="number"
           type="number"
-          error={
-            (!formDetails.number || formDetails.number.length !== 10) && error
-          }
-          errorText="Number is required OR must be 10 digit"
+          error={(!formDetails.number || formDetails.number.length !== 10) && error}
+          errorText="Number must be 10 digits"
           value={formDetails.number}
-          onChange={(e) =>
-            setFormDetails({
-              ...formDetails,
-              number: e.target.value,
-            })
-          }
+          onChange={(e) => setFormDetails({ ...formDetails, number: e.target.value })}
         />
         <CustomInput
           customClass="mt-4"
@@ -154,14 +166,19 @@ const SignUp = () => {
           name="address"
           type="text"
           error={!formDetails.address && error}
-          errorText="Address Is Required"
+          errorText="Address is required"
           value={formDetails.address}
-          onChange={(e) =>
-            setFormDetails({
-              ...formDetails,
-              address: e.target.value,
-            })
-          }
+          onChange={(e) => setFormDetails({ ...formDetails, address: e.target.value })}
+        />
+        <CustomInput
+          customClass="mt-4"
+          placeholder="RefferCode (Optional)"
+          name="refferCode"
+          type="text"
+          error={!formDetails.refferCode && error}
+          errorText="RefferCode is required"
+          value={formDetails.refferCode}
+          onChange={(e) => setFormDetails({ ...formDetails, refferCode: e.target.value })}
         />
 
         {authError && <p className="text-red-500 mt-2">{authError}</p>}
@@ -171,9 +188,31 @@ const SignUp = () => {
           isSubmit
           disabled={isLoading || loading}
         >
-          {isLoading || loading ? "Loading..." : "Sign Up"}
+          {isLoading || loading ? "Processing..." : "Sign Up"}
         </CustomButton>
-      </form>
+      </form>)}
+
+      {/* OTP Verification UI */}
+      {showOtpInput && (
+        <div className="mt-6">
+          <h3 className="text-lg font-semibold mb-2">Enter OTP</h3>
+          <CustomInput
+            type="number"
+            name="otp"
+            placeholder="Enter 6-digit OTP"
+            value={otp}
+            onChange={(e) => setOtp(e.target.value)}
+          />
+          <CustomButton
+            customClass="w-full !py-3.5 mt-4"
+            onClick={handleOtpSubmit}
+            disabled={isLoading}
+          >
+            {isLoading ? "Verifying..." : "Verify OTP"}
+          </CustomButton>
+        </div>
+      )}
+
       <OptionWay />
       <LoginWay />
       <AgreementConfirm />

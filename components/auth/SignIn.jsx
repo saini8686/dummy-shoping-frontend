@@ -1,69 +1,97 @@
 "use client";
 import Link from "next/link";
 import { useSearchParams, useRouter } from "next/navigation";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { CustomButton } from "../common/CustomButton";
 import { CustomInput } from "./common/CustomInput";
 import LoginWay from "./common/LoginWay";
 import { AgreementConfirm, OptionWay } from "./common/common";
 import { login, saveToken, isAuthenticated, authType } from '../../services/auth.service'; // Adjust the import path as necessary
-import { toast } from "react-toastify";
-
+import Cookies from 'js-cookie';
+import { ToastContainer, toast } from "react-toastify";
 
 const SignIn = () => {
+  // useEffect(() => {
+  //   // Clear all client-side cookies
+  //   Object.keys(Cookies.get()).forEach((cookieName) => {
+  //     Cookies.remove(cookieName);
+  //   });
+
+  //   // Also clear localStorage or sessionStorage if needed
+  //   localStorage.clear();
+  //   sessionStorage.clear();
+  // }, []);
   const [formDetails, setFormDetails] = useState({
     email: "",
     password: "",
   });
+
   const searchParams = useSearchParams();
   const router = useRouter();
-  let auth = searchParams.get("auth");
+  const auth = searchParams.get("auth"); // e.g., 'admin', 'shopkeeper', 'customer'
+
   const [error, setError] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
   const submitHandler = async (e) => {
     e.preventDefault();
     setError(false);
-  
-    if (!formDetails.email || !formDetails.password) {
+
+    const { email, password } = formDetails;
+
+    if (!email || !password) {
       setError(true);
       return;
     }
-  
+
     try {
       setIsLoading(true);
-      let response = await login(formDetails.email, formDetails.password);
-      if (response.token) {
-        saveToken(response.token);
-        console.log(authType(), 'authType');
+      const response = await login(email, password);
+
+      if (response?.token && response?.userId && response?.userRole) {
+        // ✅ Set cookies with secure options (for HTTPS in production)
+        Cookies.set("token", response.token, { sameSite: "Lax", secure: true });
+        Cookies.set("userId", response.userId.toString(), { sameSite: "Lax", secure: true });
+        Cookies.set("userRole", response.userRole.toLowerCase(), { sameSite: "Lax", secure: true });
+
+        const role = response.userRole.toLowerCase();
+        console.log("User Role:", role, "auth type:", auth);
         
-        if(isAuthenticated()){
-          if(auth === authType()){
-            toast.success('Login Successful');
-            
-            if(authType() === 'shopkepper'){
-              router.push(`/${auth}/product`);
-            }else{
-              console.log(`/${auth}/product`,'user authType matched');
-              router.push(`/${auth}`);
-            }
-          }else {
-            toast.warning('Auth type not matched');            
-            Cookies.remove('userId');           
-            setError(true);
-          }        
+        if (auth === role) {
+          toast.success("Login Successful");
+
+          switch (role) {
+            case "admin":
+              router.push("/admin/dashboard");
+              break;
+            case "shopkeeper":
+              router.push(`/shopkepper/product`);
+              break;
+            case "customer":
+              router.push("/customer");
+              break;
+            default:
+              router.push("/shopkepper/product");
+          }
+        } else {
+          toast.warning("You are not authorized to access this page");
+          Cookies.remove("token");
+          Cookies.remove("userId");
+          Cookies.remove("userRole");
+          setError(true);
         }
-      }else {
+      } else {
+        toast.error("Invalid credentials");
         setError(true);
       }
     } catch (err) {
-      console.error('Error:', err);
+      console.error("Login Error:", err);
+      toast.error(err.response.data.message || "An error occurred during login");
       setError(true);
     } finally {
       setIsLoading(false);
     }
   };
-
   return (
     <div className="px-4">
       <h2 className="mt-6 text-2xl font-semibold text-black !leading-130">
@@ -79,7 +107,7 @@ const SignIn = () => {
           <Icon icon="google" /> Sign in with Google
         </CustomButton>
       </div> */}
-
+      <ToastContainer />
       <form className="mt-8" onSubmit={(e) => submitHandler(e)}>
         <CustomInput
           placeholder="Email"

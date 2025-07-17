@@ -1,27 +1,25 @@
-import React, { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { getCurrentUser, logout } from '../services/auth';
+// import React, { useState } from 'react';
+// import {  logout } from '../services/auth';
 
 function Dashboard() {
-  const [user, setUser] = useState(null);
-  const navigate = useNavigate();
+  // const [user, setUser] = useState(null);
 
-  useEffect(() => {
-    const userData = getCurrentUser();
-    if (!userData) {
-      // Redirect to login if no user is found
-      navigate('/');
-      return;
-    }
-    setUser(userData);
-  }, [navigate]);
+  // useEffect(() => {
+  //   // const userData = getCurrentUser();
+  //   // if (!userData) {
+  //   //   // Redirect to login if no user is found
+  //   //   // navigate('/');
+  //   //   return;
+  //   // }
+  //   // setUser(userData);
+  // }, [navigate]);
 
   const handleLogout = () => {
     logout();
-    navigate('/');
+    // navigate('/');
   };
 
-  if (!user) return <div>Loading...</div>;
+  // if (!user) return <div>Loading...</div>;
 
   return (
     <div className="container mt-5">

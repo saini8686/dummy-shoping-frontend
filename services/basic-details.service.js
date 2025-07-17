@@ -9,8 +9,13 @@ export const submitBasicDetails = async (details) => {
   };
   
   // READ: Get all basic details or by userId
-  export const getBasicDetails = async () => {
-    const res = await api.get(`/api/basic-details/${userId}`);
+  export const getAllBasicDetails = async () => {
+    const res = await api.get(`/api/basic-details`);
+    return res.data;
+  };
+  
+  export const getBasicDetails = async (id) => {
+    const res = await api.get(`/api/basic-details/${id}`);
     return res.data;
   };
   

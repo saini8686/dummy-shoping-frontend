@@ -41,7 +41,7 @@ const UploadShopImage = () => {
       </h2>
       <QrCode />
       <Link
-        href="/shopkepper/product"
+        href="/sign-in?auth=shopkepper"
         className="text-greens-900 text-xl font-medium flex justify-center items-center gap-2 mt-6 group"
       >
         Next

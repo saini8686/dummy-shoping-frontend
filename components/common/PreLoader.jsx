@@ -39,7 +39,7 @@ const PreLoader = () => {
       {/* show */}
       <div className="w-full max-w-[540px] mx-auto min-h-screen bg-white fixed inset-0 z-50">
         <div className="relative justify-between gap-10 flex-col flex z-10 min-h-screen">
-          <div className="mt-10 px-4 flex w-full  justify-between items-center">
+          {/* <div className="mt-10 px-4 flex w-full  justify-between items-center">
             {steps === "0" && (
               <p className="text-lg font-semibold text-black !leading-130">
                 {activeIndex + 1}
@@ -67,7 +67,7 @@ const PreLoader = () => {
                 Skip
               </Link>
             )}
-          </div>
+          </div> */}
           <Image
             src="/assets/images/svg/main-logo.svg"
             width={205}
@@ -78,10 +78,7 @@ const PreLoader = () => {
           />
           <div className="bg-greens-900 landing_hero_swiper rounded-t-3xl  h-[400px]   w-full pt-[56px] pb-6 px-7">
             {steps === "0" ? (
-              <InstructionStep
-                activeIndex={activeIndex}
-                setActiveIndex={setActiveIndex}
-              />
+              <SelectRole />
             ) : steps === "1" ? (
               <SelectRole />
             ) : (

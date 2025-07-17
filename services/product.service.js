@@ -5,6 +5,21 @@ export const getAllProducts = async () => {
   return response.data;
 };
 
+export const getAllProductsThroughUserId = async ({userId, search = '', page = 1, limit = 10}) => {
+  console.log("Fetching products for userId:", userId);
+  console.log("Search term:", search);
+  
+  const response = await api.get(`/api/products/filter`, {
+    params: {
+      userId,
+      search,
+      page,
+      limit
+    }
+  });
+  return response.data;
+};
+
 // GET single product by ID
 export const getProductById = async (id) => {
   const response = await api.get(`/api/products/${id}`);

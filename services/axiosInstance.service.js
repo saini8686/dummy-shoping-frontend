@@ -7,17 +7,17 @@ const api = axios.create({
   }
 });
 
-api.interceptors.request.use((config) => {
-  const token = typeof window !== 'undefined' ? getToken() : null;
-  console.log(getToken(),"token");
-  console.log(token,"token");
+// api.interceptors.request.use((config) => {
+//   const token = typeof window !== 'undefined' ? getToken() : null;
+//   console.log(getToken(),"token");
+//   console.log(token,"token");
   
-  if (token) {
-    config.headers.Authorization = `Bearer ${token}`;
-  }
-  return config;
-}, (error) => {
-  return Promise.reject(error);
-});
+//   if (token) {
+//     config.headers.Authorization = `Bearer ${token}`;
+//   }
+//   return config;
+// }, (error) => {
+//   return Promise.reject(error);
+// });
 
 export default api;

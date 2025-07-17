@@ -10,10 +10,16 @@ export const submitUser = async (details) => {
 
 // READ: Get all basic details or by userId
 export const getAllUserList = async () => {
-  const res = await api.get(`/api/users`);
+  const token = Cookies.get("token"); // Get token from browser cookies
+
+  const res = await api.get(`/api/users`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+
   return res.data;
 };
-
 export const getUser = async () => {
   const res = await api.get(`/api/users/${userId}`);
   return res.data;

@@ -1,13 +1,14 @@
-import UsersList from '@/components/admin/UsersList'
-import PreLoader from '@/components/common/PreLoader'
 import BottomBarAdmin from '@/components/admin/common/BottomBarAdmin'
 import React, { Suspense } from 'react'
+import Dashboard from '@/components/admin/dashboard'
+import Navbar from '@/components/common/Navbar'
 
 const page = () => {
   return (
     <Suspense>
-    <UsersList/>
-    <BottomBarAdmin />
+      <Navbar />
+      <Dashboard />
+      <BottomBarAdmin />
     </Suspense>
   )
 }

@@ -4,11 +4,10 @@ import React, { Suspense } from "react";
 
 const page = () => {
   return (
-        <Suspense>
-    
+    <Suspense>
       <UserDetails />
     </Suspense>
-    
+
   );
 };
 

@@ -1,3 +1,6 @@
+import { Cookie } from "lucide-react";
+import { redirect } from "next/dist/server/api-utils";
+
 // Local storage based authentication service
 const AUTH_KEY = 'auth_user';
 const OTP_KEY = 'auth_otp';
@@ -26,4 +29,6 @@ export const getCurrentUser = () => {
 
 export const logout = () => {
   localStorage.removeItem(AUTH_KEY);
+  Cookie.removeItem("token"); // Assuming you use cookies for session management
+  redirect('/sign-in?auth='); // Redirect to login page after logout
 };

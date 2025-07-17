@@ -34,13 +34,14 @@ const BasicDetailForm = () => {
 
   const submitHandler = (e) => {
     e.preventDefault();
+    console.log(formDetails, "formDetails");
     const isAnyFieldEmpty = Object.values(formDetails).some(
       (value) => value.trim() === ""
     );
     console.log(isAnyFieldEmpty ,'isAnyFieldEmpty');
     
     const isPhoneValid = /^\d{10}$/.test(formDetails.number);
-    if (!isAnyFieldEmpty && isPhoneValid) {
+    // if (!isAnyFieldEmpty && isPhoneValid) {
       setError(false);
       console.log(formDetails, "formDetails formDetails");
       toast.success("Details submitted successfully");
@@ -60,15 +61,15 @@ const BasicDetailForm = () => {
       submitBasicDetails(formDetails);
       router.push("/shopkepper/upload-image");
 
-    } else {
-      setError(true);
+    // } else {
+    //   setError(true);
 
-      if (isAnyFieldEmpty) {
-        toast.error("Please fill in all required fields");
-      } else if (!isPhoneValid) {
-        toast.error("Phone number must be exactly 10 digits");
-      }
-    }
+    //   if (isAnyFieldEmpty) {
+    //     toast.error("Please fill in all required fields");
+    //   } else if (!isPhoneValid) {
+    //     toast.error("Phone number must be exactly 10 digits");
+    //   }
+    // }
   };
   return (
     <form onSubmit={(e) => submitHandler(e)} className="w-full  mx-auto mt-6">
@@ -117,7 +118,7 @@ const BasicDetailForm = () => {
                       onChange={(e) =>
                         setFormDetails({
                           ...formDetails,
-                          name: e.target.value,
+                          username: e.target.value,
                         })
                       }
                     />
@@ -225,7 +226,7 @@ const BasicDetailForm = () => {
                     <CustomInput
                       placeholder="Gst Number"
                       name="gst_number"
-                      type="number"
+                      type="text"
                       error={!formDetails.gst_number && error}
                       errorText="Gst Number Is Required"
                       value={formDetails.gst_number}

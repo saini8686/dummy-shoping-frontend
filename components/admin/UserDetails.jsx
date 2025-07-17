@@ -18,7 +18,7 @@ const UserDetails = () => {
   const searchParams = useSearchParams();
   // let id = searchParams.get("id");
   // const router = useRouter();
-  // const [userData, setUserData] = useState([]);
+  const [userData, setUserData] = useState([]);
   // const [loading, setLoading] = useState(true);
 
   // useEffect(() => {

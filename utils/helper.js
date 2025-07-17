@@ -463,7 +463,7 @@ export const SETTING_LIST = [
   {
     icon: "profileLogout",
     name: "Log out",
-    path: "#",
+    path: "/",
   },
 ];
 export const USER_PROFILE_DATA = [
@@ -681,7 +681,30 @@ export const BOTTOM_BAR_SHOPKEPPER_LIST = [
   },
   {
     icon: "shopkepperProfile",
+    path: "/shopkepper/profile",
+  },
+];
+
+export const BOTTOM_BAR_ADMIN_LIST = [
+  {
+    icon: "shopkepperCarryBag",
+    path: "/admin/user-list",
+  },
+  {
+    icon: "shopkepperOption",
+    path: "/admin/payment",
+  },
+  {
+    icon: "shopkepperWallet",
+    path: "/shopkepper/wallet",
+  },
+  {
+    icon: "shopkepperChartL",
     path: "#",
+  },
+  {
+    icon: "shopkepperProfile",
+    path: "/admin/profile",
   },
 ];
 
