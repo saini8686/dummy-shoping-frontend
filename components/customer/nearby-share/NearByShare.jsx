@@ -58,7 +58,7 @@ const NearByShare = ({ search }) => {
           <div className="h-[175px] mt-6 shadow-category rounded-lg py-4 px-3">
             <div className="flex items-start gap-5">
               <Image
-                src={obj.image}
+                src={obj.image ?? ""}
                 alt="shopImage"
                 height={140}
                 width={121}
