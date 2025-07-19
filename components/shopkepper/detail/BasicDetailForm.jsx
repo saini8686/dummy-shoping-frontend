@@ -24,6 +24,8 @@ const BasicDetailForm = () => {
     gst_number: "",
     smp: "",
     number: "",
+    latitude: "",
+    longitude: ""
   });
   const [error, setError] = useState(false);
   const [openIndex, setOpenIndex] = useState(null);
@@ -32,34 +34,83 @@ const BasicDetailForm = () => {
     setOpenIndex(openIndex === index ? null : index);
   };
 
+  const [address, setAddress] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [lat, setLat] = useState(null);
+  const [lng, setLng] = useState(null);
+
+  const getLocation = () => {
+    if (!navigator.geolocation) {
+      alert('Geolocation is not supported by your browser');
+      return;
+    }
+
+    setLoading(true);
+
+    navigator.geolocation.getCurrentPosition(
+      async (position) => {
+        const { latitude, longitude } = position.coords;
+        console.log('Latitude:', latitude, 'Longitude:', longitude);
+        setLat(latitude);
+        setLng(longitude);
+
+        const response = await fetch(
+          `https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${latitude}&lon=${longitude}`
+        );
+        const data = await response.json();
+        console.log('Reverse Geocode Data:', data);
+
+        const { house_number, road, suburb, city, town, village, state, postcode, country } = data.address;
+
+        const fullAddress = `
+          ${house_number ? house_number + ', ' : ''}${road ? road + ', ' : ''}${suburb ? suburb + ', ' : ''}
+          ${city || town || village ? (city || town || village) + ', ' : ''}
+          ${state ? state + ', ' : ''}${country ? country + ', ' : ''}${postcode ? postcode : ''}
+        `.replace(/\s+/g, ' ').trim();
+
+        setAddress(fullAddress || 'Address not found');
+        setLoading(false);
+      },
+      (error) => {
+        console.error(error);
+        alert('Unable to retrieve your location');
+        setLoading(false);
+      }
+    );
+  };
+
   const submitHandler = (e) => {
     e.preventDefault();
     console.log(formDetails, "formDetails");
     const isAnyFieldEmpty = Object.values(formDetails).some(
       (value) => value.trim() === ""
     );
-    console.log(isAnyFieldEmpty ,'isAnyFieldEmpty');
-    
+    console.log(isAnyFieldEmpty, 'isAnyFieldEmpty');
+
     const isPhoneValid = /^\d{10}$/.test(formDetails.number);
     // if (!isAnyFieldEmpty && isPhoneValid) {
-      setError(false);
-      console.log(formDetails, "formDetails formDetails");
-      toast.success("Details submitted successfully");
-      setFormDetails({
-        username: "",
-        village: "",
-        city: "",
-        district: "",
-        state: "",
-        shopname: "",
-        category: "",
-        smp: "",
-        gst_number: "",
-        number: "",
-      });
-      formDetails.userId = Cookies.get('userId');
-      submitBasicDetails(formDetails);
-      router.push("/shopkepper/upload-image");
+    setError(false);
+    console.log(formDetails, "formDetails formDetails");
+    toast.success("Details submitted successfully");
+    setFormDetails({
+      username: "",
+      village: "",
+      city: "",
+      district: "",
+      state: "",
+      shopname: "",
+      category: "",
+      smp: "",
+      gst_number: "",
+      number: "",
+      latitude: "",
+      longitude: ""
+    });
+    formDetails.userId = Cookies.get('userId');
+    formDetails.latitude = lat;
+    formDetails.longitude = lng;
+    submitBasicDetails(formDetails);
+    router.push("/shopkepper/upload-image");
 
     // } else {
     //   setError(true);
@@ -77,32 +128,28 @@ const BasicDetailForm = () => {
       {BAISC_DETAILS_FORM.map((section, index) => (
         <div
           key={index}
-          className={`mb-4 border overflow-hidden rounded-lg ${
-            openIndex === index ? "border-greys-600" : "border-transparent"
-          }`}
+          className={`mb-4 border overflow-hidden rounded-lg ${openIndex === index ? "border-greys-600" : "border-transparent"
+            }`}
         >
           <button
             type="button"
             onClick={() => toggleAccordion(index)}
-            className={`w-full flex  justify-between duration-300 items-center text-left text-xl font-semibold  px-5 py-3  text-blacks-200 ${
-              openIndex === index
-                ? "bg-transparent !text-greens-900"
-                : "bg-[#F1FEF8]"
-            } `}
+            className={`w-full flex  justify-between duration-300 items-center text-left text-xl font-semibold  px-5 py-3  text-blacks-200 ${openIndex === index
+              ? "bg-transparent !text-greens-900"
+              : "bg-[#F1FEF8]"
+              } `}
           >
             {section.title}
             <Icon
               icon="back"
-              className={` duration-300 ${
-                openIndex === index ? "rotate-90" : "rotate-270"
-              } `}
+              className={` duration-300 ${openIndex === index ? "rotate-90" : "rotate-270"
+                } `}
             />
           </button>
 
           <div
-            className={`grid overflow-hidden duration-300 ${
-              openIndex === index ? "grid-rows-[1fr]" : "grid-rows-[0fr]"
-            }`}
+            className={`grid overflow-hidden duration-300 ${openIndex === index ? "grid-rows-[1fr]" : "grid-rows-[0fr]"
+              }`}
           >
             <div className="overflow-hidden">
               <div className="px-4 py-4 bg-white rounded-b-lg">
@@ -257,7 +304,14 @@ const BasicDetailForm = () => {
                         })
                       }
                     />
-                    <LocationPicker/>
+                    {/* <LocationPicker/> */}
+                    <CustomButton
+                      onClick={getLocation}
+                      customClass="w-full gap-3 justify-center flex items-center !py-3.5"
+                    >
+
+                      <Icon icon="locationWhite" /> {loading ? 'Fetching Location...' : address === '' ? 'Choose Location from Google' : address}
+                    </CustomButton>
                   </div>
                 )}
               </div>

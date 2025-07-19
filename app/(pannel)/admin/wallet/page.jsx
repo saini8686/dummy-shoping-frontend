@@ -1,17 +1,17 @@
 import HeaderCustomer from "@/components/customer/HeaderCustomer";
-import Setting from "@/components/customer/profile/Setting";
-import UserInfo from "@/components/customer/profile/UserInfo";
 import BottomBarAdmin from "@/components/admin/common/BottomBarAdmin";
+import RecentTransition from "@/components/shopkepper/wallet/RecentTransition";
+import TotalAmount from "@/components/shopkepper/wallet/TotalAmount";
 
 const page = () => {
   return (
     <div className="bg-white-low">
-      <HeaderCustomer name="Profile" />
+      <HeaderCustomer name="Wallet" />
       <div className="pb-20 mt-10 px-4">
-        <UserInfo />
-        <Setting />
+        <TotalAmount />
+        <RecentTransition />
+        <BottomBarAdmin />
       </div>
-      <BottomBarAdmin />
     </div>
   );
 };

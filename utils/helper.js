@@ -677,7 +677,7 @@ export const BOTTOM_BAR_SHOPKEPPER_LIST = [
   },
   {
     icon: "shopkepperChartL",
-    path: "#",
+     path: "/shopkepper/payment",
   },
   {
     icon: "shopkepperProfile",
@@ -692,15 +692,15 @@ export const BOTTOM_BAR_ADMIN_LIST = [
   },
   {
     icon: "shopkepperOption",
-    path: "/admin/payment",
+    path: "/admin/shop-list",
   },
   {
     icon: "shopkepperWallet",
-    path: "/shopkepper/wallet",
+    path: "/admin/wallet",
   },
   {
     icon: "shopkepperChartL",
-    path: "#",
+    path: "/admin/payment",
   },
   {
     icon: "shopkepperProfile",

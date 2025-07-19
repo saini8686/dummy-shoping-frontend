@@ -11,12 +11,14 @@ import { createPayment } from "@/services/payment.service";
 import { useParams } from 'next/navigation';
 import { getUser } from "@/services/users.service"; // Import the getUser function
 import Cookies from 'js-cookie';
+import { ToastContainer, toast } from "react-toastify";
 
 const Page = () => {
   const params = useParams(); // ✅ Only declared once
-  const userId = params.userId;
+  const shopId = params.userId;
+  const userId = Cookies.get("userId");
 
-  console.log("User ID from params:", userId);
+  console.log("Shop ID from params:", shopId);
 
   const [isOpen, setIsOpen] = useState(false);
   const [amount, setAmount] = useState("");
@@ -27,22 +29,15 @@ const Page = () => {
     const token = Cookies.get("token"); // Or get from context/store
 
     if (isNaN(value)) {
-      setError("Please enter a valid number.");
-    } else if (value > 5000) {
-      setError("Amount should not exceed ₹5000.");
-    } else if (value <= 0) {
-      setError("Amount must be greater than 0.");
-    } else {
-      setError("");
-
-      try {
+      toast.error("Please enter a valid number.");
+      try { 
         const userData = await getUser(userId, token);
         console.log(userData, 'sdfghj');
-        const data = { amount: value, userId: userId, userName: userData.name, status: "pending", transactionId: 3, totalAmount: value, earnAmount: value * .10, paymentMethod: 'online' };
+        const data = { amount: value, userId: userId, userName: userData.name, status: "pending", transactionId: shopId, totalAmount: value, earnAmount: value * .10, paymentMethod: 'online' };
         const result = await createPayment(data, token);
         console.log("Payment successful:", result);
 
-        alert(`Paying ₹${amount}`);
+        toast.success(`Payment successful ₹${amount}`);
         setIsOpen(false);
         setAmount("");
       } catch (error) {
@@ -58,13 +53,12 @@ const Page = () => {
 
 
   useEffect(() => {
-    if (!userId) return;
-    console.log("Fetching shop details for userId:", userId);
-
+    if (!shopId) return;
+    console.log("Fetching shop details for shopId:", shopId);
 
     const fetchShopDetails = async () => {
       try {
-        const response = await getBasicDetails(userId);
+        const response = await getBasicDetails(shopId);
         setShopDetails(response || null);
       } catch (error) {
         console.error("Error fetching shop details:", error);
@@ -74,10 +68,11 @@ const Page = () => {
     };
 
     fetchShopDetails();
-  }, [userId]);
+  }, [shopId]);
 
   return (
-    <div className="bg-white-low">
+    <div className="bg-white-low">      
+      <ToastContainer />
       <HeaderCustomer name="Shop Details" />
       <div className="px-4 pb-20 pt-8">
         {loading ? (
