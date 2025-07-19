@@ -4,7 +4,7 @@ import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useState, useEffect } from "react";
 import Cookies from 'js-cookie';
-import { toast } from "react-toastify";
+import { ToastContainer, toast } from "react-toastify";
 
 import useAuthStore from "../../store/useAuthStore";
 import { register, verifyOtp } from "../../services/auth.service";
@@ -117,6 +117,7 @@ const SignUp = () => {
 
   return (
     <div className="px-4">
+      <ToastContainer />
       {!showOtpInput &&(<h2 className="mt-6 text-2xl font-semibold text-black !leading-130">Sign Up</h2>)}
 
       {!showOtpInput &&(
