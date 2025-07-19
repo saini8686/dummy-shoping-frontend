@@ -7,6 +7,8 @@ import Icon from "@/components/common/Icons";
 import { getShopDetails } from '../../../services/shop.service';
 import OfferSlider from "@/components/customer/OfferSlider";
 import TopBarProduct from "@/components/customer/TopBarProduct";
+import Cookies from "js-cookie";
+import { getDistanceFromLatLonInKm  } from "@/utils/geo"
 
 const NearByShare = ({ search }) => {
   const [shops, setShops] = useState([]);
@@ -91,7 +93,8 @@ const NearByShare = ({ search }) => {
                     ))}
                   </div>
                   <p className="text-reds-900 italic font-semibold text-xs !leading-130">
-                    {obj.distance} away
+                    {getDistanceFromLatLonInKm(obj.latitude, obj.longitude, Cookies.get("latitude"), Cookies.get("longitude"))} away
+                    {/* {obj.distance} away */}
                   </p>
                 </div>
               </div>

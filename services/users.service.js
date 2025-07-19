@@ -20,8 +20,15 @@ export const getAllUserList = async () => {
 
   return res.data;
 };
-export const getUser = async () => {
-  const res = await api.get(`/api/users/${userId}`);
+export const getUser = async (user_Id, token) => {
+  console.log("Fetching user with ID:", user_Id);
+  console.log("Using token:", token);
+  
+  const res = await api.get(`/api/users /${user_Id}`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
   return res.data;
 };
 

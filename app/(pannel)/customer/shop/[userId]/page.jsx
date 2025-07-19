@@ -8,17 +8,23 @@ import { getBasicDetails } from "@/services/basic-details.service";
 import { CustomButton } from "@/components/common/CustomButton";
 import { Dialog } from "@headlessui/react";
 import { createPayment } from "@/services/payment.service";
+import { useParams } from 'next/navigation';
+import { getUser } from "@/services/users.service"; // Import the getUser function
+import Cookies from 'js-cookie';
 
 const Page = () => {
-  const searchParams = useSearchParams();
-  const userId = searchParams.get(3);
+  const params = useParams(); // ✅ Only declared once
+  const userId = params.userId;
+
+  console.log("User ID from params:", userId);
+
   const [isOpen, setIsOpen] = useState(false);
   const [amount, setAmount] = useState("");
   const [error, setError] = useState("");
 
   const handleSubmit = async () => {
     const value = parseFloat(amount);
-    const token = localStorage.getItem("token"); // Or get from context/store
+    const token = Cookies.get("token"); // Or get from context/store
 
     if (isNaN(value)) {
       setError("Please enter a valid number.");
@@ -30,7 +36,9 @@ const Page = () => {
       setError("");
 
       try {
-        const data = { amount: value, userId: 1, userName: 'sunil', status: "pending", transactionId: 3, totalAmount: value, earnAmount: value * .10, paymentMethod: 'online' };
+        const userData = await getUser(userId, token);
+        console.log(userData, 'sdfghj');
+        const data = { amount: value, userId: userId, userName: userData.name, status: "pending", transactionId: 3, totalAmount: value, earnAmount: value * .10, paymentMethod: 'online' };
         const result = await createPayment(data, token);
         console.log("Payment successful:", result);
 
@@ -50,13 +58,13 @@ const Page = () => {
 
 
   useEffect(() => {
-    // if (!userId) return;
+    if (!userId) return;
     console.log("Fetching shop details for userId:", userId);
 
 
     const fetchShopDetails = async () => {
       try {
-        const response = await getBasicDetails(60);
+        const response = await getBasicDetails(userId);
         setShopDetails(response || null);
       } catch (error) {
         console.error("Error fetching shop details:", error);

@@ -5,10 +5,11 @@ import Icon from "./Icons";
 import Link from "next/link";
 import useAuthStore from "@/store/useAuthStore";
 import { useRouter } from "next/navigation";
+import Cookies from "js-cookie";
 
 const Navbar = () => {
   const { user, signOut } = useAuthStore();
- 
+
   const [showProfileMenu, setShowProfileMenu] = useState(false);
   const router = useRouter();
 
@@ -20,8 +21,8 @@ const Navbar = () => {
   }, [user]);
 
   // Display user's name or email if available
-  const displayName =  user?.displayName || "User";
-  const userEmail =  user?.email || "";
+  const displayName = user?.displayName || "User";
+  const userEmail = user?.email || "";
 
   const toggleProfileMenu = () => {
     setShowProfileMenu(!showProfileMenu);
@@ -61,7 +62,7 @@ const Navbar = () => {
           <p className="text-white font-roboto font-medium block text-sm !leading-130">
             <span className="block font-roboto">HOME</span>
             <span className="block font-roboto mt-0.5">
-              Sultan Bhag, Erraga...
+              {Cookies.get("address") || "Your Location"}
             </span>
           </p>
         </div>
@@ -81,7 +82,7 @@ const Navbar = () => {
         </div>
       </div>
 
-     
+
 
       <p className="text-lg text-white font-roboto mt-4 font-medium !leading-130">
         Your Order will be packed in 11 minutes

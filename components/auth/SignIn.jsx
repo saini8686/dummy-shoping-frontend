@@ -26,6 +26,7 @@ const SignIn = () => {
     password: "",
   });
 
+  const [loading, setLoading] = useState(true);
   const searchParams = useSearchParams();
   const router = useRouter();
   const auth = searchParams.get("auth"); // e.g., 'admin', 'shopkeeper', 'customer'
@@ -56,7 +57,7 @@ const SignIn = () => {
 
         const role = response.userRole.toLowerCase();
         console.log("User Role:", role, "auth type:", auth);
-        
+
         if (auth === role) {
           toast.success("Login Successful");
 
@@ -68,6 +69,7 @@ const SignIn = () => {
               router.push(`/shopkepper/product`);
               break;
             case "customer":
+              getLocation();
               router.push("/customer");
               break;
             default:
@@ -92,6 +94,63 @@ const SignIn = () => {
       setIsLoading(false);
     }
   };
+
+  const getLocation = () => {
+    return new Promise((resolve) => {
+      if (!navigator.geolocation) {
+        alert('Geolocation is not supported by your browser');
+        setDefaultLocation();
+        resolve();
+        return;
+      }
+
+      setLoading(true);
+
+      navigator.geolocation.getCurrentPosition(
+        async (position) => {
+          const { latitude, longitude } = position.coords;
+
+          try {
+            const response = await fetch(
+              `https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${latitude}&lon=${longitude}`
+            );
+            const data = await response.json();
+
+            const { house_number, road, suburb, city, town, village, state, postcode, country } = data.address;
+
+            const fullAddress = `
+            ${house_number ? house_number + ', ' : ''}${road ? road + ', ' : ''}${suburb ? suburb + ', ' : ''}
+            ${city || town || village ? (city || town || village) + ', ' : ''}
+            ${state ? state + ', ' : ''}${country ? country + ', ' : ''}${postcode ? postcode : ''}
+          `.replace(/\s+/g, ' ').trim();
+            console.log(latitude);
+            console.log(longitude);
+            
+            
+            document.cookie = `latitude=${latitude}; path=/`;
+            document.cookie = `longitude=${longitude}; path=/`;
+            document.cookie = `address=${encodeURIComponent(fullAddress)}; path=/`;
+
+            setAddress(fullAddress || 'Address not found');
+          } catch (err) {
+            console.error('Reverse geocode failed:', err);
+            setAddress('Address not found');
+          }
+
+          setLoading(false);
+          resolve();
+        },
+        (error) => {
+          console.error(error);
+          alert('Unable to retrieve your location, setting default.');
+          setDefaultLocation();
+          setLoading(false);
+          resolve();
+        }
+      );
+    });
+  };
+
   return (
     <div className="px-4">
       <h2 className="mt-6 text-2xl font-semibold text-black !leading-130">
