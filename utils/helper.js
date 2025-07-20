@@ -166,7 +166,7 @@ export const BOTTOM_BAR_LIST = [
   },
   {
     icon: "shopkepperProfile",
-    path: "/shopkepper/profile",
+    path: "/customer/profile",
   },
 ];
 export const CATEGORY_LIST = [
