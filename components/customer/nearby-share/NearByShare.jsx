@@ -93,7 +93,7 @@ const NearByShare = ({ search }) => {
                     ))}
                   </div>
                   <p className="text-reds-900 italic font-semibold text-xs !leading-130">
-                    {getDistanceFromLatLonInKm(obj.latitude, obj.longitude, Cookies.get("latitude"), Cookies.get("longitude")).toFixed(2)} away
+                    {getDistanceFromLatLonInKm(obj.latitude, obj.longitude, Cookies.get("latitude"), Cookies.get("longitude")).toFixed(1)} km away
                     {/* {obj.distance} away */}
                   </p>
                 </div>

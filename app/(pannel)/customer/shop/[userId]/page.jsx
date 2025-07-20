@@ -9,7 +9,7 @@ import { CustomButton } from "@/components/common/CustomButton";
 import { Dialog } from "@headlessui/react";
 import { createPayment } from "@/services/payment.service";
 import { useParams } from 'next/navigation';
-import { getUser } from "@/services/users.service"; // Import the getUser function
+import { getUser, updateUser } from "@/services/users.service"; // Import the getUser function
 import Cookies from 'js-cookie';
 import { ToastContainer, toast } from "react-toastify";
 
@@ -43,8 +43,12 @@ const Page = () => {
 
         const userData = await getUser(userId, token);
         console.log(userData, 'sdfghj');
-        const data = { amount: value, userId: userId, userName: userData.name, status: "pending", transactionId: shopId, totalAmount: value, earnAmount: value * .10, paymentMethod: 'online' };
+        const data = { amount: value, userId: userId, userName: userData.name, status: "pending", transactionId: shopId, totalAmount: value, earnAmount: value * .08, paymentMethod: 'online' };
         const result = await createPayment(data, token);
+        userData.wallet = userData.wallet + value * 0.08;
+
+        const updatedUser = await updateUser(userData); // ✅ use a different name
+
         console.log("Payment successful:", result);
 
         toast.success(`Payment successful ₹${amount}`);

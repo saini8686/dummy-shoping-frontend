@@ -1,10 +1,12 @@
 "use client"
 import { CustomButton } from "@/components/common/CustomButton";
 import Icon from "@/components/common/Icons";
-import React, { useState } from "react";
+import { useState } from "react";
 
-const TotalAmount = () => {
-  const [showBalance, setShowBalance] = useState(true); 
+const TotalAmount = (params) => {
+  const userDetails = params.total;
+  const [showBalance, setShowBalance] = useState(true);
+  
   return (
     <div className="px-6 w-full bg-greens-900/10 rounded-lg py-4">
       <div className="flex justify-between items-center">
@@ -16,7 +18,7 @@ const TotalAmount = () => {
         </button>
       </div>
       <p className="text-greens-900 text-2xl !leading-130 mt-3">
-        {showBalance ? "55,000.00" : "*******"}
+        {showBalance ?  userDetails?.wallet : "*******"}
       </p>
       <CustomButton url="/shopkepper/wallet/withdrawal" customClass="mt-4 w-fit">Withdraw</CustomButton>
     </div>

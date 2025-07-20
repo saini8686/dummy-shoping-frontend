@@ -158,11 +158,11 @@ export const BOTTOM_BAR_LIST = [
   },
   {
     icon: "wallet",
-    path: "#",
+    path: "/customer/wallet",
   },
   {
     icon: "other",
-    path: "/customer/category",
+    path: "/customer/payment",
   },
 ];
 export const CATEGORY_LIST = [

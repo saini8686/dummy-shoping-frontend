@@ -1,11 +1,10 @@
-import Icon from "@/components/common/Icons";
 import Link from "next/link";
 import React from "react";
 import TransitionList from "./TransitionList";
-import { TRANSITION_LIST } from "@/utils/helper";
 import Image from "next/image";
 
-const RecentTransition = () => {
+const RecentTransition = (params) => {
+  const TRANSITION_LIST = params.transactions  || [];
   return (
     <>
       <div className="flex justify-between items-center mt-10">
