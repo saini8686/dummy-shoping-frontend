@@ -6,7 +6,7 @@ import { getAllPayments, updateProduct } from "@/services/payment.service";
 import { CustomButton } from "@/components/common/CustomButton";
 import Cookies from "js-cookie";
 
-const Payments = () => {
+const CoustomerPayments = () => {
   const [payments, setPayments] = useState([]);
   const [loading, setLoading] = useState(true);
   const [selectedUser, setSelectedUser] = useState(null);
@@ -99,14 +99,14 @@ const Payments = () => {
             </div>
 
             {/* Action */}
-            <div className="px-4 pb-4">
+            {/* <div className="px-4 pb-4">
               <button
                 onClick={() => handleViewDetails(obj)}
                 className="w-full bg-greens-900 text-white font-medium py-2 mt-2 rounded-md hover:bg-blue-700 transition"
               >
                 View Details
               </button>
-            </div>
+            </div> */}
           </div>
         ))}
       </div>
@@ -174,4 +174,4 @@ const Payments = () => {
   );
 };
 
-export default Payments;
+export default CoustomerPayments;

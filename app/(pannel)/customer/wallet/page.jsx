@@ -8,6 +8,7 @@ import { useEffect, useState } from "react";
 import { getUser } from "@/services/users.service";
 import { getAllPayments } from "@/services/payment.service";
 import Cookies from "js-cookie";
+import BottomBar from "@/components/common/BottomBar";
 
 const Page = () => {
   const [totalAmount, setTotalAmount] = useState(null);
@@ -51,7 +52,7 @@ const Page = () => {
       <div className="pb-20 mt-10 px-4">
         <TotalAmount total={totalAmount} />
         <RecentTransition transactions={recentTransactions} />
-        <BottomBarShopKepper />
+        <BottomBar />
       </div>
     </div>
   );

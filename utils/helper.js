@@ -152,17 +152,21 @@ export const BOTTOM_BAR_LIST = [
     icon: "home",
     path: "/customer",
   },
+  // {
+  //   icon: "shop",
+  //   path: "/customer/item-details",
+  // },
   {
-    icon: "shop",
-    path: "/customer/item-details",
+    icon: "other",
+    path: "/customer/payment",
   },
   {
     icon: "wallet",
     path: "/customer/wallet",
   },
   {
-    icon: "other",
-    path: "/customer/payment",
+    icon: "shopkepperProfile",
+    path: "/shopkepper/profile",
   },
 ];
 export const CATEGORY_LIST = [
@@ -318,7 +322,7 @@ export const LIST_PRODUCT_FILTER = [
     name: "Fruits",
   },
 ];
-export const VEDIO_LIST= ["/assets/video/sow-pay.mp4","/assets/video/sow-pay.mp4","/assets/video/sow-pay.mp4"]
+export const VEDIO_LIST = ["/assets/video/sow-pay.mp4", "/assets/video/sow-pay.mp4", "/assets/video/sow-pay.mp4"]
 export const GROSERY_SLIDER_LIST = [
   {
     productName: "Fresh Vegetables",
@@ -667,17 +671,17 @@ export const BOTTOM_BAR_SHOPKEPPER_LIST = [
     icon: "shopkepperCarryBag",
     path: "/shopkepper/order",
   },
-  {
-    icon: "shopkepperOption",
-    path: "/shopkepper/product",
-  },
+  // {
+  //   icon: "shopkepperOption",
+  //   path: "/shopkepper/product",
+  // },
   {
     icon: "shopkepperWallet",
     path: "/shopkepper/wallet",
   },
   {
     icon: "shopkepperChartL",
-     path: "/shopkepper/payment",
+    path: "/shopkepper/payment",
   },
   {
     icon: "shopkepperProfile",

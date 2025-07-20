@@ -2,15 +2,17 @@ import { CustomButton } from "@/components/common/CustomButton";
 import Image from "next/image";
 import React, { useState, useEffect } from "react";
 import { getBasicDetails } from "../../../services/basic-details.service";
+import Cookies from "js-cookie";
 
 const QrCode = () => {
   const [details, setDetails] = useState([]);
   const [loading, setLoading] = useState(true);
+  const userId = Cookies.get("userId");
 
   useEffect(() => {
     const fetchBasicDetails = async () => {
       try {
-        const data = await getBasicDetails();
+        const data = await getBasicDetails(userId);
         console.log(data, 'basic details data');
         
         setDetails(data);

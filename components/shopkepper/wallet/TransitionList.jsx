@@ -7,7 +7,7 @@ const TransitionList = ({ transition }) => {
         <Icon icon="transitionCome" />
         <p>
           <span className="block text-base !leading-130 font-normal text-greys-1500">
-            Earn Amount{transition.earnAmount}
+            Earn Amount: {transition.earnAmount}
           </span>
           <span className="block text-sm !leading-130 mt-1 font-normal text-greys-1400">
             #{transition.payId}
