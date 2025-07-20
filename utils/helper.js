@@ -457,7 +457,7 @@ export const SETTING_LIST = [
   {
     icon: "profileChat",
     name: "Chat with us",
-    path: "#",
+    path: "https://wa.me/919588556755"
   },
   {
     icon: "profileWallet",
