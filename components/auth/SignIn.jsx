@@ -33,6 +33,7 @@ const SignIn = () => {
 
   const [error, setError] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [address, setAddress] = useState(false);
 
   const submitHandler = async (e) => {
     e.preventDefault();

@@ -28,9 +28,19 @@ const Page = () => {
     const value = parseFloat(amount);
     const token = Cookies.get("token"); // Or get from context/store
 
+    console.log(value, 'value');
     if (isNaN(value)) {
       toast.error("Please enter a valid number.");
-      try { 
+    } else if (value <= 0) {
+      toast.error("Amount must be greater than zero.");
+    } else if (!token) {
+      toast.error("You must be logged in to make a payment.");
+    } else if (!shopId || !userId) {
+      toast.error("Shop ID or User ID is missing.");
+    }else {
+      try {
+        console.log(value, 'value');
+
         const userData = await getUser(userId, token);
         console.log(userData, 'sdfghj');
         const data = { amount: value, userId: userId, userName: userData.name, status: "pending", transactionId: shopId, totalAmount: value, earnAmount: value * .10, paymentMethod: 'online' };
@@ -71,7 +81,7 @@ const Page = () => {
   }, [shopId]);
 
   return (
-    <div className="bg-white-low">      
+    <div className="bg-white-low">
       <ToastContainer />
       <HeaderCustomer name="Shop Details" />
       <div className="px-4 pb-20 pt-8">
