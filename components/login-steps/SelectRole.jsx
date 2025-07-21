@@ -8,8 +8,7 @@ const SelectRole = () => {
         Select Role
       </h2>
       <p className="max-w-[319px] mx-auto text-sm text-center text-white">
-        Amet minim mollit non deserunt ullamco est sit aliqua dolor do amet
-        sint.
+        Please select your role from the options below to proceed.
       </p>
 
       <Link
@@ -25,7 +24,7 @@ const SelectRole = () => {
         Customer
       </Link>
       <Link
-        href="?steps=2&auth=admin/user-list"
+        href="?steps=2&auth=admin"
         className="block py-[15px] w-full border-white border rounded-lg text-center text-white font-semibold mt-3 hover:bg-white duration-300 hover:!text-greens-900"
       >
         Admin

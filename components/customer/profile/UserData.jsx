@@ -5,7 +5,8 @@ import { USER_PROFILE_DATA } from "@/utils/helper";
 import Image from "next/image";
 import React, { useState } from "react";
 
-const UserData = () => {
+const UserData = (params) => {
+  const { userInfo } = params
   const [userProfile, setUserProfile] = useState({
     imageSrc: "/assets/images/png/profile/avtar.png",
     fullName: "Robert Miles",

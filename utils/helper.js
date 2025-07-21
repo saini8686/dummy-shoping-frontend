@@ -462,7 +462,7 @@ export const SETTING_LIST = [
   {
     icon: "profileWallet",
     name: "My Wallet",
-    path: "/customer/profile/my-wallet",
+    path: "/customer/my-wallet",
   },
   {
     icon: "profileLogout",
