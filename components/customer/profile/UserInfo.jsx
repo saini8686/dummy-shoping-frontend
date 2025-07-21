@@ -1,9 +1,9 @@
 "use client";
 import Image from "next/image";
 
-const UserInfo = (params) => {
-  const { userInfo } = params;
-  console.log(userInfo.name);
+const UserInfo = () => {
+  // const { userInfo } = params;
+  // console.log(userInfo.name);
 
   return (
     <div className="flex gap-4 items-center">
