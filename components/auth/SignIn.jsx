@@ -64,7 +64,7 @@ const SignIn = () => {
 
           switch (role) {
             case "admin":
-              router.push("/admin/dashboard");
+              router.push("/admin/user-list");
               break;
             case "shopkeeper":
               router.push(`/shopkepper/product`);
