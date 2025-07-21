@@ -17,10 +17,11 @@ const UserInfo = () => {
       />
       <p>
         <span className="font-semibold block text-blacks-200 !leading-130">
-          {userInfo.name ?? "Jhon doe"}
+          {"Jhon doe"}
+          {/* {userInfo.name ?? "Jhon doe"} */}
         </span>
         <span className="text-sm font-medium block !leading-130 text-greys-1100">
-          {userInfo.number ?? "00009xxxx"}
+          {"00009xxxx"}
         </span>
       </p>
     </div>
