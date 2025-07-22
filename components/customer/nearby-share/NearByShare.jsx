@@ -4,11 +4,11 @@ import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import { CustomButton } from "@/components/common/CustomButton";
 import Icon from "@/components/common/Icons";
-import { getShopDetails } from '../../../services/shop.service';
+import { getShopDetails } from "../../../services/shop.service";
 import OfferSlider from "@/components/customer/OfferSlider";
 import TopBarProduct from "@/components/customer/TopBarProduct";
 import Cookies from "js-cookie";
-import { getDistanceFromLatLonInKm  } from "@/utils/geo"
+import { getDistanceFromLatLonInKm } from "@/utils/geo";
 
 const NearByShare = ({ search }) => {
   const [shops, setShops] = useState([]);
@@ -16,8 +16,20 @@ const NearByShare = ({ search }) => {
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [showAdsOnce, setShowAdsOnce] = useState(false);
+  const [userCoords, setUserCoords] = useState(null);
 
-  // Fetch shops on page or search change
+  useEffect(() => {
+    const lat = Cookies.get("latitude");
+    const lng = Cookies.get("longitude");
+
+    if (lat && lng) {
+      setUserCoords({
+        lat: parseFloat(lat),
+        lng: parseFloat(lng)
+      });
+    }
+  }, []);
+
   useEffect(() => {
     const fetchShops = async () => {
       try {
@@ -25,8 +37,6 @@ const NearByShare = ({ search }) => {
         const res = await getShopDetails(search, page);
         setShops(res.data || []);
         setTotalPages(res.totalPages || 1);
-
-        // Show ad once after first successful fetch
         if (!showAdsOnce) setShowAdsOnce(true);
       } catch (err) {
         console.error("Failed to fetch shops", err);
@@ -38,7 +48,6 @@ const NearByShare = ({ search }) => {
     fetchShops();
   }, [search, page]);
 
-  // Reset page when search changes
   useEffect(() => {
     setPage(1);
   }, [search]);
@@ -51,62 +60,64 @@ const NearByShare = ({ search }) => {
 
       {showAdsOnce && <TopBarProduct />}
 
-      {/* ✅ Loop through shops and insert Ads before second-last item */}
       {shops.map((obj, i) => (
         <div key={i}>
-
           <div className="h-[175px] mt-6 shadow-category rounded-lg py-4 px-3">
             <div className="flex items-start gap-5">
-              <Image
-                src={obj.shop_front_image ?? "/assets/images/png/shop/shop-1.png"}
+              <img
+                src={`${process.env.NEXT_PUBLIC_API_BASE}/${obj.shop_front_image}`}
                 alt="shopImage"
                 height={140}
                 width={121}
                 className="object-cover rounded w-[121px] h-[140px]"
               />
               <div className="w-full">
-                <h2 className="text-lg leading-130 font-medium text-blacks-200 mb-2">
+                <h2 className="text-lg font-medium text-blacks-200 mb-2">
                   {obj.name}
                 </h2>
-                <p className="text-lg leading-130 font-medium text-blacks-200">
+                <p className="text-lg font-medium text-blacks-200">
                   {obj.category}
                 </p>
                 <CustomButton
-                  url={'../customer/' + obj.path}
+                  url={`../customer/${obj.path}`}
                   customClass="mt-2 w-fit text-sm mb-5"
                 >
                   View Shop
                 </CustomButton>
-                <div className="flex justify-between w-full items-center">
+                <div className="flex justify-between items-center">
                   <div className="flex items-center">
                     {Array.from({ length: 5 }, (_, index) => (
                       <span
                         key={index}
                         className={
                           index < Math.round(obj.review)
-                            ? 'text-yellows-100'
-                            : 'text-greys-800'
+                            ? "text-yellows-100"
+                            : "text-greys-800"
                         }
                       >
                         <Icon icon="star" />
                       </span>
                     ))}
                   </div>
-                  <p className="text-reds-900 italic font-semibold text-xs !leading-130">
-                    {getDistanceFromLatLonInKm(obj.latitude, obj.longitude, Cookies.get("latitude"), Cookies.get("longitude")).toFixed(1)} km away
-                    {/* {obj.distance} away */}
+                  <p className="text-reds-900 italic font-semibold text-xs">
+                    {userCoords
+                      ? `${getDistanceFromLatLonInKm(
+                          obj.latitude,
+                          obj.longitude,
+                          userCoords.lat,
+                          userCoords.lng
+                        ).toFixed(1)} km away`
+                      : ""}
                   </p>
                 </div>
               </div>
             </div>
           </div>
-          
-          {/* Render ad just before the second last item */}
-          {i === shops.length - 2 &&  <OfferSlider />}
+
+          {i === shops.length - 2 && <OfferSlider />}
         </div>
       ))}
 
-      {/* Pagination */}
       {totalPages > 1 && (
         <div className="flex justify-center gap-4 mt-6">
           <button

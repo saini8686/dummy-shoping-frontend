@@ -5,8 +5,9 @@ import CustomUploadImage from "./CustomUploadImage";
 import QrCode from "./QrCode";
 import Link from "next/link";
 import Icon from "@/components/common/Icons";
-import { getUser, updateUser, uploadImageToServer } from "@/services/users.service";
+import { getUser, uploadImageToServer } from "@/services/users.service";
 import Cookies from "js-cookie";
+import { CustomButton } from "@/components/common/CustomButton";
 
 const UploadShopImage = () => {
   const [imageFiles, setImageFiles] = useState({
@@ -53,7 +54,7 @@ const UploadShopImage = () => {
     setImagePreviews((prev) => ({ ...prev, [key]: previewURL }));
   };
 
-  const handleSubmit = async () => {
+  const handleUpload = async (imageKey, fieldName) => {
     const userId = Cookies.get("userId");
     const token = Cookies.get("token");
 
@@ -62,72 +63,74 @@ const UploadShopImage = () => {
       return;
     }
 
+    const file = imageFiles[imageKey];
+    if (!file) {
+      alert(`Please select an image for ${fieldName.replace(/_/g, ' ')}.`);
+      return;
+    }
+
     try {
-      const shop_front_url = imageFiles.shopFront
-        ? await uploadImageToServer(imageFiles.shopFront, userId)
-        : user.shop_front_url;
-
-      const shop_counter_url = imageFiles.counterView
-        ? await uploadImageToServer(imageFiles.counterView, userId)
-        : user.shop_counter_url;
-
-      const other_img_url = imageFiles.other
-        ? await uploadImageToServer(imageFiles.other, userId)
-        : user.other_img_url;
-
-      const payload = {
-        userId,
-        shop_front_url,
-        shop_counter_url,
-        other_img_url,
-      };
-
-      await updateUser(payload);
-      alert("Shop images uploaded successfully.");
+      const uploadedUrl = await uploadImageToServer(file, userId, "user", fieldName);
+      console.log(`${fieldName} uploaded to:`, uploadedUrl);
+      alert(`${fieldName.replace(/_/g, ' ')} uploaded successfully.`);
     } catch (error) {
-      console.error("Image upload failed:", error);
-      alert("Failed to upload images.");
+      console.error(`${fieldName} upload failed:`, error);
+      alert(`Failed to upload ${fieldName.replace(/_/g, ' ')}.`);
     }
   };
 
   if (loading) return <p className="text-center">Loading user...</p>;
 
   return (
-    <div>
-      <h2 className="text-xl font-semibold pb-3.5 text-greens-900">
-        Upload Shop Images
-      </h2>
+    <div className="max-w-xl mx-auto">
+      <h2 className="text-xl font-semibold pb-3.5 text-greens-900">Upload Shop Images</h2>
 
+      {/* Shop Front View */}
       <CustomUploadImage
         name="Shop Front View"
         image={imagePreviews.shopFront}
         onChange={(file) => handleImageUpload("shopFront", file)}
       />
+      <CustomButton
+        onClick={() => handleUpload("shopFront", "shop_front_url")}
+        customClass="w-full py-[11px] mt-3"
+      >
+        Upload Shop Front Image
+      </CustomButton>
+
+      {/* Shop Counter View */}
       <CustomUploadImage
         name="Shop Counter View"
         image={imagePreviews.counterView}
         onChange={(file) => handleImageUpload("counterView", file)}
       />
+      <CustomButton
+        onClick={() => handleUpload("counterView", "shop_counter_url")}
+        customClass="w-full py-[11px] mt-3"
+      >
+        Upload Counter View Image
+      </CustomButton>
+
+      {/* Other Images */}
       <CustomUploadImage
         name="Other Images (Optional)"
         image={imagePreviews.other}
         onChange={(file) => handleImageUpload("other", file)}
       />
-
-      <h2 className="text-xl font-semibold mt-10 text-greens-900">
-        QR Scanner for shop identity
-      </h2>
-      <QrCode />
-
-      <button
-        onClick={handleSubmit}
-        className="mt-6 bg-greens-900 text-white px-4 py-2 rounded"
+      <CustomButton
+        onClick={() => handleUpload("other", "other_img_url")}
+        customClass="w-full py-[11px] mt-3"
       >
-        Upload & Continue
-      </button>
+        Upload Other Image
+      </CustomButton>
 
+      {/* QR Code */}
+      {/* <h2 className="text-xl font-semibold mt-10 text-greens-900">QR Scanner for Shop Identity</h2>
+      <QrCode /> */}
+
+      {/* Navigation */}
       <Link
-        href="/sign-in?auth=shopkepper"
+        href="/shopkepper/order"
         className="text-greens-900 text-xl font-medium flex justify-center items-center gap-2 mt-6 group"
       >
         Next

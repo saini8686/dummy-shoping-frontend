@@ -55,11 +55,12 @@ export const deleteUser = async () => {
   return res.data;
 };
 
-export const uploadImageToServer = async (file, userId, type = "user") => {
+export const uploadImageToServer = async (file, userId, type = "user", columnName) => {
   const formData = new FormData();
   formData.append("file", file);     // must match multer field name
   formData.append("id", userId);     // required for backend to know which user
   formData.append("type", type);     // e.g., user, payment, etc.
+  formData.append("columnName", columnName);     // e.g., user, payment, etc.
 
   try {
     const res = await api.post(`/api/upload`, formData, {
@@ -72,7 +73,7 @@ export const uploadImageToServer = async (file, userId, type = "user") => {
     console.log("Image upload response:", res);
 
     // Axios automatically parses JSON
-    return res.data.url || res.data.path;
+    return res;
   } catch (err) {
     console.error("Image upload failed:", err);
     throw new Error("Image upload failed");
