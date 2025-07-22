@@ -65,7 +65,9 @@ const NearByShare = ({ search }) => {
           <div className="h-[175px] mt-6 shadow-category rounded-lg py-4 px-3">
             <div className="flex items-start gap-5">
               <img
-                src={`${process.env.NEXT_PUBLIC_API_BASE}/${obj.shop_front_image}`}
+                src={obj.shop_front_image === null
+                  ? "/assets/images/png/shop/shop-1.png"
+                  : `${process.env.NEXT_PUBLIC_API_BASE}/${obj.shop_front_image}`}
                 alt="shopImage"
                 height={140}
                 width={121}
@@ -102,11 +104,11 @@ const NearByShare = ({ search }) => {
                   <p className="text-reds-900 italic font-semibold text-xs">
                     {userCoords
                       ? `${getDistanceFromLatLonInKm(
-                          obj.latitude,
-                          obj.longitude,
-                          userCoords.lat,
-                          userCoords.lng
-                        ).toFixed(1)} km away`
+                        obj.latitude,
+                        obj.longitude,
+                        userCoords.lat,
+                        userCoords.lng
+                      ).toFixed(1)} km away`
                       : ""}
                   </p>
                 </div>
