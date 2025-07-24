@@ -23,17 +23,17 @@ const UserData = ({ userInfo }) => {
         imageSrc: userInfo?.profilePicture || "/assets/images/png/profile/avtar.png",
         fullName: userInfo?.name || "",
         number: userInfo?.number || "",
-        password: "********",
+        password: "", // Password should not be pre-filled for security reasons
       });
     }
   }, [userInfo]);
 
   const handleImageChange = (e) => {
     console.log("Image change event:", e);
-    
+
     const file = e.target.files[0];
     console.log("Selected file:", file);
-    
+
     if (file) {
       setImageFile(file);
       const reader = new FileReader();
@@ -44,7 +44,7 @@ const UserData = ({ userInfo }) => {
         }));
       };
       console.log("Selected file:", userProfile);
-      
+
       reader.readAsDataURL(file);
     }
   };
@@ -96,7 +96,12 @@ const UserData = ({ userInfo }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await updateUser(userProfile);
+      userInfo.name = userProfile.fullName;
+      userInfo.number = userProfile.number;
+      userInfo.password = userProfile.password;
+      console.log("info",userInfo);
+      
+      const response = await updateUser(userInfo);
 
       if (!response.ok && !response.success) {
         throw new Error("Update failed");
@@ -109,22 +114,22 @@ const UserData = ({ userInfo }) => {
     }
   };
 
-const getImageSrc = () => {
-  const { imageSrc } = userProfile;
+  const getImageSrc = () => {
+    const { imageSrc } = userProfile;
 
-  // Fallback to default avatar if imageSrc is null or empty
-  if (!imageSrc || imageSrc === "null") {
-    return "/assets/images/png/profile/avtar.png";
-  }
+    // Fallback to default avatar if imageSrc is null or empty
+    if (!imageSrc || imageSrc === "null") {
+      return "/assets/images/png/profile/avtar.png";
+    }
 
-  // If imageSrc is a data URL or a full URL, return as-is
-  if (imageSrc.startsWith("data:image") || imageSrc.startsWith("http")) {
-    return imageSrc;
-  }
+    // If imageSrc is a data URL or a full URL, return as-is
+    if (imageSrc.startsWith("data:image") || imageSrc.startsWith("http")) {
+      return imageSrc;
+    }
 
-  // Prepend API base URL for relative paths
-  return `${process.env.NEXT_PUBLIC_API_BASE}${imageSrc}`;
-};
+    // Prepend API base URL for relative paths
+    return `${process.env.NEXT_PUBLIC_API_BASE}${imageSrc}`;
+  };
 
 
   return (
@@ -175,14 +180,13 @@ const getImageSrc = () => {
                 {obj.label}
               </p>
               <input
-                type={password && obj.type === "password" ? "text" : obj.type}
+                type={obj.type === "password" && password ? "text" : obj.type}
                 value={userProfile[obj.name]}
                 onChange={(e) =>
                   setUserProfile({ ...userProfile, [obj.name]: e.target.value })
                 }
                 className="w-full border-0 outline-0 bg-transparent text-greys-dark-400 placeholder:text-greys-dark-400"
                 placeholder={obj.label}
-                disabled={obj.name === "password"}
               />
             </div>
             {obj.type === "password" && (
@@ -195,6 +199,7 @@ const getImageSrc = () => {
             )}
           </div>
         ))}
+
 
         <CustomButton type="submit" customClass="w-full py-3.5 mt-8">
           Save Changes

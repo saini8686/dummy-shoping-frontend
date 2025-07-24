@@ -7,22 +7,28 @@ import useAuthStore from "@/store/useAuthStore";
 import { useRouter } from "next/navigation";
 import Cookies from "js-cookie";
 
-const Navbar = () => {
+const Navbar = ({ userInfo }) => {
   const { user, signOut } = useAuthStore();
 
   const [showProfileMenu, setShowProfileMenu] = useState(false);
   const router = useRouter();
 
   // Fetch user data when component mounts if we have a user but no userData
-  useEffect(() => {
-    if (user && user.uid) {
-      console.log("Fetching user data in Navbar for:", user);
-    }
-  }, [user]);
+
+  // useEffect(() => {
+  //   if (userInfo) {
+  //     setUserProfile({
+  //       imageSrc: userInfo?.profilePicture || "/assets/images/png/profile/avtar.png",
+  //       fullName: userInfo?.name || "",
+  //       number: userInfo?.number || "",
+  //       password: "", // Password should not be pre-filled for security reasons
+  //     });
+  //   }
+  // }, [userInfo]);
 
   // Display user's name or email if available
-  const displayName = user?.displayName || "User";
-  const userEmail = user?.email || "";
+  const displayName = userInfo?.name || "User";
+  const userEmail = userInfo?.email || "";
 
   const toggleProfileMenu = () => {
     setShowProfileMenu(!showProfileMenu);
@@ -63,6 +69,9 @@ const Navbar = () => {
             <span className="block font-roboto">HOME</span>
             <span className="block font-roboto mt-0.5">
               {Cookies.get("address") || "Your Location"}
+            </span>
+            <span className="block font-roboto mt-0.5">
+              {userInfo?.referralCode||""}
             </span>
           </p>
         </div>
