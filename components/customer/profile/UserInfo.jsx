@@ -6,8 +6,8 @@ const UserInfo = ({ userInfo }) => {
   
   return (
     <div className="flex gap-4 items-center">
-      <Image
-        src="/assets/images/png/profile/avtar.png"
+      <img
+        src={userInfo?.profilePicture ? `${process.env.NEXT_PUBLIC_API_BASE}${userInfo?.profilePicture}` : "/assets/images/svg/user.svg"}
         width={50}
         height={50}
         sizes="100vw"

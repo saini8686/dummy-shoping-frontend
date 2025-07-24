@@ -1,93 +1,104 @@
-"use client"; // 👈 Add this as the first line
+"use client";
 
 import BottomBar from "@/components/common/BottomBar";
 import HeaderCustomer from "@/components/customer/HeaderCustomer";
 import React, { useEffect, useState } from "react";
-import { useSearchParams } from "next/navigation";
-import { getBasicDetails } from "@/services/basic-details.service";
-import { CustomButton } from "@/components/common/CustomButton";
 import { Dialog } from "@headlessui/react";
+import { useParams } from "next/navigation";
+import Cookies from "js-cookie";
+import { getBasicDetails } from "@/services/basic-details.service";
 import { createPayment } from "@/services/payment.service";
-import { useParams } from 'next/navigation';
-import { getUser, updateUser } from "@/services/users.service"; // Import the getUser function
-import Cookies from 'js-cookie';
+import { getUser, updateUser } from "@/services/users.service";
+import { CustomButton } from "@/components/common/CustomButton";
 import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const Page = () => {
-  const params = useParams(); // ✅ Only declared once
+  const params = useParams();
   const shopId = params.userId;
   const userId = Cookies.get("userId");
-
-  console.log("Shop ID from params:", shopId);
+  const token = Cookies.get("token");
 
   const [isOpen, setIsOpen] = useState(false);
   const [amount, setAmount] = useState("");
-  const [error, setError] = useState("");
-
-  const handleSubmit = async () => {
-    const value = parseFloat(amount);
-    const token = Cookies.get("token"); // Or get from context/store
-
-    console.log(value, 'value');
-    if (isNaN(value)) {
-      toast.error("Please enter a valid number.");
-    } else if (value <= 0) {
-      toast.error("Amount must be greater than zero.");
-    } else if (!token) {
-      toast.error("You must be logged in to make a payment.");
-    } else if (!shopId || !userId) {
-      toast.error("Shop ID or User ID is missing.");
-    }else {
-      try {
-        console.log(value, 'value');
-
-        const userData = await getUser(userId, token);
-        console.log(userData, 'sdfghj');
-        const data = { amount: value, userId: userId, userName: userData.name, status: "pending", transactionId: shopId, totalAmount: value, earnAmount: value * .08, paymentMethod: 'online' };
-        const result = await createPayment(data, token);
-        userData.wallet = userData.wallet + value * 0.08;
-
-        const updatedUser = await updateUser(userData); // ✅ use a different name
-
-        console.log("Payment successful:", result);
-
-        toast.success(`Payment successful ₹${amount}`);
-        setIsOpen(false);
-        setAmount("");
-      } catch (error) {
-        console.error("Payment failed:", error);
-        setError("Payment failed. Please try again.");
-      }
-    }
-  };
-
-
+  const [userInfo, setUserInfo] = useState(null);
+  const [shopUserData, setShopUserData] = useState(null);
   const [shopDetails, setShopDetails] = useState(null);
   const [loading, setLoading] = useState(true);
 
+  const fetchDetails = async () => {
+    try {
+      const userData = await getUser(userId, token);
+      setUserInfo(userData);
+      const shopUserData = await getUser(shopId, token);
+      setShopUserData(shopUserData);
+
+      const shopData = await getBasicDetails(shopId);
+      setShopDetails(shopData || null);
+    } catch (error) {
+      toast.error("Failed to fetch data.");
+      console.error("Fetch error:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   useEffect(() => {
-    if (!shopId) return;
-    console.log("Fetching shop details for shopId:", shopId);
-
-    const fetchShopDetails = async () => {
-      try {
-        const response = await getBasicDetails(shopId);
-        setShopDetails(response || null);
-      } catch (error) {
-        console.error("Error fetching shop details:", error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchShopDetails();
+    if (shopId && userId && token) fetchDetails();
   }, [shopId]);
+
+  const handleSubmit = async () => {
+    const value = parseFloat(amount);
+
+    if (isNaN(value)) {
+      toast.error("Please enter a valid number.");
+      return;
+    }
+
+    if (value <= 0) {
+      toast.error("Amount must be greater than zero.");
+      return;
+    }
+
+    if (!token || !userId || !shopId) {
+      toast.error("Missing required details.");
+      return;
+    }
+
+    try {
+      const data = {
+        amount: value,
+        userId: userId,
+        userName: userInfo?.name || "User",
+        status: "pending",
+        transactionId: shopId,
+        totalAmount: value,
+        earnAmount: value * 0.08,
+        paymentMethod: "online",
+      };
+
+      await createPayment(data, token);
+
+      const updatedUser = {
+        ...userInfo,
+        wallet: (userInfo?.wallet || 0) + value * 0.08,
+      };
+
+      await updateUser(updatedUser);
+      toast.success(`Payment successful ₹${value}`);
+      setIsOpen(false);
+      setAmount("");
+    } catch (error) {
+      console.error("Payment failed:", error);
+      toast.error("Payment failed. Please try again.");
+    }
+  };
 
   return (
     <div className="bg-white-low">
       <ToastContainer />
       <HeaderCustomer name="Shop Details" />
+
       <div className="px-4 pb-20 pt-8">
         {loading ? (
           <p className="text-gray-500">Loading...</p>
@@ -108,16 +119,33 @@ const Page = () => {
               <Detail label="State" value={shopDetails.state} />
               <Detail label="Latitude" value={shopDetails.latitude} />
               <Detail label="Longitude" value={shopDetails.longitude} />
-              <Detail label="Created At" value={new Date(shopDetails.createdAt).toLocaleString()} />
-              <Detail label="Updated At" value={new Date(shopDetails.updatedAt).toLocaleString()} />
+              <Detail
+                label="Created At"
+                value={new Date(shopDetails.createdAt).toLocaleString()}
+              />
+              <Detail
+                label="Updated At"
+                value={new Date(shopDetails.updatedAt).toLocaleString()}
+              />
               <Detail label="Address" value={shopDetails.address} full />
             </div>
-            <div className="flex justify-center mt-4">
-              <img src={shopDetails.qrCode} />
+
+            {/* Shop Images */}
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-6">
+              {shopDetails.shop_front_url && (
+                <ImageCard label="Shop Front" url={shopUserData.shop_front_url} />
+              )}
+              {shopDetails.shop_counter_url && (
+                <ImageCard label="Counter View" url={shopUserData.shop_counter_url} />
+              )}
+              {shopDetails.other_img_url && (
+                <ImageCard label="Other View" url={shopUserData.other_img_url} />
+              )}
             </div>
+
             <CustomButton
               url="#"
-              customClass="mt-2 w-fit text-sm w-full text-center"
+              customClass="mt-4 w-fit text-sm w-full text-center"
               onClick={(e) => {
                 e.preventDefault();
                 setIsOpen(true);
@@ -128,6 +156,7 @@ const Page = () => {
           </div>
         )}
       </div>
+
       {/* Popup Dialog */}
       <Dialog open={isOpen} onClose={() => setIsOpen(false)} className="relative z-50">
         <div className="fixed inset-0 bg-black/30" aria-hidden="true" />
@@ -164,7 +193,7 @@ const Page = () => {
       </Dialog>
 
       <BottomBar />
-    </div >
+    </div>
   );
 };
 
@@ -174,6 +203,13 @@ const Detail = ({ label, value, full = false }) => (
       <span className="font-medium text-gray-800">{label}:</span>{" "}
       {value || <span className="text-gray-400 italic">N/A</span>}
     </p>
+  </div>
+);
+
+const ImageCard = ({ label, url }) => (
+  <div className="border rounded-md overflow-hidden shadow-sm">
+    <img src={url} alt={label} className="w-full h-40 object-cover" />
+    <div className="p-2 text-sm text-center text-gray-700 font-medium">{label}</div>
   </div>
 );
 

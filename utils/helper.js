@@ -444,15 +444,15 @@ export const SETTING_LIST = [
     name: "Edit Profile",
     path: "/customer/profile/edit-profile",
   },
-  {
-    icon: "profileLocation",
-    name: "My Address",
-    path: "/customer/profile/my-address",
-  },
+  // {
+  //   icon: "profileLocation",
+  //   name: "My Address",
+  //   path: "/customer/profile/my-address",
+  // },
   {
     icon: "profileOrder",
     name: "My Orders",
-    path: "#",
+    path: "customer/payment",
   },
   {
     icon: "profileChat",
@@ -488,6 +488,12 @@ export const USER_PROFILE_DATA = [
     name: "number",
     icon: "call",
     type: "number",
+  },
+  {
+    label: "Address",
+    name: "address",
+    icon: "profileLocation",
+    type: "text",
   },
 ];
 export const USER_ADDRESSE_DATA = [

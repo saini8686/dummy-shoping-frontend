@@ -2,20 +2,23 @@
 import { CustomButton } from "@/components/common/CustomButton";
 import Icon from "@/components/common/Icons";
 import { USER_PROFILE_DATA } from "@/utils/helper";
-import Image from "next/image";
-import React, { useState, useEffect, use } from "react";
+import React, { useState, useEffect } from "react";
 import Cookies from "js-cookie";
-import { uploadImageToServer, updateUser } from "@/services/users.service"; // ✅ make sure this exists
+import { uploadImageToServer, updateUser } from "@/services/users.service";
+import { ToastContainer, toast } from "react-toastify";
 
 const UserData = ({ userInfo }) => {
   const [userProfile, setUserProfile] = useState({
-    imageSrc: "/assets/images/png/profile/avtar.png",
+    imageSrc: "/asset/images/png/profile/avtar.png",
     fullName: "",
     number: "",
     password: "",
+    address: "",
   });
-  const [password, setPassword] = useState(false);
+
+  const [passwordVisible, setPasswordVisible] = useState(false);
   const [imageFile, setImageFile] = useState(null);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     if (userInfo) {
@@ -23,17 +26,14 @@ const UserData = ({ userInfo }) => {
         imageSrc: userInfo?.profilePicture || "/assets/images/png/profile/avtar.png",
         fullName: userInfo?.name || "",
         number: userInfo?.number || "",
-        password: "", // Password should not be pre-filled for security reasons
+        password: "",
+        address: userInfo?.address || "",
       });
     }
   }, [userInfo]);
 
   const handleImageChange = (e) => {
-    console.log("Image change event:", e);
-
     const file = e.target.files[0];
-    console.log("Selected file:", file);
-
     if (file) {
       setImageFile(file);
       const reader = new FileReader();
@@ -43,8 +43,6 @@ const UserData = ({ userInfo }) => {
           imageSrc: reader.result,
         }));
       };
-      console.log("Selected file:", userProfile);
-
       reader.readAsDataURL(file);
     }
   };
@@ -54,96 +52,84 @@ const UserData = ({ userInfo }) => {
     const token = Cookies.get("token");
 
     if (!userId || !token) {
-      alert("User not authenticated.");
+      toast.error("User not authenticated.");
       return;
     }
 
     if (!imageFile) {
-      alert("Please select an image first.");
+      toast.warn("Please select an image first.");
       return;
     }
 
+    setLoading(true);
     try {
-      const result = await uploadImageToServer(
-        imageFile,
-        userId,
-        "user",
-        "profilePicture"
-      );
-
-      if (result?.url) {
-        setUserProfile((prev) => ({
-          ...prev,
-          imageSrc: result.url,
-        }));
-
-        // ✅ Update user profile with new image URL
-        // await updateUser({
-        //   ...userProfile,
-        //   profilePicture: result.url,
-        // });
-
-        alert("Profile image uploaded and updated successfully!");
-      } else {
-        alert("Upload succeeded but no image URL returned.");
+      const result = await uploadImageToServer(imageFile, userId, "user", "profilePicture");
+      if (!result || !result.ok) {
+        toast.success("Profile image uploaded successfully.");
       }
     } catch (error) {
       console.error("Upload failed:", error);
-      alert("Failed to upload profile image.");
+      toast.error("Failed to upload profile image.");
+    } finally {
+      setLoading(false);
     }
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    try {
-      userInfo.name = userProfile.fullName;
-      userInfo.number = userProfile.number;
-      userInfo.password = userProfile.password;
-      console.log("info",userInfo);
-      
-      const response = await updateUser(userInfo);
 
-      if (!response.ok && !response.success) {
+    const updatedData = {
+      ...userInfo,
+      name: userProfile.fullName,
+      number: userProfile.number,
+      password: userProfile.password,
+      address: userProfile.address,
+    };
+
+    setLoading(true);
+    try {
+      console.log("fetching user with updated data:", updatedData);
+      
+      const response = await updateUser(updatedData);
+
+      if (!response || !response.ok) {
         throw new Error("Update failed");
       }
 
-      alert("Profile updated successfully!");
+      toast.success("Profile updated successfully!");
     } catch (error) {
       console.error("Update failed:", error);
-      alert("Failed to update profile.");
+      toast.error("Failed to update profile.");
+    } finally {
+      setLoading(false);
     }
   };
 
   const getImageSrc = () => {
     const { imageSrc } = userProfile;
 
-    // Fallback to default avatar if imageSrc is null or empty
     if (!imageSrc || imageSrc === "null") {
       return "/assets/images/png/profile/avtar.png";
     }
 
-    // If imageSrc is a data URL or a full URL, return as-is
     if (imageSrc.startsWith("data:image") || imageSrc.startsWith("http")) {
       return imageSrc;
     }
 
-    // Prepend API base URL for relative paths
     return `${process.env.NEXT_PUBLIC_API_BASE}${imageSrc}`;
   };
 
-
   return (
     <div>
-      <form onSubmit={handleSubmit}>
+      <ToastContainer />
+      <form>
         <div className="relative mb-[50px] w-fit mx-auto">
           <img
             src={getImageSrc()}
             width={129}
             height={129}
-            sizes="100vw"
             className="w-[129px] rounded-full h-[129px] object-cover object-top"
             alt="user profile"
-            priority
           />
           <input
             type="file"
@@ -162,9 +148,10 @@ const UserData = ({ userInfo }) => {
         <CustomButton
           type="button"
           onClick={handleUpload}
+          disabled={loading}
           customClass="w-full py-[11px] mt-3"
         >
-          Upload Profile Image
+          {loading ? "Uploading..." : "Upload Profile Image"}
         </CustomButton>
 
         {USER_PROFILE_DATA.map((obj, i) => (
@@ -180,7 +167,7 @@ const UserData = ({ userInfo }) => {
                 {obj.label}
               </p>
               <input
-                type={obj.type === "password" && password ? "text" : obj.type}
+                type={obj.type === "password" && passwordVisible ? "text" : obj.type}
                 value={userProfile[obj.name]}
                 onChange={(e) =>
                   setUserProfile({ ...userProfile, [obj.name]: e.target.value })
@@ -191,18 +178,22 @@ const UserData = ({ userInfo }) => {
             </div>
             {obj.type === "password" && (
               <span
-                onClick={() => setPassword(!password)}
+                onClick={() => setPasswordVisible(!passwordVisible)}
                 className="absolute cursor-pointer top-1/2 right-3 -translate-y-1/2"
               >
-                <Icon icon={password ? "eyeOpen" : "eyeClose"} />
+                <Icon icon={passwordVisible ? "eyeOpen" : "eyeClose"} />
               </span>
             )}
           </div>
         ))}
 
-
-        <CustomButton type="submit" customClass="w-full py-3.5 mt-8">
-          Save Changes
+        <CustomButton
+          type="submit"
+          onClick={handleSubmit}
+          disabled={loading}
+          customClass="w-full py-3.5 mt-8"
+        >
+          {loading ? "Saving..." : "Save Changes"}
         </CustomButton>
       </form>
     </div>
