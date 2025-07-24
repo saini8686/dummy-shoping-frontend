@@ -1,10 +1,9 @@
 "use client";
 import Image from "next/image";
 
-const UserInfo = () => {
-  // const { userInfo } = params;
-  // console.log(userInfo.name);
-
+const UserInfo = ({ userInfo }) => {
+  console.log(userInfo);
+  
   return (
     <div className="flex gap-4 items-center">
       <Image
@@ -17,11 +16,10 @@ const UserInfo = () => {
       />
       <p>
         <span className="font-semibold block text-blacks-200 !leading-130">
-          {"Jhon doe"}
-          {/* {userInfo.name ?? "Jhon doe"} */}
+          {userInfo?.name ?? "Jhon doe"}
         </span>
         <span className="text-sm font-medium block !leading-130 text-greys-1100">
-          {"00009xxxx"}
+          {userInfo?.number ?? "00009xxxx"}
         </span>
       </p>
     </div>

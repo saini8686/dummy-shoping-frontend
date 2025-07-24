@@ -32,7 +32,7 @@ const Orders = () => {
 
         if (payData && userDataRes?.userId) {
           const filteredPayments = payData.filter(
-            (item) => String(item.userId) === String(userDataRes.userId)
+            (item) => String(item.transactionId) === String(userDataRes.userId)
           );
           setRecentTransactions(filteredPayments);
         } else {

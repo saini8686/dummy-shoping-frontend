@@ -22,7 +22,7 @@ const Payments = () => {
     getAllPayments()
       .then((res) => {
         if (Array.isArray(res)) {
-          const filtered = res.filter((item) => String(item.userId) === String(userId));
+          const filtered = res.filter((item) => String(item.transactionId) === String(userId));
           setPayments(filtered);
         } else {
           console.warn("Expected an array from getAllPayments, got:", res);
