@@ -18,6 +18,7 @@ const UserData = ({ userInfo }) => {
 
   const [passwordVisible, setPasswordVisible] = useState(false);
   const [imageFile, setImageFile] = useState(null);
+  const [loadingProfile, setLoadingProfile] = useState(false);
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
@@ -61,7 +62,7 @@ const UserData = ({ userInfo }) => {
       return;
     }
 
-    setLoading(true);
+    setLoadingProfile(true);
     try {
       const result = await uploadImageToServer(imageFile, userId, "user", "profilePicture");
       if (!result || !result.ok) {
@@ -71,7 +72,7 @@ const UserData = ({ userInfo }) => {
       console.error("Upload failed:", error);
       toast.error("Failed to upload profile image.");
     } finally {
-      setLoading(false);
+      setLoadingProfile(false);
     }
   };
 
@@ -148,10 +149,10 @@ const UserData = ({ userInfo }) => {
         <CustomButton
           type="button"
           onClick={handleUpload}
-          disabled={loading}
+          disabled={loadingProfile}
           customClass="w-full py-[11px] mt-3"
         >
-          {loading ? "Uploading..." : "Upload Profile Image"}
+          {loadingProfile ? "Uploading..." : "Upload Profile Image"}
         </CustomButton>
 
         {USER_PROFILE_DATA.map((obj, i) => (

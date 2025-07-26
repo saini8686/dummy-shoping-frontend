@@ -477,12 +477,12 @@ export const USER_PROFILE_DATA = [
     icon: "profileInput",
     type: "text",
   },
-  {
-    label: "Password",
-    name: "password",
-    icon: "password",
-    type: "password",
-  },
+  // {
+  //   label: "Password",
+  //   name: "password",
+  //   icon: "password",
+  //   type: "password",
+  // },
   {
     label: "Phone Number",
     name: "number",

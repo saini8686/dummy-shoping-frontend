@@ -94,19 +94,20 @@ export const logout = () => {
   Cookies.remove("userId");
   Cookies.remove("userRole");
 
+  window.location.href = "/";
   // Redirect based on role
-  switch (userRole) {
-    case "admin":
-      window.location.href = "/sign-in?auth=admin";
-      break;
-    case "shopkeeper":
-      window.location.href = "/sign-in?auth=shopkeeper";
-      break;
-    case "customer":
-      window.location.href = "/sign-in?auth=customer";
-      break;
-    default:
-      window.location.href = "/sign-in";
-      break;
-  }
+  // switch (userRole) {
+  //   case "admin":
+  //     window.location.href = "/sign-in?auth=admin";
+  //     break;
+  //   case "shopkeeper":
+  //     window.location.href = "/sign-in?auth=shopkeeper";
+  //     break;
+  //   case "customer":
+  //     window.location.href = "/sign-in?auth=customer";
+  //     break;
+  //   default:
+  //     window.location.href = "/sign-in";
+  //     break;
+  // }
 };
