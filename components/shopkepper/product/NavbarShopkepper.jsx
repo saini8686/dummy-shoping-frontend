@@ -5,7 +5,7 @@ import Link from "next/link";
 import useAuthStore from "@/store/useAuthStore";
 import { useRouter } from "next/navigation";
 import Icon from "@/components/common/Icons";
-const NavbarShopkepper = () => {
+const NavbarShopkepper = ({ userInfo }) => {
   const router = useRouter();
   return (
     <div className="pt-8 pb-4 rounded-b-3xl bg-greens-900 px-4 relative">
@@ -38,7 +38,7 @@ const NavbarShopkepper = () => {
             alt="logo"
           />
           <p className="text-white font-medium block text-base !leading-130">
-            <span className="block">Hello Emekus</span>
+            <span className="block">Hello {userInfo?.name || 'Emekus'} </span>
             <span className="block text-sm text-white/70 mt-0.5">
               Let’s make sales today
             </span>

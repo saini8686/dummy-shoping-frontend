@@ -3,12 +3,13 @@ import SearchBar from "@/components/common/SearchBar";
 import BottomBarShopKepper from "@/components/shopkepper/common/BottomBarShopKepper";
 import NavbarShopkepper from "@/components/shopkepper/product/NavbarShopkepper";
 import ProductIn from "@/components/shopkepper/product/ProductIn";
+import HeaderCustomer from "@/components/customer/HeaderCustomer";
 import Link from "next/link";
 
 const page = () => {
   return (
     <div className="bg-white-low">
-      <NavbarShopkepper />
+      <HeaderCustomer name="Product" />
       <div className="pb-20 relative z-[1] mt-8 px-4">
         <SearchBar />
         <ProductIn />
