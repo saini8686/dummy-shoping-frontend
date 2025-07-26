@@ -21,6 +21,26 @@ export const verifyOtp = async (data) => {
   return res.data;
 };
 
+export const reVerifyOtp = async (data) => {
+  const res = await api.post('/api/reverify-otp', data);
+  return res.data;
+};
+
+export const forgotPassword = async (data) => {
+  const res = await api.post('/auth/forgot-password', data);
+  return res.data;
+};
+
+export const sendResetOtp = async (data) => {
+  const res = await api.post('/auth/resend-otp', data);
+  return res.data;
+};
+
+export const resetPassword = async (data) => {
+  const res = await api.post('/auth/reset-password', data);
+  return res.data;
+};
+
 // SAVE TOKEN IN COOKIE
 export const saveToken = (token) => {
   Cookies.set(TOKEN_KEY, token, { secure: true, sameSite: 'Strict', expires: 7 }); // Expires in 7 days
