@@ -6,21 +6,11 @@ import { CustomButton } from "../common/CustomButton";
 import { CustomInput } from "./common/CustomInput";
 import LoginWay from "./common/LoginWay";
 import { AgreementConfirm, OptionWay } from "./common/common";
-import { login, saveToken, isAuthenticated, authType } from '../../services/auth.service'; // Adjust the import path as necessary
+import { login } from '../../services/auth.service';
 import Cookies from 'js-cookie';
 import { ToastContainer, toast } from "react-toastify";
 
 const SignIn = () => {
-  // useEffect(() => {
-  //   // Clear all client-side cookies
-  //   Object.keys(Cookies.get()).forEach((cookieName) => {
-  //     Cookies.remove(cookieName);
-  //   });
-
-  //   // Also clear localStorage or sessionStorage if needed
-  //   localStorage.clear();
-  //   sessionStorage.clear();
-  // }, []);
   const [formDetails, setFormDetails] = useState({
     email: "",
     password: "",
@@ -34,6 +24,28 @@ const SignIn = () => {
   const [error, setError] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [address, setAddress] = useState(false);
+
+  // ✅ Redirect if already logged in
+  useEffect(() => {
+    const token = Cookies.get("token");
+    const userRole = Cookies.get("userRole");
+
+    if (token && userRole) {
+      switch (userRole.toLowerCase()) {
+        case "admin":
+          router.replace("/admin/user-list");
+          break;
+        case "shopkeeper":
+          router.replace("/shopkepper/product");
+          break;
+        case "customer":
+          router.replace("/customer");
+          break;
+        default:
+          router.replace("/");
+      }
+    }
+  }, []);
 
   const submitHandler = async (e) => {
     e.preventDefault();
@@ -51,7 +63,6 @@ const SignIn = () => {
       const response = await login(email, password);
 
       if (response?.token && response?.userId && response?.userRole) {
-        // ✅ Set cookies with secure options (for HTTPS in production)
         Cookies.set("token", response.token, { sameSite: "Lax", secure: true });
         Cookies.set("userId", response.userId.toString(), { sameSite: "Lax", secure: true });
         Cookies.set("userRole", response.userRole.toLowerCase(), { sameSite: "Lax", secure: true });
@@ -70,7 +81,7 @@ const SignIn = () => {
               router.push(`/shopkepper/product`);
               break;
             case "customer":
-              getLocation();
+              await getLocation();
               router.push("/customer");
               break;
             default:
@@ -89,7 +100,7 @@ const SignIn = () => {
       }
     } catch (err) {
       console.error("Login Error:", err);
-      toast.error(err.response.data.message || "An error occurred during login");
+      toast.error(err?.response?.data?.message || "An error occurred during login");
       setError(true);
     } finally {
       setIsLoading(false);
@@ -120,14 +131,11 @@ const SignIn = () => {
             const { house_number, road, suburb, city, town, village, state, postcode, country } = data.address;
 
             const fullAddress = `
-            ${house_number ? house_number + ', ' : ''}${road ? road + ', ' : ''}${suburb ? suburb + ', ' : ''}
-            ${city || town || village ? (city || town || village) + ', ' : ''}
-            ${state ? state + ', ' : ''}${country ? country + ', ' : ''}${postcode ? postcode : ''}
-          `.replace(/\s+/g, ' ').trim();
-            console.log(latitude);
-            console.log(longitude);
-            
-            
+              ${house_number ? house_number + ', ' : ''}${road ? road + ', ' : ''}${suburb ? suburb + ', ' : ''}
+              ${city || town || village ? (city || town || village) + ', ' : ''}
+              ${state ? state + ', ' : ''}${country ? country + ', ' : ''}${postcode ? postcode : ''}
+            `.replace(/\s+/g, ' ').trim();
+
             document.cookie = `latitude=${latitude}; path=/`;
             document.cookie = `longitude=${longitude}; path=/`;
             document.cookie = `address=${encodeURIComponent(fullAddress)}; path=/`;
@@ -154,21 +162,10 @@ const SignIn = () => {
 
   return (
     <div className="px-4">
-      <h2 className="mt-6 text-2xl font-semibold text-black !leading-130">
-        Sign In
-      </h2>
-
-      {/* Google Sign-in Button */}
-      {/* <div className="mt-4">
-        <CustomButton
-          customClass="w-full gap-3 justify-center flex items-center !py-3.5"
-          onClick={handleGoogleSignIn}
-          disabled={isLoading}>
-          <Icon icon="google" /> Sign in with Google
-        </CustomButton>
-      </div> */}
+      <h2 className="mt-6 text-2xl font-semibold text-black !leading-130">Sign In</h2>
       <ToastContainer />
-      <form className="mt-8" onSubmit={(e) => submitHandler(e)}>
+
+      <form className="mt-8" onSubmit={submitHandler}>
         <CustomInput
           placeholder="Email"
           name="email"
@@ -214,6 +211,7 @@ const SignIn = () => {
           {isLoading ? "Loading..." : "Sign In"}
         </CustomButton>
       </form>
+
       <OptionWay />
       <LoginWay />
       <AgreementConfirm />

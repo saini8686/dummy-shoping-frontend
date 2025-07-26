@@ -7,12 +7,11 @@ import Cookies from 'js-cookie';
 import { ToastContainer, toast } from "react-toastify";
 
 import useAuthStore from "../../store/useAuthStore";
-import { register, verifyOtp } from "../../services/auth.service";
+import { register, verifyOtp, login } from "../../services/auth.service";
 import { CustomButton } from "../common/CustomButton";
 import { CustomInput } from "./common/CustomInput";
 import LoginWay from "./common/LoginWay";
 import { AgreementConfirm, OptionWay } from "./common/common";
-import { login } from '../../services/auth.service'; // Adjust the import path as necessary
 
 const SignUp = () => {
   const [formDetails, setFormDetails] = useState({
@@ -21,7 +20,7 @@ const SignUp = () => {
     number: "",
     name: "",
     password: "",
-    refferCode: "",
+    referralCode: "",
   });
 
   const [otp, setOtp] = useState('');
@@ -33,14 +32,23 @@ const SignUp = () => {
   const searchParams = useSearchParams();
   const router = useRouter();
   const auth = searchParams.get("auth");
+  const referralCodeFromURL = searchParams.get("referralCode");
 
   const { loading, error: authError } = useAuthStore();
 
   useEffect(() => {
-    // Clear cookies and storage
+    // Clear all cookies and storage
     Object.keys(Cookies.get()).forEach((cookieName) => Cookies.remove(cookieName));
     localStorage.clear();
     sessionStorage.clear();
+
+    // Set referral code from URL if exists
+    if (referralCodeFromURL) {
+      setFormDetails((prev) => ({
+        ...prev,
+        referralCode: referralCodeFromURL,
+      }));
+    }
   }, []);
 
   const handleSubmit = async (e) => {
@@ -100,15 +108,13 @@ const SignUp = () => {
 
       if (result.userId === userId) {
         toast.success("OTP Verified!");
-        
+
         const response = await login(formDetails.email, formDetails.password);
         if (response?.token && response?.userId && response?.userRole) {
-          // ✅ Set cookies with secure options (for HTTPS in production)
           Cookies.set("token", response.token, { sameSite: "Lax", secure: true });
           Cookies.set("userId", response.userId.toString(), { sameSite: "Lax", secure: true });
           Cookies.set("userRole", response.userRole.toLowerCase(), { sameSite: "Lax", secure: true });
         }
-        console.log("User ID:", userId, "Auth Type:", auth);
 
         if (auth === "shopkepper") Cookies.set("userId", userId, { secure: true, sameSite: "Strict", expires: 7 });
 
@@ -185,11 +191,11 @@ const SignUp = () => {
           />
           <CustomInput
             customClass="mt-4"
-            placeholder="RefferCode (Optional)"
-            name="refferCode"
+            placeholder="Referral Code (Optional)"
+            name="referralCode"
             type="text"
-            value={formDetails.refferCode}
-            onChange={(e) => setFormDetails({ ...formDetails, refferCode: e.target.value })}
+            value={formDetails.referralCode}
+            onChange={(e) => setFormDetails({ ...formDetails, referralCode: e.target.value })}
           />
 
           {authError && <p className="text-red-500 mt-2">{authError}</p>}
@@ -201,9 +207,9 @@ const SignUp = () => {
           >
             {isLoading || loading ? "Processing..." : "Sign Up"}
           </CustomButton>
-        </form>)}
+        </form>
+      )}
 
-      {/* OTP Verification UI */}
       {showOtpInput && (
         <div className="mt-6">
           <h3 className="text-lg font-semibold mb-2">Enter OTP</h3>

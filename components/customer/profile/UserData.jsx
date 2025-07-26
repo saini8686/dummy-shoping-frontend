@@ -12,7 +12,7 @@ const UserData = ({ userInfo }) => {
     imageSrc: "/asset/images/png/profile/avtar.png",
     fullName: "",
     number: "",
-    password: "",
+    // password: "",
     address: "",
   });
 
@@ -27,7 +27,7 @@ const UserData = ({ userInfo }) => {
         imageSrc: userInfo?.profilePicture || "/assets/images/png/profile/avtar.png",
         fullName: userInfo?.name || "",
         number: userInfo?.number || "",
-        password: "",
+        // password: "",
         address: userInfo?.address || "",
       });
     }
@@ -83,7 +83,7 @@ const UserData = ({ userInfo }) => {
       ...userInfo,
       name: userProfile.fullName,
       number: userProfile.number,
-      password: userProfile.password,
+      // password: userProfile.password,
       address: userProfile.address,
     };
 

@@ -1,34 +1,23 @@
 "use client";
 import Image from "next/image";
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import Icon from "./Icons";
 import Link from "next/link";
 import useAuthStore from "@/store/useAuthStore";
 import { useRouter } from "next/navigation";
 import Cookies from "js-cookie";
+import { Copy } from "lucide-react"; // 👈 Use lucide-react icon
+import { toast, ToastContainer } from "react-toastify"; // 👈 Toast for feedback
 
 const Navbar = ({ userInfo }) => {
   const { user, signOut } = useAuthStore();
-
   const [showProfileMenu, setShowProfileMenu] = useState(false);
+  const [copied, setCopied] = useState(false);
   const router = useRouter();
 
-  // Fetch user data when component mounts if we have a user but no userData
-
-  // useEffect(() => {
-  //   if (userInfo) {
-  //     setUserProfile({
-  //       imageSrc: userInfo?.profilePicture || "/assets/images/png/profile/avtar.png",
-  //       fullName: userInfo?.name || "",
-  //       number: userInfo?.number || "",
-  //       password: "", // Password should not be pre-filled for security reasons
-  //     });
-  //   }
-  // }, [userInfo]);
-
-  // Display user's name or email if available
   const displayName = userInfo?.name || "User";
   const userEmail = userInfo?.email || "";
+  const referralCode = userInfo?.referralCode || "";
 
   const toggleProfileMenu = () => {
     setShowProfileMenu(!showProfileMenu);
@@ -48,18 +37,47 @@ const Navbar = ({ userInfo }) => {
     }
   };
 
+  const handleCopyReferral = () => {
+    if (!referralCode) return;
+    const urlWithReferral = `${window.location.origin}/sign-up?auth=customer&referralCode=${referralCode}`;
+    navigator.clipboard.writeText(urlWithReferral);
+    setCopied(true);
+    toast.success("Referral code copied!");
+    setTimeout(() => setCopied(false), 1500);
+  };
+
   return (
     <div className="pt-8 pb-4 rounded-b-3xl bg-greens-900 px-4 relative">
-      <Link href="/customer">
-        <Image
-          src="/assets/images/svg/logo.svg"
-          width={86}
-          height={39}
-          sizes="100vw"
-          className="mb-5 w-[85px] h-[32px] object-cover"
-          alt="logo"
-        />
-      </Link>
+      {/* Top Logo + Referral */}
+      <ToastContainer />
+      <div className="flex justify-between gap-5 items-start">
+        <Link href="/customer">
+          <Image
+            src="/assets/images/svg/logo.svg"
+            width={86}
+            height={39}
+            sizes="100vw"
+            className="mb-5 w-[85px] h-[32px] object-cover"
+            alt="logo"
+          />
+        </Link>
+        {referralCode && (
+          <div
+            onClick={handleCopyReferral}
+            className="flex items-center gap-1 cursor-pointer group font-bold"
+          >
+            <span className="block font-roboto mt-0.5 text-white text-sm">
+              {referralCode}
+            </span>
+            <Copy
+              size={18}
+              className="text-white group-hover:text-green-300 transition"
+            />
+          </div>
+        )}
+      </div>
+
+      {/* Location + Icons */}
       <div className="flex justify-between gap-5 items-center">
         <div className="flex items-center gap-1">
           <span className="bg-white rounded-full flex justify-center items-center min-w-[34px] h-[34px]">
@@ -69,9 +87,6 @@ const Navbar = ({ userInfo }) => {
             <span className="block font-roboto">HOME</span>
             <span className="block font-roboto mt-0.5">
               {Cookies.get("address") || "Your Location"}
-            </span>
-            <span className="block font-roboto mt-0.5">
-              {userInfo?.referralCode||""}
             </span>
           </p>
         </div>
@@ -90,8 +105,6 @@ const Navbar = ({ userInfo }) => {
           </Link>
         </div>
       </div>
-
-
 
       <p className="text-lg text-white font-roboto mt-4 font-medium !leading-130">
         Your Order will be packed in 11 minutes

@@ -38,8 +38,8 @@ const TopBarProduct = () => {
   }, [VEDIO_LIST]);
   return (
     <div>
-      {/* <div className="flex gap-2.5 mt-8 items-center justify-between"> */}
-        {/* {TOPBAR_ITEM_LIST.map((obj, i) => (
+      <div className="flex gap-2.5 mt-8 items-center justify-between">
+        {TOPBAR_ITEM_LIST.map((obj, i) => (
           <Link key={i} href={obj.url} className="group">
             <Image
               src={obj.image}
@@ -54,10 +54,10 @@ const TopBarProduct = () => {
               {obj.name}
             </p>
           </Link>
-        ))} */}
+        ))}
 
         {/* vedio */}
-      {/* </div> */}
+      </div>
       <Swiper
         loop={true}
         slidesPerView={1}

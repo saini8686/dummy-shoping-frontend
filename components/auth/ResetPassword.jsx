@@ -208,7 +208,7 @@ const ResetPassword = () => {
             onChange={(e) => setNewPassword(e.target.value)}
           />
           <CustomInput
-            customClass={"pt-3"}
+            customClass="mt-4"
             type="password"
             name="confirmPassword"
             placeholder="Confirm Password"

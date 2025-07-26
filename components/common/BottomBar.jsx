@@ -22,7 +22,7 @@ const BottomBar = () => {
             <Icon icon={obj.icon} />
           </Link>
         ))}
-      <UpiButton />
+      {/* <UpiButton /> */}
       </div>
     </div>
   );
