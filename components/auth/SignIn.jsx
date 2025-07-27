@@ -36,7 +36,7 @@ const SignIn = () => {
           router.replace("/admin/user-list");
           break;
         case "shopkeeper":
-          router.replace("/shopkepper/product");
+          router.replace("/shopkepper/order");
           break;
         case "customer":
           router.replace("/customer");
