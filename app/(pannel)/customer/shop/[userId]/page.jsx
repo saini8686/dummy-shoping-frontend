@@ -23,6 +23,7 @@ const Page = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [amount, setAmount] = useState("");
   const [userInfo, setUserInfo] = useState(null);
+  const [adminInfo, setAdminInfo] = useState(null);
   const [shopUserData, setShopUserData] = useState(null);
   const [shopDetails, setShopDetails] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -31,6 +32,8 @@ const Page = () => {
     try {
       const userData = await getUser(userId, token);
       setUserInfo(userData);
+      const adminData = await getUser(1, token);
+      setAdminInfo(adminData);
       const shopUserData = await getUser(shopId, token);
       setShopUserData(shopUserData);
 
@@ -74,7 +77,7 @@ const Page = () => {
         status: "pending",
         transactionId: shopId,
         totalAmount: value,
-        earnAmount: value * 0.08,
+        earnAmount: value * (shopDetails.smp * 0.02),
         paymentMethod: "online",
       };
 
@@ -82,10 +85,12 @@ const Page = () => {
 
       const updatedUser = {
         ...userInfo,
-        wallet: (userInfo?.wallet || 0) + value * 0.08,
+        wallet: (userInfo?.wallet || 0) + (shopDetails.smp * 0.02),
       };
 
+      const adminUser = { ...adminInfo, wallet: (userInfo?.wallet || 0) + (shopDetails.smp * 0.05), wallet2: (userInfo?.wallet2 || 0) + + (shopDetails.smp * 0.25) };
       await updateUser(updatedUser);
+      await updateUser(adminUser);
       toast.success(`Payment successful ₹${value}`);
       setIsOpen(false);
       setAmount("");
