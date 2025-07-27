@@ -12,6 +12,7 @@ import { getUser, updateUser } from "@/services/users.service";
 import { CustomButton } from "@/components/common/CustomButton";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import ProductDetails from "@/components/customer/product/ProductDetails";
 
 const Page = () => {
   const params = useParams();
@@ -142,7 +143,7 @@ const Page = () => {
                 <ImageCard label="Other View" url={shopUserData.other_img_url} />
               )}
             </div>
-
+            <ProductDetails shopId={shopId} />
             <CustomButton
               url="#"
               customClass="mt-4 w-fit text-sm w-full text-center"
