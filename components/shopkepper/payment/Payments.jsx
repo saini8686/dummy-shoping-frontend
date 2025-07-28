@@ -5,7 +5,7 @@ import Image from "next/image";
 import { Dialog } from "@headlessui/react";
 import { getAllPayments, updateProduct } from "@/services/payment.service";
 import { getBasicDetails } from "@/services/shop.service";
-import { getUser, updateUser } from "@/services/user.service";
+import { getUser, updateUser } from "@/services/users.service";
 import { createNotification } from "@/services/notification.service";
 import { CustomButton } from "@/components/common/CustomButton";
 import Cookies from "js-cookie";
