@@ -10,7 +10,7 @@ const TotalAmount = (params) => {
 
   return (
     <>
-      {userDetails.isAdmin ?
+      {userDetails?.isAdmin ?
         <div className="flex justify-between items-center">
           <div className="px-6 w-full bg-greens-900/10 rounded-lg py-4 mr-2">
             <div className="flex justify-between items-center">
