@@ -22,18 +22,12 @@ const Page = () => {
 
   const [isOpen, setIsOpen] = useState(false);
   const [amount, setAmount] = useState("");
-  const [userInfo, setUserInfo] = useState(null);
-  const [adminInfo, setAdminInfo] = useState(null);
   const [shopUserData, setShopUserData] = useState(null);
   const [shopDetails, setShopDetails] = useState(null);
   const [loading, setLoading] = useState(true);
 
   const fetchDetails = async () => {
     try {
-      const userData = await getUser(userId, token);
-      setUserInfo(userData);
-      const adminData = await getUser(1, token);
-      setAdminInfo(adminData);
       const shopUserData = await getUser(shopId, token);
       setShopUserData(shopUserData);
 
@@ -77,7 +71,7 @@ const Page = () => {
         status: "pending",
         transactionId: shopId,
         totalAmount: value,
-        earnAmount: value * (shopDetails.smp * 0.02),
+        // earnAmount: value * (shopDetails.smp * 0.02),
         paymentMethod: "online",
       };
 
@@ -148,6 +142,7 @@ const Page = () => {
                 <ImageCard label="Other View" url={shopUserData.other_img_url} />
               )}
             </div>
+            <h2 className="text-xl mt-2 capitalize font-semibold  font-roboto !leading-130">Listed Products</h2>
             <ProductDetails shopId={shopId} />
             <CustomButton
               url="#"

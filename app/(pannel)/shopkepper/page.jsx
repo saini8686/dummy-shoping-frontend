@@ -30,7 +30,6 @@ const page = () => {
   return (
     <div className="bg-white-low">
       <HeaderCustomer userInfo={userInfo} />
-      <HeaderCustomer userInfo={userInfo} />
       <div className="pb-20 mt-10 px-4">
         <BasicDetailForm />
       </div>

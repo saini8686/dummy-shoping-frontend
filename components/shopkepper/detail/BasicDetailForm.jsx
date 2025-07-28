@@ -243,11 +243,26 @@ const BasicDetailForm = () => {
                       }
                     />
                     <CustomInput
-                      placeholder="Category"
+                      placeholder="Select Category"
                       name="category"
-                      type="text"
+                      type="select"
+                      options={[
+                        "Grocery Store",
+                        "Electronic Store",
+                        "Fashion Store",
+                        "Stationery Store",
+                        "Hardware Store",
+                        "Fruits & Vegetables Store",
+                        "Restaurant / Dhaba",
+                        "Medical Store",
+                        "Furniture Store",
+                        "Kitchen Store",
+                        "Cosmetic Store",
+                        "Jewellery Shop",
+                        "Sweets Store",
+                      ]}
                       error={!formDetails.category && error}
-                      errorText="Category Is Required"
+                      errorText="Category is required"
                       value={formDetails.category}
                       onChange={(e) =>
                         setFormDetails({
@@ -256,12 +271,14 @@ const BasicDetailForm = () => {
                         })
                       }
                     />
+
                     <CustomInput
-                      placeholder="SMP"
-                      name="SMP"
-                      type="number"
+                      placeholder="Select SMP"
+                      name="smp"
+                      type="select"
+                      options={['3', '5', '10', '12', '15', '20', '25', '30', '40', '50']} // Replace with actual SMP options
                       error={!formDetails.smp && error}
-                      errorText="SMP Is Required"
+                      errorText="SMP is required"
                       value={formDetails.smp}
                       onChange={(e) =>
                         setFormDetails({

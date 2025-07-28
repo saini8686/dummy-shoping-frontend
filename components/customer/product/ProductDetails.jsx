@@ -12,8 +12,10 @@ const ProductDetails = ({shopId}) => {
   useEffect(() => {
     getAllProducts()
       .then((res) => {
-        setProduct(res)
-        console.log(products);
+         const filtered = res.filter((product) => product.userId === Number(shopId));
+        console.log(filtered);
+        
+        setProduct(filtered);
         
       })
       .catch((err) => console.error("Error fetching product:", err))

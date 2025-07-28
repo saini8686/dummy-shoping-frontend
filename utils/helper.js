@@ -6,25 +6,71 @@ export const TOPBAR_ITEM_LIST = [
   },
   {
     image: "/assets/images/png/grocery.png",
-    name: "Grocery",
+    name: "Grocery Store",
     url: "/customer/category",
   },
   {
-    image: "/assets/images/png/clothes.png",
-    name: "Clothes",
+    image: "/assets/images/png/electronics.png",
+    name: "Electronic Store",
     url: "/customer/category",
   },
   {
-    image: "/assets/images/png/medical.png",
-    name: "Medical",
+    image: "/assets/images/png/fashion.png",
+    name: "Fashion Store",
+    url: "/customer/category",
+  },
+  {
+    image: "/assets/images/png/stationery.png",
+    name: "Stationery Store",
+    url: "/customer/category",
+  },
+  {
+    image: "/assets/images/png/hardware.png",
+    name: "Hardware Store",
+    url: "/customer/category",
+  },
+  {
+    image: "/assets/images/png/vegetables.png",
+    name: "Fruits & Vegetables Store",
     url: "/customer/category",
   },
   {
     image: "/assets/images/png/food.png",
-    name: "Food",
+    name: "Restaurant / Dhaba",
+    url: "/customer/category",
+  },
+  {
+    image: "/assets/images/png/medical.png",
+    name: "Medical Store",
+    url: "/customer/category",
+  },
+  {
+    image: "/assets/images/png/furniture.png",
+    name: "Furniture Store",
+    url: "/customer/category",
+  },
+  {
+    image: "/assets/images/png/kitchen.png",
+    name: "Kitchen Store",
+    url: "/customer/category",
+  },
+  {
+    image: "/assets/images/png/cosmetic.png",
+    name: "Cosmetic Store",
+    url: "/customer/category",
+  },
+  {
+    image: "/assets/images/png/jewellery.png",
+    name: "Jewellery Shop",
+    url: "/customer/category",
+  },
+  {
+    image: "/assets/images/png/sweets.png",
+    name: "Sweets Store",
     url: "/customer/category",
   },
 ];
+
 export const BEST_SELLER_LIST = [
   {
     image: "/assets/images/png/dairy.png",

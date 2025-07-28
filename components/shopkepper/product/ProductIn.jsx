@@ -2,17 +2,25 @@
 import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import { getAllProducts } from "../../../services/product.service";
+import Cookies from "js-cookie";
 
 const ProductIn = () => {
   const [products, setProduct] = useState([]);
   const [loading, setLoading] = useState(true);
 
+
   useEffect(() => {
+    const userId = Cookies.get("userId"); // Get userId from cookies
+console.log("user",userId);
+
     getAllProducts()
       .then((res) => {
-        setProduct(res)
-        console.log(products);
+        console.log(res, 'all products');
         
+        const filtered = res.filter((product) => product.userId === Number(userId));
+        console.log(filtered);
+        
+        setProduct(filtered);
       })
       .catch((err) => console.error("Error fetching product:", err))
       .finally(() => setLoading(false));
@@ -23,7 +31,10 @@ const ProductIn = () => {
   return (
     <div className="mt-7">
       {products.map((obj, i) => (
-        <div className="flex justify-between items-center mt-3 pb-1 border-b border-white-100 ">
+        <div
+          key={obj.id || obj._id || i} // Use product ID if available, otherwise fallback to index
+          className="flex justify-between items-center mt-3 pb-1 border-b border-white-100"
+        >
           <div className="flex items-center gap-1.5">
             <div className="border rounded-lg w-[60px] h-[60px] flex justify-center items-center border-white-100">
               <Image
@@ -51,6 +62,7 @@ const ProductIn = () => {
           </p>
         </div>
       ))}
+
     </div>
   );
 };
