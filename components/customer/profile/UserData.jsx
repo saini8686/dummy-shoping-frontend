@@ -65,7 +65,7 @@ const UserData = ({ userInfo }) => {
     setLoadingProfile(true);
     try {
       const result = await uploadImageToServer(imageFile, userId, "user", "profilePicture");
-      if (!result || !result.ok) {
+      if (!result) {
         toast.success("Profile image uploaded successfully.");
       }
     } catch (error) {
@@ -93,7 +93,7 @@ const UserData = ({ userInfo }) => {
       
       const response = await updateUser(updatedData);
 
-      if (!response || !response.ok) {
+      if (!response) {
         throw new Error("Update failed");
       }
 
