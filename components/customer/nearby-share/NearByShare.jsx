@@ -4,7 +4,7 @@ import React, { useEffect, useState, useRef } from "react";
 import Image from "next/image";
 import { CustomButton } from "@/components/common/CustomButton";
 import Icon from "@/components/common/Icons";
-import { getShopDetails } from "../../../services/shop.service";
+import { getBasicDetails } from "../../../services/shop.service";
 import OfferSlider from "@/components/customer/OfferSlider";
 import Cookies from "js-cookie";
 import { getDistanceFromLatLonInKm } from "@/utils/geo";
@@ -70,7 +70,7 @@ const NearByShare = ({ search }) => {
     const fetchShops = async () => {
       try {
         setLoading(true);
-        const res = await getShopDetails(search, page);
+        const res = await getBasicDetails(search, page);
         const allShops = res.data || [];
         setShops(allShops);
         setTotalPages(res.totalPages || 1);
@@ -105,8 +105,8 @@ const NearByShare = ({ search }) => {
           {TOPBAR_ITEM_LIST.map((obj, i) => (
             <button
               key={i}
-              onClick={() => setSelectedCategory(obj.name.toLowerCase())}
-              className={`group text-center flex-shrink-0 ${selectedCategory === obj.name.toLowerCase() ? "border-greens-900 border" : ""
+              onClick={() => setSelectedCategory(obj.value)}
+              className={`group text-center flex-shrink-0 ${selectedCategory === obj.value ? "border-greens-900 border" : ""
                 }`}
             >
               <Image
@@ -121,6 +121,7 @@ const NearByShare = ({ search }) => {
                 {obj.name}
               </p>
             </button>
+
           ))}
         </div>
       )}
@@ -199,7 +200,7 @@ const NearByShare = ({ search }) => {
                 src={
                   obj.shop_front_image === null
                     ? "/assets/images/png/shop/shop-1.png"
-                    : `${process.env.NEXT_PUBLIC_API_BASE}/${obj.shop_front_image}`
+                    : `${process.env.NEXT_PUBLIC_API_BASE?.replace(/\/$/, "")}/${obj.shop_front_image}`
                 }
                 alt="shopImage"
                 height={140}

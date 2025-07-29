@@ -1,18 +1,20 @@
 "use client";
+
 import { OptionWay } from "@/components/auth/common/common";
 import { CustomInput } from "@/components/auth/common/CustomInput";
 import { CustomButton } from "@/components/common/CustomButton";
-import LocationPicker from "@/components/common/GetLocation";
 import Icon from "@/components/common/Icons";
 import { BAISC_DETAILS_FORM } from "@/utils/helper";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { ToastContainer, toast } from "react-toastify";
 import { submitBasicDetails } from "../../../services/basic-details.service";
-import Cookies from 'js-cookie';
+import Cookies from "js-cookie";
+import "react-toastify/dist/ReactToastify.css";
 
 const BasicDetailForm = () => {
   const router = useRouter();
+
   const [formDetails, setFormDetails] = useState({
     username: "",
     village: "",
@@ -25,23 +27,23 @@ const BasicDetailForm = () => {
     smp: "",
     number: "",
     latitude: "",
-    longitude: ""
+    longitude: "",
   });
+
   const [error, setError] = useState(false);
   const [openIndex, setOpenIndex] = useState(null);
+  const [address, setAddress] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [lat, setLat] = useState(null);
+  const [lng, setLng] = useState(null);
 
   const toggleAccordion = (index) => {
     setOpenIndex(openIndex === index ? null : index);
   };
 
-  const [address, setAddress] = useState('');
-  const [loading, setLoading] = useState(false);
-  const [lat, setLat] = useState(null);
-  const [lng, setLng] = useState(null);
-
   const getLocation = () => {
     if (!navigator.geolocation) {
-      alert('Geolocation is not supported by your browser');
+      toast.error("Geolocation is not supported by your browser");
       return;
     }
 
@@ -50,80 +52,120 @@ const BasicDetailForm = () => {
     navigator.geolocation.getCurrentPosition(
       async (position) => {
         const { latitude, longitude } = position.coords;
-        console.log('Latitude:', latitude, 'Longitude:', longitude);
         setLat(latitude);
         setLng(longitude);
 
-        const response = await fetch(
-          `https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${latitude}&lon=${longitude}`
-        );
-        const data = await response.json();
-        console.log('Reverse Geocode Data:', data);
+        // ✅ Also update formDetails
+        setFormDetails((prev) => ({
+          ...prev,
+          latitude: latitude.toString(),
+          longitude: longitude.toString(),
+        }));
 
-        const { house_number, road, suburb, city, town, village, state, postcode, country } = data.address;
+        try {
+          const response = await fetch(
+            `https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${latitude}&lon=${longitude}`
+          );
+          const data = await response.json();
+          const {
+            house_number,
+            road,
+            suburb,
+            city,
+            town,
+            village,
+            state,
+            postcode,
+            country,
+          } = data.address;
 
-        const fullAddress = `
-          ${house_number ? house_number + ', ' : ''}${road ? road + ', ' : ''}${suburb ? suburb + ', ' : ''}
-          ${city || town || village ? (city || town || village) + ', ' : ''}
-          ${state ? state + ', ' : ''}${country ? country + ', ' : ''}${postcode ? postcode : ''}
-        `.replace(/\s+/g, ' ').trim();
+          const fullAddress = `
+          ${house_number ? house_number + ", " : ""}${road ? road + ", " : ""}${suburb ? suburb + ", " : ""}
+          ${city || town || village ? (city || town || village) + ", " : ""}
+          ${state ? state + ", " : ""}${country ? country + ", " : ""}${postcode || ""}
+        `
+            .replace(/\s+/g, " ")
+            .trim();
 
-        setAddress(fullAddress || 'Address not found');
-        setLoading(false);
+          setAddress(fullAddress || "Address not found");
+        } catch (err) {
+          console.error("Geocoding failed", err);
+          toast.error("Failed to retrieve address");
+        } finally {
+          setLoading(false);
+        }
       },
       (error) => {
         console.error(error);
-        alert('Unable to retrieve your location');
+        toast.error("Unable to retrieve your location");
         setLoading(false);
       }
     );
   };
 
-  const submitHandler = (e) => {
+
+  const submitHandler = async (e) => {
     e.preventDefault();
-    console.log(formDetails, "formDetails");
+
     const isAnyFieldEmpty = Object.values(formDetails).some(
       (value) => value.trim() === ""
     );
-    console.log(isAnyFieldEmpty, 'isAnyFieldEmpty');
-
     const isPhoneValid = /^\d{10}$/.test(formDetails.number);
-    // if (!isAnyFieldEmpty && isPhoneValid) {
-    setError(false);
-    console.log(formDetails, "formDetails formDetails");
-    toast.success("Details submitted successfully");
-    setFormDetails({
-      username: "",
-      village: "",
-      city: "",
-      district: "",
-      state: "",
-      shopname: "",
-      category: "",
-      smp: "",
-      gst_number: "",
-      number: "",
-      latitude: "",
-      longitude: ""
-    });
-    formDetails.userId = Cookies.get('userId');
-    formDetails.latitude = lat;
-    formDetails.longitude = lng;
-    submitBasicDetails(formDetails);
-    router.push("/shopkepper/upload-image");
 
-    // } else {
-    //   setError(true);
+    if (!lat || !lng) {
+      toast.error("Please choose your location");
+      return;
+    }
 
-    //   if (isAnyFieldEmpty) {
-    //     toast.error("Please fill in all required fields");
-    //   } else if (!isPhoneValid) {
-    //     toast.error("Phone number must be exactly 10 digits");
-    //   }
-    // }
+    if (!isAnyFieldEmpty && isPhoneValid) {
+      setError(false);
+
+      const payload = {
+        ...formDetails,
+        userId: Cookies.get("userId"),
+        latitude: lat,
+        longitude: lng,
+      };
+
+      try {
+        await submitBasicDetails(payload);
+        toast.success("Details submitted successfully");
+
+        // Reset form
+        setFormDetails({
+          username: "",
+          village: "",
+          city: "",
+          district: "",
+          state: "",
+          shopname: "",
+          category: "",
+          gst_number: "",
+          smp: "",
+          number: "",
+          latitude: "",
+          longitude: "",
+        });
+
+        setAddress("");
+        setLat(null);
+        setLng(null);
+        router.push("/shopkepper/upload-image");
+      } catch (err) {
+        console.error("Submission error", formDetails);
+        console.error("Submission failed", err);
+        toast.error("Failed to submit. Please try again.");
+      }
+    } else {
+      setError(true);
+      console.error("Submission error", formDetails);
+      if (isAnyFieldEmpty) toast.error("Please fill in all required fields");
+      if (!isPhoneValid) toast.error("Phone number must be exactly 10 digits");
+    }
   };
+
   return (
-    <form onSubmit={(e) => submitHandler(e)} className="w-full  mx-auto mt-6">
+    <form onSubmit={submitHandler} className="w-full mx-auto mt-6">
       <ToastContainer />
       {BAISC_DETAILS_FORM.map((section, index) => (
         <div
@@ -134,16 +176,16 @@ const BasicDetailForm = () => {
           <button
             type="button"
             onClick={() => toggleAccordion(index)}
-            className={`w-full flex  justify-between duration-300 items-center text-left text-xl font-semibold  px-5 py-3  text-blacks-200 ${openIndex === index
-              ? "bg-transparent !text-greens-900"
-              : "bg-[#F1FEF8]"
-              } `}
+            className={`w-full flex justify-between duration-300 items-center text-left text-xl font-semibold px-5 py-3 text-blacks-200 ${openIndex === index
+                ? "bg-transparent !text-greens-900"
+                : "bg-[#F1FEF8]"
+              }`}
           >
             {section.title}
             <Icon
               icon="back"
-              className={` duration-300 ${openIndex === index ? "rotate-90" : "rotate-270"
-                } `}
+              className={`duration-300 ${openIndex === index ? "rotate-90" : "rotate-270"
+                }`}
             />
           </button>
 
@@ -152,15 +194,15 @@ const BasicDetailForm = () => {
               }`}
           >
             <div className="overflow-hidden">
-              <div className="px-4 py-4 bg-white rounded-b-lg">
-                {index === 0 ? (
-                  <div className="space-y-4">
+              <div className="px-4 py-4 bg-white rounded-b-lg space-y-4">
+                {index === 0 && (
+                  <>
                     <CustomInput
                       placeholder="Name"
                       name="username"
                       type="text"
                       error={!formDetails.username && error}
-                      errorText="Name Is Required"
+                      errorText="Name is required"
                       value={formDetails.username}
                       onChange={(e) =>
                         setFormDetails({
@@ -174,7 +216,7 @@ const BasicDetailForm = () => {
                       name="village"
                       type="text"
                       error={!formDetails.village && error}
-                      errorText="Village Is Required"
+                      errorText="Village is required"
                       value={formDetails.village}
                       onChange={(e) =>
                         setFormDetails({
@@ -188,7 +230,7 @@ const BasicDetailForm = () => {
                       name="city"
                       type="text"
                       error={!formDetails.city && error}
-                      errorText="City Is Required"
+                      errorText="City is required"
                       value={formDetails.city}
                       onChange={(e) =>
                         setFormDetails({
@@ -202,7 +244,7 @@ const BasicDetailForm = () => {
                       name="district"
                       type="text"
                       error={!formDetails.district && error}
-                      errorText="District Is Required"
+                      errorText="District is required"
                       value={formDetails.district}
                       onChange={(e) =>
                         setFormDetails({
@@ -216,7 +258,7 @@ const BasicDetailForm = () => {
                       name="state"
                       type="text"
                       error={!formDetails.state && error}
-                      errorText="State Is Required"
+                      errorText="State is required"
                       value={formDetails.state}
                       onChange={(e) =>
                         setFormDetails({
@@ -225,15 +267,17 @@ const BasicDetailForm = () => {
                         })
                       }
                     />
-                  </div>
-                ) : index === 1 ? (
-                  <div className="space-y-4">
+                  </>
+                )}
+
+                {index === 1 && (
+                  <>
                     <CustomInput
-                      placeholder="shop Name"
+                      placeholder="Shop Name"
                       name="shopname"
                       type="text"
                       error={!formDetails.shopname && error}
-                      errorText="shop Name Is Required"
+                      errorText="Shop name is required"
                       value={formDetails.shopname}
                       onChange={(e) =>
                         setFormDetails({
@@ -242,24 +286,25 @@ const BasicDetailForm = () => {
                         })
                       }
                     />
+
                     <CustomInput
                       placeholder="Select Category"
                       name="category"
                       type="select"
                       options={[
-                        "Grocery Store",
-                        "Electronic Store",
-                        "Fashion Store",
-                        "Stationery Store",
-                        "Hardware Store",
-                        "Fruits & Vegetables Store",
-                        "Restaurant / Dhaba",
-                        "Medical Store",
-                        "Furniture Store",
-                        "Kitchen Store",
-                        "Cosmetic Store",
-                        "Jewellery Shop",
-                        "Sweets Store",
+                        { label: "Grocery Store", value: "grocery" },
+                        { label: "Electronic Store", value: "electronics" },
+                        { label: "Fashion Store", value: "fashion" },
+                        { label: "Stationery Store", value: "stationery" },
+                        { label: "Hardware Store", value: "hardware" },
+                        { label: "Fruits & Vegetables Store", value: "fruits_vegetables" },
+                        { label: "Restaurant / Dhaba", value: "restaurant" },
+                        { label: "Medical Store", value: "medical" },
+                        { label: "Furniture Store", value: "furniture" },
+                        { label: "Kitchen Store", value: "kitchen" },
+                        { label: "Cosmetic Store", value: "cosmetic" },
+                        { label: "Jewellery Shop", value: "jewellery" },
+                        { label: "Sweets Store", value: "sweets" },
                       ]}
                       error={!formDetails.category && error}
                       errorText="Category is required"
@@ -276,7 +321,18 @@ const BasicDetailForm = () => {
                       placeholder="Select SMP"
                       name="smp"
                       type="select"
-                      options={['3', '5', '10', '12', '15', '20', '25', '30', '40', '50']} // Replace with actual SMP options
+                      options={[
+                        { label: "1%", value: "3" },
+                        { label: "2%", value: "5" },
+                        { label: "3%", value: "10" },
+                        { label: "4%", value: "12" },
+                        { label: "5%", value: "15" },
+                        { label: "8%", value: "20" },
+                        { label: "10%", value: "25" },
+                        { label: "15%", value: "30" },
+                        { label: "20%", value: "40" },
+                        { label: "25%", value: "50" },
+                      ]}
                       error={!formDetails.smp && error}
                       errorText="SMP is required"
                       value={formDetails.smp}
@@ -287,12 +343,13 @@ const BasicDetailForm = () => {
                         })
                       }
                     />
+
                     <CustomInput
-                      placeholder="Gst Number"
+                      placeholder="GST Number"
                       name="gst_number"
                       type="text"
                       error={!formDetails.gst_number && error}
-                      errorText="Gst Number Is Required"
+                      errorText="GST number is required"
                       value={formDetails.gst_number}
                       onChange={(e) =>
                         setFormDetails({
@@ -301,18 +358,20 @@ const BasicDetailForm = () => {
                         })
                       }
                     />
-                  </div>
-                ) : (
-                  <div className="space-y-4">
+                  </>
+                )}
+
+                {index === 2 && (
+                  <>
                     <CustomInput
-                      placeholder="+91  Number"
+                      placeholder="+91 Number"
                       name="number"
                       type="number"
                       error={
                         error &&
-                        (!formDetails.number || formDetails.number.length != 10)
+                        (!formDetails.number || formDetails.number.length !== 10)
                       }
-                      errorText="Number is Required Or must be 10 digit"
+                      errorText="Number is required and must be 10 digits"
                       value={formDetails.number}
                       onChange={(e) =>
                         setFormDetails({
@@ -321,21 +380,25 @@ const BasicDetailForm = () => {
                         })
                       }
                     />
-                    {/* <LocationPicker/> */}
                     <CustomButton
                       onClick={getLocation}
                       customClass="w-full gap-3 justify-center flex items-center !py-3.5"
                     >
-
-                      <Icon icon="locationWhite" /> {loading ? 'Fetching Location...' : address === '' ? 'Choose Location from Google' : address}
+                      <Icon icon="locationWhite" />
+                      {loading
+                        ? "Fetching Location..."
+                        : address === ""
+                          ? "Choose Location from Google"
+                          : address}
                     </CustomButton>
-                  </div>
+                  </>
                 )}
               </div>
             </div>
           </div>
         </div>
       ))}
+
       <CustomButton isSubmit customClass="w-full">
         Continue
       </CustomButton>

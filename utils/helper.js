@@ -2,74 +2,89 @@ export const TOPBAR_ITEM_LIST = [
   {
     image: "/assets/images/png/all.png",
     name: "All",
+    value: "all",
     url: "/customer/category",
   },
   {
     image: "/assets/images/png/grocery.png",
     name: "Grocery Store",
+    value: "grocery",
     url: "/customer/category",
   },
   {
     image: "/assets/images/png/electronics.png",
     name: "Electronic Store",
+    value: "electronics",
     url: "/customer/category",
   },
   {
     image: "/assets/images/png/fashion.png",
     name: "Fashion Store",
+    value: "fashion",
     url: "/customer/category",
   },
   {
     image: "/assets/images/png/stationery.png",
     name: "Stationery Store",
+    value: "stationery",
     url: "/customer/category",
   },
   {
     image: "/assets/images/png/hardware.png",
     name: "Hardware Store",
+    value: "hardware",
     url: "/customer/category",
   },
   {
     image: "/assets/images/png/vegetables.png",
     name: "Fruits & Vegetables Store",
+    value: "fruits_vegetables",
     url: "/customer/category",
   },
   {
     image: "/assets/images/png/food.png",
     name: "Restaurant / Dhaba",
+    value: "restaurant",
     url: "/customer/category",
   },
   {
     image: "/assets/images/png/medical.png",
     name: "Medical Store",
+    value: "medical",
     url: "/customer/category",
   },
   {
     image: "/assets/images/png/furniture.png",
     name: "Furniture Store",
+    value: "furniture",
     url: "/customer/category",
   },
   {
     image: "/assets/images/png/kitchen.png",
     name: "Kitchen Store",
+    value: "kitchen",
     url: "/customer/category",
   },
   {
     image: "/assets/images/png/cosmetic.png",
     name: "Cosmetic Store",
+    value: "cosmetic",
     url: "/customer/category",
   },
   {
     image: "/assets/images/png/jewellery.png",
     name: "Jewellery Shop",
+    value: "jewellery",
     url: "/customer/category",
   },
   {
     image: "/assets/images/png/sweets.png",
     name: "Sweets Store",
+    value: "sweets",
     url: "/customer/category",
   },
 ];
+
 
 export const BEST_SELLER_LIST = [
   {

@@ -16,7 +16,7 @@ const Setting = () => {
     NProgress.start();
     try {
       await signOut();
-      router.push(`/sign-in?auth=${firstRoute}`);
+      router.push(`/`);
     } catch (error) {
       console.error("Error signing out:", error);
     }

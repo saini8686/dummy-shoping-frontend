@@ -16,6 +16,7 @@ const Payments = () => {
   const [selectedUser, setSelectedUser] = useState(null);
   const [isOpen, setIsOpen] = useState(false);
   const [shopDetails, setShopDetails] = useState(null);
+  const [shopkeeprData, setShopkeeprData] = useState(null);
   const [adminInfo, setAdminInfo] = useState(null);
 
   const fetchPayments = () => {
@@ -39,6 +40,8 @@ const Payments = () => {
     const token = Cookies.get("token");
     const shopData = await getBasicDetails(userId);
     setShopDetails(shopData || null);
+    const shopkeeprData = await getUser(userId, token);
+    setShopkeeprData(shopkeeprData || null);
     const adminData = await getUser(1, token);
     setAdminInfo(adminData);
   };
@@ -56,53 +59,69 @@ const Payments = () => {
   const handleApprove = async (user, status) => {
     try {
       const token = Cookies.get("token");
+      const userId = Cookies.get("userId");
+
       if (!user || !user.userId) {
         alert("Invalid user data.");
         return;
       }
-      user.status = status;
+
+
       const userData = await getUser(user.userId, token);
 
+      const totalAmount = payments.totalAmount || 0;
+      const smp = shopDetails?.smp || 0;
+
+      // if (status === "approved" && shopkeeprData.recharge > totalAmount) {
       if (status === "approved") {
-        const earnAmount = user.totalAmount * (shopDetails.smp * 0.01);
-        user.earnAmount = earnAmount;
+        // Earned amount for user
+        const earnAmount = totalAmount * (smp * 0.01);
+        const updatedUser = {
+          ...userData,
+          wallet: (userData?.wallet || 0) + earnAmount,
+        };
 
-        userData.wallet = (userData?.wallet || 0) + earnAmount;
-        userData.wallet2 = (userData?.wallet2 || 0) + (shopDetails.smp * 0.01);
+        payments.earnAmount = earnAmount;
 
-        await updateUser(userData);
+        await updateUser(updatedUser);
 
-        // Notify user
         await createNotification({
           userId: user.userId,
-          message: `Your payment of ₹${user.totalAmount} has been approved.`,
+          message: `Your payment of ₹${totalAmount} has been approved.`,
           earnCoin: earnAmount,
           earnType: "shoping",
           earnUserId: user.userId,
-          earnUserName: userData.name,
+          earnUserName: userData?.name || "",
           status: "sent",
         });
 
         // Admin commission
-        const adminCommission = shopDetails.smp * 0.05;
-        const adminUser = {
+        const adminCommission1 = totalAmount * smp * 0.05;
+        const adminCommission2 = totalAmount * smp * 0.25;
+        const updatedAdmin = {
           ...adminInfo,
-          wallet: (adminInfo?.wallet || 0) + adminCommission,
-          wallet2: (adminInfo?.wallet2 || 0) + (shopDetails.smp * 0.25),
+          wallet: (adminInfo?.wallet || 0) + adminCommission1,
+          wallet2: (adminInfo?.wallet2 || 0) + adminCommission2,
         };
-        await updateUser(adminUser);
-
+        await updateUser(updatedAdmin);
+        const shopRecharge = {
+          ...shopkeeprData,
+          recharge: (shopkeeprData.recharge?.wallet || 0) - payments.totalAmount,
+        };
         
+        await updateUser(shopRecharge);
 
-        // Parent referral commission
+        // Referral earnings
         if (userData?.parentUserId) {
           const parentData = await getUser(userData.parentUserId, token);
-          const referralEarn = shopDetails.smp * 0.02;
+          const referralEarn = totalAmount * smp * 0.02;
 
-          parentData.wallet = (parentData.wallet || 0) + referralEarn;
-          await updateUser(parentData);
+          const updatedParent = {
+            ...parentData,
+            wallet: (parentData.wallet || 0) + referralEarn,
+          };
+          await updateUser(updatedParent);
 
-          // Notify parent
           await createNotification({
             userId: parentData.id,
             message: `You earned ₹${referralEarn} from your referral ${userData.userName}'s payment.`,
@@ -112,28 +131,27 @@ const Payments = () => {
             earnUserName: userData.userName,
             status: "sent",
           });
-
-          // Admin referral fee again (if needed, remove if not required)
-          const adminReferral = {
-            ...adminInfo,
-            wallet: (adminInfo?.wallet || 0) + (shopDetails.smp * 0.05),
-            wallet2: (adminInfo?.wallet2 || 0) + (shopDetails.smp * 0.25),
-          };
-          await updateUser(adminReferral);
         }
       } else if (status === "rejected") {
         await createNotification({
           userId: user.userId,
-          message: `Your payment of ₹${user.totalAmount} has been rejected.`,
+          message: `Your payment of ₹${totalAmount} has been rejected.`,
           earnCoin: 0,
           earnType: "payment",
           earnUserId: user.userId,
-          earnUserName: userData.name,
+          earnUserName: userData?.name || "",
           status: "sent",
         });
       }
 
-      await updateProduct(user.userId, user);
+      // ✅ Update payment record
+      const updatedPayment = {
+        ...user,
+        status,
+      };
+
+      await updateProduct(user.userId, updatedPayment);
+
       alert(`Payment ${status} successfully!`);
       setIsOpen(false);
       fetchPayments();
@@ -142,6 +160,7 @@ const Payments = () => {
       alert("Failed to update payment.");
     }
   };
+
 
   if (loading) return <p className="text-center text-gray-500 mt-10">Loading payments...</p>;
   if (!payments || payments.length === 0)

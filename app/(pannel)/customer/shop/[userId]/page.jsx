@@ -13,6 +13,7 @@ import { CustomButton } from "@/components/common/CustomButton";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import ProductDetails from "@/components/customer/product/ProductDetails";
+// import Image from "next/image"; // Optional: if you switch to next/image
 
 const Page = () => {
   const params = useParams();
@@ -22,6 +23,7 @@ const Page = () => {
 
   const [isOpen, setIsOpen] = useState(false);
   const [amount, setAmount] = useState("");
+  const [rating, setRating] = useState(0);
   const [shopUserData, setShopUserData] = useState(null);
   const [shopDetails, setShopDetails] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -58,36 +60,38 @@ const Page = () => {
       return;
     }
 
+    if (!rating || rating < 1 || rating > 5) {
+      toast.error("Please select a rating (1–5 stars).");
+      return;
+    }
+
     if (!token || !userId || !shopId) {
       toast.error("Missing required details.");
       return;
     }
 
     try {
+      const userInfo = await getUser(userId, token);
+
       const data = {
-        amount: value,
         userId: userId,
         userName: userInfo?.name || "User",
-        status: "pending",
-        transactionId: shopId,
+        earnAmount:0,
         totalAmount: value,
-        // earnAmount: value * (shopDetails.smp * 0.02),
         paymentMethod: "online",
+        transactionId: shopId,
+        rating: rating || 0,
+        status: "pending",
+        filepath:""
       };
 
       await createPayment(data, token);
 
-      const updatedUser = {
-        ...userInfo,
-        wallet: (userInfo?.wallet || 0) + (shopDetails.smp * 0.02),
-      };
 
-      const adminUser = { ...adminInfo, wallet: (userInfo?.wallet || 0) + (shopDetails.smp * 0.05), wallet2: (userInfo?.wallet2 || 0) + + (shopDetails.smp * 0.25) };
-      await updateUser(updatedUser);
-      await updateUser(adminUser);
       toast.success(`Payment successful ₹${value}`);
       setIsOpen(false);
       setAmount("");
+      setRating(0);
     } catch (error) {
       console.error("Payment failed:", error);
       toast.error("Payment failed. Please try again.");
@@ -132,18 +136,31 @@ const Page = () => {
 
             {/* Shop Images */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-6">
-              {shopDetails.shop_front_url && (
-                <ImageCard label="Shop Front" url={shopUserData.shop_front_url} />
+              {shopUserData.shop_front_url && (
+                <ImageCard
+                  label="Shop Front"
+                  url={`${process.env.NEXT_PUBLIC_API_BASE?.replace(/\/$/, "")}/${shopUserData.shop_front_url?.replace(/^\//, "")}`}
+                />
               )}
-              {shopDetails.shop_counter_url && (
-                <ImageCard label="Counter View" url={shopUserData.shop_counter_url} />
+              {shopUserData.shop_counter_url && (
+                <ImageCard
+                  label="Counter View"
+                  url={`${process.env.NEXT_PUBLIC_API_BASE?.replace(/\/$/, "")}/${shopUserData.shop_counter_url?.replace(/^\//, "")}`}
+                />
               )}
-              {shopDetails.other_img_url && (
-                <ImageCard label="Other View" url={shopUserData.other_img_url} />
+              {shopUserData.other_img_url && (
+                <ImageCard
+                  label="Other View"
+                  url={`${process.env.NEXT_PUBLIC_API_BASE?.replace(/\/$/, "")}/${shopUserData.other_img_url?.replace(/^\//, "")}`}
+                />
               )}
             </div>
-            <h2 className="text-xl mt-2 capitalize font-semibold  font-roboto !leading-130">Listed Products</h2>
+
+            <h2 className="text-xl mt-2 capitalize font-semibold font-roboto !leading-130">
+              Listed Products
+            </h2>
             <ProductDetails shopId={shopId} />
+
             <CustomButton
               url="#"
               customClass="mt-4 w-fit text-sm w-full text-center"
@@ -174,6 +191,20 @@ const Page = () => {
               onChange={(e) => setAmount(e.target.value)}
               className="w-full px-4 py-2 border rounded-md mb-4 focus:outline-none focus:ring focus:border-blue-300"
             />
+
+            <div className="flex items-center mb-4">
+              <span className="mr-2 text-gray-700">Rate this shop:</span>
+              {[1, 2, 3, 4, 5].map((star) => (
+                <span
+                  key={star}
+                  onClick={() => setRating(star)}
+                  className={`text-2xl cursor-pointer transition ${star <= rating ? "text-yellow-400" : "text-gray-300"
+                    }`}
+                >
+                  ★
+                </span>
+              ))}
+            </div>
 
             <div className="flex justify-end gap-2">
               <CustomButton
@@ -209,6 +240,8 @@ const Detail = ({ label, value, full = false }) => (
 
 const ImageCard = ({ label, url }) => (
   <div className="border rounded-md overflow-hidden shadow-sm">
+    {/* Uncomment below and configure next.config.js if using next/image */}
+    {/* <Image src={url} alt={label} width={400} height={200} className="w-full h-40 object-cover" /> */}
     <img src={url} alt={label} className="w-full h-40 object-cover" />
     <div className="p-2 text-sm text-center text-gray-700 font-medium">{label}</div>
   </div>

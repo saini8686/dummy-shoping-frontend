@@ -117,7 +117,7 @@ const UserData = ({ userInfo }) => {
       return imageSrc;
     }
 
-    return `${process.env.NEXT_PUBLIC_API_BASE}/${imageSrc}`;
+    return `${process.env.NEXT_PUBLIC_API_BASE?.replace(/\/$/, "")}/${imageSrc}`;
   };
 
   return (

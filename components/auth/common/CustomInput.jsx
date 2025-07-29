@@ -24,8 +24,8 @@ export const CustomInput = ({
         >
           <option value="">{placeholder}</option>
           {options.map((option, idx) => (
-            <option key={idx} value={option}>
-              {option}
+            <option key={idx} value={option.value}>
+              {option.label}
             </option>
           ))}
         </select>
