@@ -214,6 +214,9 @@ const NearByShare = ({ search }) => {
                 <p className="text-lg font-medium text-blacks-200">
                   {obj.category}
                 </p>
+                <p className="text-lg font-medium text-blacks-200">
+                  {obj.smp} % Discount
+                </p>
                 <CustomButton
                   url={`../customer/${obj.path}`}
                   customClass="mt-2 w-fit text-sm mb-5"

@@ -2,12 +2,12 @@
 
 import { useState, useEffect } from "react";
 import CustomUploadImage from "./CustomUploadImage";
-import QrCode from "./QrCode";
 import Link from "next/link";
 import Icon from "@/components/common/Icons";
 import { getUser, uploadImageToServer } from "@/services/users.service";
 import Cookies from "js-cookie";
 import { CustomButton } from "@/components/common/CustomButton";
+import { ToastContainer, toast } from "react-toastify";
 
 const UploadShopImage = () => {
   const [imageFiles, setImageFiles] = useState({
@@ -24,6 +24,7 @@ const UploadShopImage = () => {
 
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [uploading, setUploading] = useState(false);
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -31,7 +32,7 @@ const UploadShopImage = () => {
       const token = Cookies.get("token");
 
       if (!userId || !token) {
-        console.error("User ID or token not found in cookies.");
+        toast.error("User ID or token not found in cookies.");
         return;
       }
 
@@ -39,7 +40,7 @@ const UploadShopImage = () => {
         const userData = await getUser(userId, token);
         setUser(userData);
       } catch (error) {
-        console.error("Failed to fetch user:", error);
+        toast.error("Failed to fetch user data");
       } finally {
         setLoading(false);
       }
@@ -50,40 +51,82 @@ const UploadShopImage = () => {
 
   const handleImageUpload = (key, file) => {
     const previewURL = URL.createObjectURL(file);
-    setImageFiles((prev) => ({ ...prev, [key]: file }));
-    setImagePreviews((prev) => ({ ...prev, [key]: previewURL }));
+    setImageFiles(prev => ({ ...prev, [key]: file }));
+    setImagePreviews(prev => ({ ...prev, [key]: previewURL }));
   };
 
-  const handleUpload = async (imageKey, fieldName) => {
+  const handleAllUploads = async () => {
     const userId = Cookies.get("userId");
     const token = Cookies.get("token");
 
     if (!user || !userId || !token) {
-      alert("User not authenticated.");
+      toast.error("Please login to upload images");
       return;
     }
 
-    const file = imageFiles[imageKey];
-    if (!file) {
-      alert(`Please select an image for ${fieldName.replace(/_/g, ' ')}.`);
+    // Check if at least one image is selected
+    if (!imageFiles.shopFront && !imageFiles.counterView) {
+      toast.error("Please upload at least shop front and counter view images");
       return;
     }
+
+    setUploading(true);
+    const toastId = toast.loading("Uploading images...");
 
     try {
-      const uploadedUrl = await uploadImageToServer(file, userId, "user", fieldName);
-      console.log(`${fieldName} uploaded to:`, uploadedUrl);
-      alert(`${fieldName.replace(/_/g, ' ')} uploaded successfully.`);
+      // Upload shop front image if selected
+      if (imageFiles.shopFront) {
+        await uploadImageToServer(
+          imageFiles.shopFront,
+          userId,
+          "user",
+          "shop_front_url"
+        );
+      }
+
+      // Upload counter view image if selected
+      if (imageFiles.counterView) {
+        await uploadImageToServer(
+          imageFiles.counterView,
+          userId,
+          "user",
+          "shop_counter_url"
+        );
+      }
+
+      // Upload other image if selected
+      if (imageFiles.other) {
+        await uploadImageToServer(
+          imageFiles.other,
+          userId,
+          "user",
+          "other_img_url"
+        );
+      }
+
+      toast.success("Images uploaded successfully!", { id: toastId });
     } catch (error) {
-      console.error(`${fieldName} upload failed:`, error);
-      alert(`Failed to upload ${fieldName.replace(/_/g, ' ')}.`);
+      toast.error("Failed to upload images", { id: toastId });
+      console.error("Upload error:", error);
+    } finally {
+      setUploading(false);
     }
   };
 
-  if (loading) return <p className="text-center">Loading user...</p>;
+  if (loading) {
+    return (
+      <div className="max-w-xl mx-auto">
+        <p className="text-center py-10">Loading user data...</p>
+      </div>
+    );
+  }
 
   return (
     <div className="max-w-xl mx-auto">
-      <h2 className="text-xl font-semibold pb-3.5 text-greens-900">Upload Shop Images</h2>
+      <ToastContainer />
+      <h2 className="text-xl font-semibold pb-3.5 text-greens-900">
+        Upload Shop Images
+      </h2>
 
       {/* Shop Front View */}
       <CustomUploadImage
@@ -91,12 +134,6 @@ const UploadShopImage = () => {
         image={imagePreviews.shopFront}
         onChange={(file) => handleImageUpload("shopFront", file)}
       />
-      <CustomButton
-        onClick={() => handleUpload("shopFront", "shop_front_url")}
-        customClass="w-full py-[11px] mt-3"
-      >
-        Upload Shop Front Image
-      </CustomButton>
 
       {/* Shop Counter View */}
       <CustomUploadImage
@@ -104,12 +141,6 @@ const UploadShopImage = () => {
         image={imagePreviews.counterView}
         onChange={(file) => handleImageUpload("counterView", file)}
       />
-      <CustomButton
-        onClick={() => handleUpload("counterView", "shop_counter_url")}
-        customClass="w-full py-[11px] mt-3"
-      >
-        Upload Counter View Image
-      </CustomButton>
 
       {/* Other Images */}
       <CustomUploadImage
@@ -117,16 +148,16 @@ const UploadShopImage = () => {
         image={imagePreviews.other}
         onChange={(file) => handleImageUpload("other", file)}
       />
-      <CustomButton
-        onClick={() => handleUpload("other", "other_img_url")}
-        customClass="w-full py-[11px] mt-3"
-      >
-        Upload Other Image
-      </CustomButton>
 
-      {/* QR Code */}
-      {/* <h2 className="text-xl font-semibold mt-10 text-greens-900">QR Scanner for Shop Identity</h2>
-      <QrCode /> */}
+      {/* Single Upload Button */}
+      <CustomButton
+        onClick={handleAllUploads}
+        disabled={uploading || (!imageFiles.shopFront && !imageFiles.counterView)}
+        customClass={`w-full py-[11px] mt-6 ${uploading ? "opacity-70 cursor-not-allowed" : ""
+          }`}
+      >
+        {uploading ? "Uploading..." : "Upload All Images"}
+      </CustomButton>
 
       {/* Navigation */}
       <Link

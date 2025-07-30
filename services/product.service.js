@@ -22,7 +22,7 @@ export const getAllProductsThroughUserId = async ({userId, search = '', page = 1
 
 // GET single product by ID
 export const getProductById = async (id) => {
-  const response = await api.get(`/api/products/${id}`);
+  const response = await api.get(`/api/product/${id}`);
   return response.data;
 };
 
