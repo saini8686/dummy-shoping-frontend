@@ -194,37 +194,50 @@ const NearByShare = ({ search }) => {
       {/* Shops */}
       {filteredShops.map((obj, i) => (
         <div key={i}>
-          <div className="h-[175px] mt-6 shadow-category rounded-lg py-4 px-3">
-            <div className="flex items-start gap-5">
-              <img
-                src={
-                  obj.shop_front_image === null
-                    ? "/assets/images/png/shop/shop-1.png"
-                    : `${process.env.NEXT_PUBLIC_API_BASE?.replace(/\/$/, "")}/${obj.shop_front_image}`
-                }
-                alt="shopImage"
-                height={140}
-                width={121}
-                className="object-cover rounded w-[121px] h-[140px]"
-              />
-              <div className="w-full">
-                <h2 className="text-lg font-medium text-blacks-200 mb-2">
-                  {obj.name}
-                </h2>
-                <p className="text-lg font-medium text-blacks-200">
-                  {obj.category}
-                </p>
-                <p className="text-lg font-medium text-blacks-200">
-                  {obj.smp} % Discount
-                </p>
-                <CustomButton
-                  url={`../customer/${obj.path}`}
-                  customClass="mt-2 w-fit text-sm mb-5"
-                >
-                  View Shop
-                </CustomButton>
-                <div className="flex justify-between items-center">
-                  <div className="flex items-center">
+          <div className="h-auto mt-6 rounded-xl shadow-lg p-4 bg-white transition hover:shadow-xl">
+            <div className="flex gap-4">
+              {/* Image + Ribbon */}
+              <div className="relative w-[121px] h-[140px] overflow-hidden rounded-lg">
+                <img
+                  src={
+                    obj.shop_front_image === null
+                      ? "/assets/images/png/shop/shop-1.png"
+                      : `${process.env.NEXT_PUBLIC_API_BASE?.replace(/\/$/, "")}/${obj.shop_front_image}`
+                  }
+                  alt="shopImage"
+                  className="object-cover w-full h-full rounded-lg"
+                />
+
+                {/* Clean Diagonal Ribbon */}
+                <span className="absolute top-2 left-[-25px] w-[100px] bg-reds-900 text-white text-[10px] font-bold py-[2px] text-center rotate-[-45deg] shadow-md z-10">
+                  {obj.smp}% OFF
+                </span>
+              </div>
+
+              {/* Info Block */}
+              <div className="flex-1 flex flex-col justify-between">
+                <div>
+                  <h2 className="text-lg font-semibold text-blacks-200 truncate">
+                    {obj.name}
+                  </h2>
+                  <p className="text-sm text-blacks-200">{obj.category}</p>
+                  {/* <small className="text-sm text-green-600 font-medium block mt-1">
+                    {obj.smp}% Discount
+                  </small> */}
+                </div>
+
+                <div className="mt-3">
+                  <CustomButton
+                    url={`../customer/${obj.path}`}
+                    customClass="w-fit text-sm"
+                  >
+                    View Shop
+                  </CustomButton>
+                </div>
+
+                <div className="flex justify-between items-center mt-3">
+                  {/* Stars */}
+                  <div className="flex items-center gap-[2px]">
                     {Array.from({ length: 5 }, (_, index) => (
                       <span
                         key={index}
@@ -238,7 +251,9 @@ const NearByShare = ({ search }) => {
                       </span>
                     ))}
                   </div>
-                  <p className="text-reds-900 italic font-semibold text-xs">
+
+                  {/* Distance */}
+                  <p className="text-xs italic font-medium text-reds-900">
                     {userCoords
                       ? `${getDistanceFromLatLonInKm(
                         obj.latitude,

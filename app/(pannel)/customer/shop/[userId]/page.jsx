@@ -76,17 +76,26 @@ const Page = () => {
       const data = {
         userId: userId,
         userName: userInfo?.name || "User",
-        earnAmount:0,
+        earnAmount: 0,
         totalAmount: value,
         paymentMethod: "online",
         transactionId: shopId,
         rating: rating || 0,
         status: "pending",
-        filepath:""
+        filepath: ""
       };
 
       await createPayment(data, token);
 
+      const userData = {
+        ...userInfo,
+        review: (
+          (userInfo.review * userInfo.reviewCount + rating) /
+          (userInfo.reviewCount + 1)
+        ),
+        reviewCount: userInfo.reviewCount + 1,
+      }
+      await updateUser(userData);
 
       toast.success(`Payment successful ₹${value}`);
       setIsOpen(false);
