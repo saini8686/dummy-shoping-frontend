@@ -13,10 +13,11 @@ const AddProductForm = () => {
   const router = useRouter();
   const searchParams = useSearchParams();
   let product = searchParams.get("product");
+
   const [formDetails, setFormDetails] = useState({
     productName: "",
     description: "",
-    productImage: null,
+    productImage: "", // base64 string
     inStock: false,
     discountPrize: "",
     productCategory: "",
@@ -24,13 +25,20 @@ const AddProductForm = () => {
     productPrize: "",
   });
 
-  const handleImageUpload = (key, file) => {
-    setFormDetails((prev) => ({ ...prev, [key]: file }));
-  };
-
   const [error, setError] = useState(false);
   const [confirm, setConfirm] = useState(false);
   const [productDetails, setProduct] = useState(false);
+
+  const handleImageUpload = async (key, file) => {
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      setFormDetails((prev) => ({
+        ...prev,
+        [key]: reader.result, // base64 string
+      }));
+    };
+    if (file) reader.readAsDataURL(file);
+  };
 
   const submitHandler = async (e) => {
     e.preventDefault();
@@ -42,31 +50,26 @@ const AddProductForm = () => {
       return false;
     };
 
-    const isAnyFieldEmpty = Object.values({ ...formDetails, productImage: "ok" }).some(isFieldEmpty);
-    if (!isAnyFieldEmpty && formDetails.productImage instanceof File) {
+    const isAnyFieldEmpty = Object.values(formDetails).some(isFieldEmpty);
+    if (!isAnyFieldEmpty) {
       try {
         setError(false);
         const userId = Cookies.get("userId");
-        const formData = new FormData();
 
-        formData.append("userId", userId);
-        formData.append("productName", formDetails.productName);
-        formData.append("description", formDetails.description);
-        formData.append("productCategory", formDetails.productCategory);
-        formData.append("productUnit", formDetails.productUnit);
-        formData.append("productPrize", formDetails.productPrize);
-        formData.append("discountPrize", formDetails.discountPrize);
-        formData.append("inStock", formDetails.inStock);
-        formData.append("productImage", formDetails.productImage);
+        const payload = {
+          ...formDetails,
+          userId,
+        };
 
-        const res = await createProduct(formData);
+        const res = await createProduct(payload);
         console.log("Product Created:", res);
         setProduct(res);
 
+        // Reset form
         setFormDetails({
           productName: "",
           description: "",
-          productImage: null,
+          productImage: "",
           inStock: false,
           discountPrize: "",
           productCategory: "",
@@ -113,7 +116,7 @@ const AddProductForm = () => {
               name="productName"
               type="text"
               error={!formDetails.productName && error}
-              errorText="Product name Is Required"
+              errorText="Product name is required"
               value={formDetails.productName}
               onChange={(e) =>
                 setFormDetails({
@@ -127,7 +130,7 @@ const AddProductForm = () => {
               name="description"
               type="text"
               error={!formDetails.description && error}
-              errorText="Description Is Required"
+              errorText="Description is required"
               value={formDetails.description}
               onChange={(e) =>
                 setFormDetails({
@@ -145,7 +148,7 @@ const AddProductForm = () => {
               name="productCategory"
               type="text"
               error={!formDetails.productCategory && error}
-              errorText="Product Category Is Required"
+              errorText="Product category is required"
               value={formDetails.productCategory}
               onChange={(e) =>
                 setFormDetails({
@@ -159,7 +162,7 @@ const AddProductForm = () => {
               name="productUnit"
               type="number"
               error={!formDetails.productUnit && error}
-              errorText="Product Unit Is Required"
+              errorText="Product unit is required"
               value={formDetails.productUnit}
               onChange={(e) =>
                 setFormDetails({
@@ -169,11 +172,11 @@ const AddProductForm = () => {
               }
             />
             <CustomInput
-              placeholder="Product Price (N)"
+              placeholder="Product Price (₹)"
               name="productPrize"
               type="number"
               error={!formDetails.productPrize && error}
-              errorText="Product Price Is Required"
+              errorText="Product price is required"
               value={formDetails.productPrize}
               onChange={(e) =>
                 setFormDetails({
@@ -183,11 +186,11 @@ const AddProductForm = () => {
               }
             />
             <CustomInput
-              placeholder="Discount Price (N)"
+              placeholder="Discount Price (₹)"
               name="discountPrize"
               type="number"
               error={!formDetails.discountPrize && error}
-              errorText="Discount Price Is Required"
+              errorText="Discount price is required"
               value={formDetails.discountPrize}
               onChange={(e) =>
                 setFormDetails({
@@ -197,7 +200,7 @@ const AddProductForm = () => {
               }
             />
             <div className="flex justify-between items-center">
-              <p>Mark Product in stock</p>
+              <p>Mark Product in Stock</p>
               <input
                 type="checkbox"
                 className="w-5 h-5 cursor-pointer accent-greens-900"
