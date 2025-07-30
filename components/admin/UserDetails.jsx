@@ -1,110 +1,140 @@
 "use client";
-import React from "react";
+import React, { useState, useEffect } from "react";
 import Icon from "../common/Icons";
 import { CustomButton } from "../common/CustomButton";
-import { useRouter } from "next/navigation";
-import { getUser } from "../../services/users.service"
-import { useState, useEffect } from "react";
-import { useSearchParams } from "next/navigation";
-
-const locations = [
-  { id: 1, name: "Location Name", detail: "ipsum dolo / ipsum dolo" },
-  { id: 2, name: "Location Name", detail: "ipsum dolo / ipsum dolo" },
-  { id: 3, name: "Location Name", detail: "ipsum dolo / ipsum dolo" },
-  { id: 4, name: "Location Name", detail: "ipsum dolo / ipsum dolo" },
-];
+import { useRouter, useSearchParams } from "next/navigation";
+import { getUser, updateUser } from "../../services/users.service";
+import Image from "next/image";
+import Cookies from "js-cookie";
 
 const UserDetails = () => {
   const searchParams = useSearchParams();
-  // let id = searchParams.get("id");
+  const userId = searchParams.get("id");
+  const token = Cookies.get("token");
   const router = useRouter();
-  const [userData, setUserData] = useState([]);
-  // const [loading, setLoading] = useState(true);
 
-  // useEffect(() => {
-  //   const fetchUserDetails = async () => {
-  //     try {
-  //       const data = await getUser();
-  //       console.log(data, 'All user details data');
+  const [userData, setUserData] = useState(null);
+  const [rechargeModalOpen, setRechargeModalOpen] = useState(false);
+  const [newRecharge, setNewRecharge] = useState("");
 
-  //       setUserData(data);
-  //     } catch (error) {
-  //       console.error('Error fetching user details:', error);
-  //     } finally {
-  //       setLoading(false);
-  //     }
-  //   };
+  useEffect(() => {
+    const fetchUserDetails = async () => {
+      try {
+        const data = await getUser(userId, token);
+        setUserData(data);
+      } catch (error) {
+        console.error("Error fetching user details:", error);
+      }
+    };
 
-  //   fetchUserDetails();
-  // }, []);
+    fetchUserDetails();
+  }, [userId, token]);
 
-  // if (loading) return <p>Loading...</p>;
+  const handleRechargeUpdate = async () => {
+    if (!userData) return;
+    const updatedUser = { ...userData, recharge: (userData.recharge || 0) + parseFloat(newRecharge) };
+
+    try {
+      await updateUser(updatedUser);
+      setUserData(updatedUser);
+      setRechargeModalOpen(false);
+    } catch (error) {
+      console.error("Recharge update failed:", error);
+    }
+  };
+
+  if (!userData) return <p>Loading...</p>;
 
   return (
     <div className="w-full h-screen bg-white rounded-xl shadow-md">
       {/* Header */}
       <div className="bg-[#01BA5D] text-white p-4 rounded-b-3xl relative">
-        <button
-          onClick={() => router.back()}
-          className="border-0 outline-0 bg-transparent mt-12"
-        >
+        <button onClick={() => router.back()} className="mt-12 bg-transparent">
           <Icon icon="back" className="invert" />
         </button>
-        <h2 className="text-2xl mt-[50px] mb-2 capitalize font-semibold font-roboto text-white !leading-130">
+        <h2 className="text-2xl mt-[50px] mb-2 font-semibold font-roboto text-white">
           User Details
         </h2>
       </div>
 
       {/* User Info */}
       <div className="py-9 px-4">
-        <div className="bg-white border border-[#DCDCDC] rounded-xl px-3 py-4 flex items-center gap-5">
-          <div className="min-w-[80px] min-h-[80px] flex items-center justify-center">
-            <div className="scale-200">
-              <Icon icon="userProfile" />
-            </div>
+        <div className="bg-white border border-[#DCDCDC] rounded-xl px-3 py-4 flex gap-5">
+          <div className="w-[80px] h-[80px]">
+            <img
+              src={userData?.profilePicture ? `${process.env.NEXT_PUBLIC_API_BASE?.replace(/\/$/, "")}/${userData?.profilePicture}` : "/assets/images/png/shopkepper/basic-detail-profile.png"}
+              width={80}
+              height={80}
+              alt="Profile"
+              className="rounded-full object-cover"
+            />
           </div>
-          <div>
-            <h3 className="text-[#01BE62] font-bold mb-2">User No.#{userData.userId}</h3>
-            <p className="text-[#858585] text-sm">
-              <span className="font-bold text-[#010101]">Details:</span> Worem
-              ipsum dolor sit amet, consectetur adipiscing elit. Nunc vulputate
-              libero et velit interdum, ac aliquet odio mattis. Class aptent
-              taciti.
+          <div className="flex-1">
+            <h3 className="text-[#01BE62] font-bold mb-2">User #{userData.userId}</h3>
+            <p className="text-sm text-[#575757]">Name: {userData.name}</p>
+            <p className="text-sm text-[#575757]">Email: {userData.email}</p>
+            <p className="text-sm text-[#575757]">Mobile: {userData.number}</p>
+            <p className="text-sm text-[#575757]">Status: {userData.status}</p>
+            <p className="text-sm text-[#575757]">
+              Recharge: ₹{userData.recharge}
+              <button
+                onClick={() => {
+                  setRechargeModalOpen(true);
+                  setNewRecharge(userData.recharge);
+                }}
+                className="ml-3 text-blue-600 underline text-xs"
+              >
+                Update
+              </button>
             </p>
           </div>
         </div>
       </div>
 
-      {/* Location List */}
-      <div className="px-4">
-        <div className="flex justify-between items-center mb-4">
-          <h4 className="text-[#010101] text-xl font-bold">Locations List</h4>
-          <CustomButton customClass="!py-2 !px-3 !text-sm">
-            Add More Locations
-          </CustomButton>
-        </div>
-
-        <div className="space-y-3">
-          {locations.map((loc) => (
-            <div
-              key={loc.id}
-              className="flex justify-between items-center bg-[#F1FFF8] p-4 rounded-lg"
-            >
-              <div>
-                <h5 className="text-[#01BA5D] font-bold text-base mb-1">
-                  {loc.name}
-                </h5>
-                <p className="text-[#575757] text-xs font-semibold">
-                  {loc.detail}
-                </p>
-              </div>
-              <CustomButton customClass="!py-2 !px-3 !text-xs">
-                Delete
-              </CustomButton>
-            </div>
-          ))}
-        </div>
+      {/* Shop Images */}
+      <div className="px-4 mt-4 grid grid-cols-2 md:grid-cols-3 gap-4">
+        {["shop_front_url", "shop_counter_url", "other_img_url"].map((imgKey, i) =>
+          userData[imgKey] ? (
+            <img
+              key={i}
+              src={userData?.profilePicture ? `${process.env.NEXT_PUBLIC_API_BASE?.replace(/\/$/, "")}/${userData[imgKey]}` : "/assets/images/png/shopkepper/basic-detail-profile.png"}
+              alt={imgKey}
+              width={200}
+              height={150}
+              className="rounded-lg border object-cover"
+            />
+          ) : null
+        )}
       </div>
+
+      {/* Recharge Modal */}
+      {rechargeModalOpen && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center">
+          <div className="bg-white rounded-xl p-6 w-96">
+            <h3 className="text-xl font-semibold mb-4">Update Recharge</h3>
+            <input
+              type="number"
+              value={newRecharge}
+              onChange={(e) => setNewRecharge(e.target.value)}
+              className="w-full border px-3 py-2 rounded mb-4"
+            />
+            <div className="flex justify-end gap-3">
+              <button
+                onClick={() => setRechargeModalOpen(false)}
+                className="bg-gray-300 px-4 py-2 rounded"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={handleRechargeUpdate}
+                className="bg-green-600 text-white px-4 py-2 rounded"
+              >
+                Save
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

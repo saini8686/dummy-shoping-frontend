@@ -29,8 +29,8 @@ const NavbarShopkepper = ({ userInfo }) => {
       </div>
       <div className="flex justify-between gap-5 mt-7 items-center">
         <div className="flex items-center gap-2">
-          <Image
-            src="/assets/images/png/shopkepper/basic-detail-profile.png"
+          <img
+            src={userInfo?.profilePicture ? `${process.env.NEXT_PUBLIC_API_BASE?.replace(/\/$/, "")}/${userInfo?.profilePicture}` : "/assets/images/png/shopkepper/basic-detail-profile.png"}
             width={51}
             height={51}
             sizes="100vw"

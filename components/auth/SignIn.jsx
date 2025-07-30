@@ -78,14 +78,14 @@ const SignIn = () => {
               router.push("/admin/user-list");
               break;
             case "shopkeeper":
-              router.push(`/shopkepper/product`);
+              router.push(`/shopkepper/order`);
               break;
             case "customer":
               await getLocation();
               router.push("/customer");
               break;
             default:
-              router.push("/shopkepper/product");
+              router.push("/shopkepper/order");
           }
         } else {
           toast.warning("You are not authorized to access this page");

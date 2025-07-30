@@ -6,8 +6,8 @@ import CustomUploadImage from "../detail/CustomUploadImage";
 import { useRouter, useSearchParams } from "next/navigation";
 import ProductAddedModal from "./modal/ProductAddedModal";
 import ConfirmProduct from "./ConfirmProduct";
-import { createProduct } from "../../../services/product.service"
-import Cookies from 'js-cookie';
+import { createProduct } from "../../../services/product.service";
+import Cookies from "js-cookie";
 
 const AddProductForm = () => {
   const router = useRouter();
@@ -23,35 +23,46 @@ const AddProductForm = () => {
     productUnit: "",
     productPrize: "",
   });
+
   const handleImageUpload = (key, file) => {
-    const previewURL = URL.createObjectURL(file);
-    setFormDetails((prev) => ({ ...prev, [key]: previewURL }));
+    setFormDetails((prev) => ({ ...prev, [key]: file }));
   };
+
   const [error, setError] = useState(false);
   const [confirm, setConfirm] = useState(false);
   const [productDetails, setProduct] = useState(false);
 
   const submitHandler = async (e) => {
     e.preventDefault();
-  
+
     const isFieldEmpty = (value) => {
       if (typeof value === "string") return value.trim() === "";
       if (Array.isArray(value)) return value.length === 0;
       if (value === null || value === undefined) return true;
       return false;
     };
-  
-    const isAnyFieldEmpty = Object.values(formDetails).some(isFieldEmpty);
-    if (!isAnyFieldEmpty) {
+
+    const isAnyFieldEmpty = Object.values({ ...formDetails, productImage: "ok" }).some(isFieldEmpty);
+    if (!isAnyFieldEmpty && formDetails.productImage instanceof File) {
       try {
         setError(false);
-        const userId = Cookies.get('userId');
-        const productData = { ...formDetails, userId };
-  
-        const res = await createProduct(productData);
+        const userId = Cookies.get("userId");
+        const formData = new FormData();
+
+        formData.append("userId", userId);
+        formData.append("productName", formDetails.productName);
+        formData.append("description", formDetails.description);
+        formData.append("productCategory", formDetails.productCategory);
+        formData.append("productUnit", formDetails.productUnit);
+        formData.append("productPrize", formDetails.productPrize);
+        formData.append("discountPrize", formDetails.discountPrize);
+        formData.append("inStock", formDetails.inStock);
+        formData.append("productImage", formDetails.productImage);
+
+        const res = await createProduct(formData);
         console.log("Product Created:", res);
         setProduct(res);
-  
+
         setFormDetails({
           productName: "",
           description: "",
@@ -62,7 +73,7 @@ const AddProductForm = () => {
           productUnit: "",
           productPrize: "",
         });
-  
+
         setConfirm(true);
       } catch (error) {
         console.error("Error creating product:", error);
@@ -74,14 +85,16 @@ const AddProductForm = () => {
       setConfirm(false);
     }
   };
-  
+
   const closeConfirm = () => {
     setConfirm(false);
   };
+
   const showProductDetail = () => {
     router.push(`/shopkepper/product/add-product?product=confirm&id=${productDetails?.product?.id}`);
     setConfirm(false);
   };
+
   useEffect(() => {
     confirm
       ? document.body.classList.add("overflow-hidden")
@@ -93,7 +106,7 @@ const AddProductForm = () => {
       {product === "confirm" ? (
         <ConfirmProduct />
       ) : (
-        <form onSubmit={(e) => submitHandler(e)}>
+        <form onSubmit={submitHandler}>
           <div className="space-y-4">
             <CustomInput
               placeholder="Product Name"
@@ -190,11 +203,11 @@ const AddProductForm = () => {
                 className="w-5 h-5 cursor-pointer accent-greens-900"
                 id="inStock"
                 name="inStock"
-                value={formDetails.inStock}
+                checked={formDetails.inStock}
                 onChange={(e) =>
                   setFormDetails({
                     ...formDetails,
-                    inStock: e.target.value,
+                    inStock: e.target.checked,
                   })
                 }
               />

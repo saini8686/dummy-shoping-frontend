@@ -10,7 +10,7 @@ export const submitUser = async (details) => {
 
 // READ: Get all basic details or by userId
 export const getAllUserList = async () => { // Get token from browser cookies
-const token = Cookies.get("token");
+  const token = Cookies.get("token");
   const res = await api.get(`/api/users`, {
     headers: {
       Authorization: `Bearer ${token}`,
@@ -22,7 +22,7 @@ const token = Cookies.get("token");
 export const getUser = async (user_Id, token) => {
   console.log("Fetching user with ID:", user_Id);
   console.log("Using token:", token);
-  
+
   const res = await api.get(`/api/users/${user_Id}`, {
     headers: {
       Authorization: `Bearer ${token}`,
@@ -50,8 +50,13 @@ export const updateUser = async (updatedDetails) => {
 
 
 // DELETE: Delete basic details by userId
-export const deleteUser = async () => {
-  const res = await api.delete(`/api/users/${userId}`);
+export const deleteUser = async (user_id) => {
+  const token = Cookies.get("token");
+  const res = await api.delete(`/api/users/${user_id}`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
   return res.data;
 };
 

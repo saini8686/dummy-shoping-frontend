@@ -8,6 +8,7 @@ import { useEffect, useState } from "react";
 import { getAllUserList } from "@/services/users.service";
 import { getAllPayments } from "@/services/payment.service";
 import Cookies from "js-cookie";
+import BottomBarAdmin from "@/components/admin/common/BottomBarAdmin";
 
 const Page = () => {
   const [totalAmount, setTotalAmount] = useState(0);
@@ -55,7 +56,7 @@ const Page = () => {
       <div className="pb-20 mt-10 px-4">
         <TotalAmount total={totalAmount} />
         <RecentTransition transactions={recentTransactions} />
-        <BottomBarShopKepper />
+        <BottomBarAdmin />
       </div>
     </div>
   );
