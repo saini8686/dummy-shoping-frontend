@@ -108,7 +108,7 @@ const BasicDetailForm = () => {
     e.preventDefault();
 
     const isAnyFieldEmpty = Object.values(formDetails).some(
-      (value) => value.trim() === ""
+      (value) => value.trim() === "" || value.gst_number ===""
     );
     const isPhoneValid = /^\d{10}$/.test(formDetails.number);
 

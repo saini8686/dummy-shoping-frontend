@@ -37,8 +37,8 @@ export const createPayment = async (data) => {
 
 
 // UPDATE Payment
-export const updateProduct = async (id, data) => {
-  const response = await api.put(`/api/payment/${id}`, data, {
+export const updatePayment = async (userId, data) => {
+  const response = await api.put(`/api/payment/${userId}`, data, {
     headers: {
       Authorization: `Bearer ${token}`,
     }

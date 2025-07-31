@@ -6,7 +6,7 @@ import Cookies from "js-cookie";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
-import { getAllPayments, updateProduct } from "@/services/payment.service";
+import { getAllPayments, updatePayment } from "@/services/payment.service";
 import { getBasicDetails } from "@/services/basic-details.service";
 import { getUser, updateUser } from "@/services/users.service";
 import { createNotification } from "@/services/notification.service";
@@ -74,9 +74,10 @@ const Payments = () => {
       const totalAmount = user.totalAmount;
       const userData = await getUser(user.userId, token);
       const smp = shopDetails?.smp || 1;
+      const smpPr = Number(smp) / 100;
 
       if (status === "approved") {
-        const earnAmount = Number(totalAmount) * (Number(smp) * 0.01);
+        const earnAmount = Number(totalAmount) * smpPr;
 
         const updatedUser = {
           ...userData,
@@ -94,12 +95,11 @@ const Payments = () => {
           status: "sent",
         });
 
-        const adminCommission1 = Number(totalAmount) * Number(smp) * 0.05;
-        const adminCommission2 = Number(totalAmount) * Number(smp) * 0.25;
+        const adminCommission1 = Number(totalAmount) * smpPr * 0.05;
+        const adminCommission2 = Number(totalAmount) * smpPr * 0.25;
 
         const updatedAdmin = {
           ...adminInfo,
-          wallet: (adminInfo.wallet || 0) + earnAmount,
           wallet1: (adminInfo.wallet1 || 0) + adminCommission1,
           wallet2: (adminInfo.wallet2 || 0) + adminCommission2,
         };
@@ -113,7 +113,9 @@ const Payments = () => {
 
         if (userData?.parentUserId) {
           const parentData = await getUser(userData.parentUserId, token);
-          const referralEarn = totalAmount * Number(smp) * 0.02;
+          console.log("parentData", parentData);
+
+          const referralEarn = totalAmount * smpPr * 0.2;
 
           const updatedParent = {
             ...parentData,
@@ -122,12 +124,12 @@ const Payments = () => {
           await updateUser(updatedParent);
 
           await createNotification({
-            userId: parentData.id,
-            message: `You earned ₹${referralEarn} from your referral ${userData.userName}'s payment.`,
-            earnCoin: referralEarn,
+            userId: parentData.userId,
+            message: `You earned ₹${referralEarn} from your referral ${userData?.name}'s payment.`,
+            earnCoin: referralEarn || 0,
             earnType: "referral",
-            earnUserId: userData.id,
-            earnUserName: userData.userName,
+            earnUserId: userData.userId,
+            earnUserName: userData.name,
             status: "sent",
           });
         }
@@ -144,7 +146,7 @@ const Payments = () => {
       }
 
       const updatedPayment = { ...user, status };
-      await updateProduct(user.userId, updatedPayment);
+      await updatePayment(user.payId, updatedPayment);
 
       toast.success(`Payment ${status} successfully`);
       setIsOpen(false);

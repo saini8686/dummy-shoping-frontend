@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import { Dialog } from "@headlessui/react";
-import { getAllPayments, updateProduct } from "@/services/payment.service";
+import { getAllPayments, updatePayment } from "@/services/payment.service";
 import { CustomButton } from "@/components/common/CustomButton";
 import Cookies from "js-cookie";
 import Icon from "@/components/common/Icons";
@@ -62,7 +62,7 @@ const CoustomerPayments = () => {
 
       const updatedUser = { ...user, status, rating };
 
-      const res = await updateProduct(user.userId, updatedUser);
+      const res = await updatePayment(user.payId, updatedUser);
       alert("Payment updated successfully!");
 
       setIsOpen(false);
