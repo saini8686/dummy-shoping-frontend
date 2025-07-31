@@ -222,7 +222,7 @@ const NearByShare = ({ search }) => {
                   </h2>
                   <p className="text-sm text-blacks-200">{obj?.category}</p>
                   <small className="text-sm text-green-600 font-medium block mt-1">
-                    {obj?.smp}% Discount
+                    {obj?.smp}% Future saving
                   </small>
                   <small className="text-sm text-green-600 font-medium block mt-1">
                     {obj?.address}

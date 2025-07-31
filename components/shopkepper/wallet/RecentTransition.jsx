@@ -4,9 +4,7 @@ import TransitionList from "./TransitionList";
 import Image from "next/image";
 
 const RecentTransition = (params) => {
-  const TRANSITION_LIST = params.transactions  || [];
-  console.log("sd",TRANSITION_LIST);
-  
+  const TRANSITION_LIST = params.transactions  || [];  
   return (
     <>
       <div className="flex justify-between items-center mt-10">

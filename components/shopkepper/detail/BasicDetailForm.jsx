@@ -348,8 +348,6 @@ const BasicDetailForm = () => {
                       placeholder="GST Number"
                       name="gst_number"
                       type="text"
-                      error={!formDetails.gst_number && error}
-                      errorText="GST number is required"
                       value={formDetails.gst_number}
                       onChange={(e) =>
                         setFormDetails({
