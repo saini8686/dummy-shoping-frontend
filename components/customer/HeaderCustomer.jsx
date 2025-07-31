@@ -20,10 +20,10 @@ const HeaderCustomer = ({ name, location ,classCard }) => {
         <Link href="/customer">
           <Image
             src="/assets/images/svg/logo.svg"
-            width={86}
+            width={100}
             height={39}
             sizes="100vw"
-            className="w-[85px] h-[32px] object-cover"
+            className="h-[32px] object-cover"
             alt="logo"
           />
         </Link>

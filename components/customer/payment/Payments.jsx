@@ -5,6 +5,7 @@ import { Dialog } from "@headlessui/react";
 import { getAllPayments, updateProduct } from "@/services/payment.service";
 import { CustomButton } from "@/components/common/CustomButton";
 import Cookies from "js-cookie";
+import Icon from "@/components/common/Icons";
 
 const CoustomerPayments = () => {
   const [payments, setPayments] = useState([]);
@@ -94,11 +95,10 @@ const CoustomerPayments = () => {
                 #{i + 1} • {obj.userName}
               </h2>
               <span
-                className={`text-xs font-semibold px-2 py-1 rounded-full ${
-                  obj.status === "approved"
+                className={`text-xs font-semibold px-2 py-1 rounded-full ${obj.status === "approved"
                     ? "bg-green-200 text-green-900"
                     : "bg-yellow-200 text-yellow-900"
-                }`}
+                  }`}
               >
                 {obj.status.toUpperCase()}
               </span>
@@ -133,9 +133,17 @@ const CoustomerPayments = () => {
         <div className="fixed inset-0 bg-black/40" aria-hidden="true" />
         <div className="fixed inset-0 flex items-center justify-center p-4">
           <Dialog.Panel className="bg-white rounded-lg shadow-xl max-w-md w-full p-6">
-            <Dialog.Title className="text-xl font-semibold mb-4">
-              Payment Details
-            </Dialog.Title>
+            <div className="flex items-center justify-between mb-4">
+              <Dialog.Title className="text-xl font-semibold mb-4">
+                Payment Details
+              </Dialog.Title>
+              <button
+                className="px-4 py-2 rounded bg-gray-300 text-gray-800 hover:bg-gray-400"
+                onClick={handleClose}
+              >
+                <Icon icon="close" />
+              </button>
+            </div>
 
             {selectedUser && (
               <div className="space-y-3 text-sm text-gray-700">
@@ -196,40 +204,6 @@ const CoustomerPayments = () => {
                   </button>
                 ))}
               </div>
-            </div>
-
-            {/* Action Buttons */}
-            <div className="mt-6 flex justify-between">
-              <button
-                className="px-4 py-2 rounded bg-gray-300 text-gray-800 hover:bg-gray-400"
-                onClick={handleClose}
-              >
-                Close
-              </button>
-
-              <CustomButton
-                disabled={selectedUser?.totalAmount > 5000}
-                onClick={() => handleApprove(selectedUser, "rejected")}
-                className={`px-4 py-2 rounded text-white ${
-                  selectedUser?.totalAmount > 5000
-                    ? "bg-gray-400 cursor-not-allowed"
-                    : "bg-red-600 hover:bg-red-700"
-                }`}
-              >
-                Reject
-              </CustomButton>
-
-              <CustomButton
-                disabled={selectedUser?.totalAmount > 5000}
-                onClick={() => handleApprove(selectedUser, "approved")}
-                className={`px-4 py-2 rounded text-white ${
-                  selectedUser?.totalAmount > 5000
-                    ? "bg-gray-400 cursor-not-allowed"
-                    : "bg-green-600 hover:bg-green-700"
-                }`}
-              >
-                Approve
-              </CustomButton>
             </div>
           </Dialog.Panel>
         </div>

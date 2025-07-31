@@ -63,6 +63,13 @@ const SignIn = () => {
       const response = await login(email, password);
 
       if (response?.token && response?.userId && response?.userRole) {
+        // if (
+        //   (response?.userRole === "admin" || response?.userRole === "shopkeeper") &&
+        //   response?.status !== "approved"
+        // ) {
+        //   toast.error("Your account is not active. Please contact support.");
+        //   return;
+        // }
         Cookies.set("token", response.token, { sameSite: "Lax", secure: true });
         Cookies.set("userId", response.userId.toString(), { sameSite: "Lax", secure: true });
         Cookies.set("userRole", response.userRole.toLowerCase(), { sameSite: "Lax", secure: true });

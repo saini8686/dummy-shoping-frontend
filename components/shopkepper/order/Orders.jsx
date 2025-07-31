@@ -30,8 +30,8 @@ const Orders = () => {
         const payData = await getAllPayments();
         console.log("All Payments:", payData);
 
-        if (payData && userDataRes?.userId) {
-          const filteredPayments = payData.filter(
+        if (payData.success && userDataRes?.userId) {
+          const filteredPayments = payData?.data.filter(
             (item) => String(item.transactionId) === String(userDataRes.userId)
           );
           setRecentTransactions(filteredPayments);

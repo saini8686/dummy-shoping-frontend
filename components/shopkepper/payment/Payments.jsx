@@ -11,6 +11,7 @@ import { getBasicDetails } from "@/services/basic-details.service";
 import { getUser, updateUser } from "@/services/users.service";
 import { createNotification } from "@/services/notification.service";
 import { CustomButton } from "@/components/common/CustomButton";
+import Icon from "@/components/common/Icons";
 
 const Payments = () => {
   const [payments, setPayments] = useState([]);
@@ -168,8 +169,8 @@ const Payments = () => {
               <div className="bg-greens-900 px-4 py-2 text-white flex justify-between items-center">
                 <h2 className="font-semibold text-sm">#{i + 1} • {obj.userName}</h2>
                 <span className={`text-xs font-semibold px-2 py-1 rounded-full ${obj.status === "approved"
-                    ? "bg-green-200 text-green-900"
-                    : "bg-yellow-200 text-yellow-900"
+                  ? "bg-green-200 text-green-900"
+                  : "bg-yellow-200 text-yellow-900"
                   }`}>
                   {obj.status.toUpperCase()}
                 </span>
@@ -203,7 +204,7 @@ const Payments = () => {
                 className="px-4 py-2 rounded bg-gray-300 text-gray-800 hover:bg-gray-400"
                 onClick={() => setIsOpen(false)}
               >
-                Close
+                <Icon icon="close" />
               </button>
             </div>
             {selectedUser && (
@@ -215,7 +216,7 @@ const Payments = () => {
                 <p><strong>Payment Method:</strong> {selectedUser.paymentMethod}</p>
               </div>
             )}
-            <div className="mt-6 flex justify-end gap-3">
+            {selectedUser?.status === "pending" && <div className="mt-6 flex justify-end gap-3">
               <CustomButton
                 disabled={selectedUser?.totalAmount > 5000}
                 onClick={() => handleApprove(selectedUser, "rejected")}
@@ -230,7 +231,7 @@ const Payments = () => {
               >
                 Approve
               </CustomButton>
-            </div>
+            </div>}
           </Dialog.Panel>
         </div>
       </Dialog>

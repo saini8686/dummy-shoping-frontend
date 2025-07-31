@@ -6,7 +6,7 @@ import RecentTransition from "@/components/shopkepper/wallet/RecentTransition";
 import TotalAmount from "@/components/shopkepper/wallet/TotalAmount";
 import { useEffect, useState } from "react";
 import { getUser } from "@/services/users.service";
-import { getAllPayments } from "@/services/payment.service";
+import { getAllNotifications } from "@/services/notification.service";
 import Cookies from "js-cookie";
 import BottomBar from "@/components/common/BottomBar";
 
@@ -24,11 +24,11 @@ const Page = () => {
         console.log("User Data:", userData);
         setTotalAmount(userData);
 
-        const payData = await getAllPayments();
+        const payData = await getAllNotifications();
         console.log("All Payments:", payData);
 
-        if (payData && userData?.userId) {
-          const filteredPayments = payData.filter(
+        if (payData.success && userData?.userId) {
+          const filteredPayments = payData?.data.filter(
             item => String(item.userId) === String(userData.userId)
           );
           console.log("Filtered Payments:", filteredPayments);
@@ -50,7 +50,7 @@ const Page = () => {
     <div className="bg-white-low">
       <HeaderCustomer name="Wallet" />
       <div className="pb-20 mt-10 px-4">
-        <TotalAmount total={totalAmount} />
+        <TotalAmount total={totalAmount} isAdmin={false} breakdown={""} />
         <RecentTransition transactions={recentTransactions} />
         <BottomBar />
       </div>

@@ -15,6 +15,16 @@ export interface Notification extends NotificationPayload {
   createdAt: string;
 }
 
+export const getAllNotifications = async (userId?: number) => {
+  try {
+    const res = await api.get('/api/notifications');
+    return res.data;
+  } catch (error: any) {
+    console.error('Error fetching notifications:', error);
+    throw error?.response?.data || { message: 'Unknown error' };
+  }
+};
+
 // 🟢 Create Notification
 export const createNotification = async (data: NotificationPayload) => {
   try {

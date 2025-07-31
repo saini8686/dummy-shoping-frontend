@@ -209,21 +209,24 @@ const NearByShare = ({ search }) => {
                 />
 
                 {/* Clean Diagonal Ribbon */}
-                <span className="absolute top-2 left-[-25px] w-[100px] bg-reds-900 text-white text-[10px] font-bold py-[2px] text-center rotate-[-45deg] shadow-md z-10">
+                {/* <span className="absolute top-2 left-[-25px] w-[100px] bg-reds-900 text-white text-[10px] font-bold py-[2px] text-center rotate-[-45deg] shadow-md z-10">
                   {obj.smp}% OFF
-                </span>
+                </span> */}
               </div>
 
               {/* Info Block */}
               <div className="flex-1 flex flex-col justify-between">
                 <div>
                   <h2 className="text-lg font-semibold text-blacks-200 truncate">
-                    {obj.name}
+                    {obj?.name}
                   </h2>
-                  <p className="text-sm text-blacks-200">{obj.category}</p>
-                  {/* <small className="text-sm text-green-600 font-medium block mt-1">
-                    {obj.smp}% Discount
-                  </small> */}
+                  <p className="text-sm text-blacks-200">{obj?.category}</p>
+                  <small className="text-sm text-green-600 font-medium block mt-1">
+                    {obj?.smp}% Discount
+                  </small>
+                  <small className="text-sm text-green-600 font-medium block mt-1">
+                    {obj?.address}
+                  </small>
                 </div>
 
                 <div className="mt-3">

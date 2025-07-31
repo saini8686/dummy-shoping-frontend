@@ -189,14 +189,14 @@ const SignUp = () => {
             value={formDetails.address}
             onChange={(e) => setFormDetails({ ...formDetails, address: e.target.value })}
           />
-          <CustomInput
+         {auth === "customer" && <CustomInput
             customClass="mt-4"
             placeholder="Referral Code (Optional)"
             name="referralCode"
             type="text"
             value={formDetails.referralCode}
             onChange={(e) => setFormDetails({ ...formDetails, referralCode: e.target.value })}
-          />
+          />}
 
           {authError && <p className="text-red-500 mt-2">{authError}</p>}
 

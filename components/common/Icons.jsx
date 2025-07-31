@@ -672,6 +672,9 @@ const Icon = ({ icon, className }) => {
         />
       </svg>
     ),
+    close: (
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 50 50" width="20px" height="20px"><path d="M 7.71875 6.28125 L 6.28125 7.71875 L 23.5625 25 L 6.28125 42.28125 L 7.71875 43.71875 L 25 26.4375 L 42.28125 43.71875 L 43.71875 42.28125 L 26.4375 25 L 43.71875 7.71875 L 42.28125 6.28125 L 25 23.5625 Z" /></svg>
+    ),
     pencilAddresse: (
       <svg
         width="36"
@@ -1092,16 +1095,16 @@ const Icon = ({ icon, className }) => {
         <path
           d="M13.9893 11.2848C13.9893 13.0627 12.5527 14.4993 10.7748 14.4993C8.99695 14.4993 7.5603 13.0627 7.5603 11.2848C7.5603 9.50696 8.99695 8.07031 10.7748 8.07031C12.5527 8.07031 13.9893 9.50696 13.9893 11.2848Z"
           stroke="#01BE62"
-          stroke-width="1.34686"
-          stroke-linecap="round"
-          stroke-linejoin="round"
+          strokeWidth="1.34686"
+          strokeLinecap="round"
+          strokeLinejoin="round"
         />
         <path
           d="M10.7748 18.71C13.9444 18.71 16.8985 16.8423 18.9547 13.6098C19.7628 12.3438 19.7628 10.2158 18.9547 8.94971C16.8985 5.71725 13.9444 3.84961 10.7748 3.84961C7.60517 3.84961 4.65106 5.71725 2.59486 8.94971C1.78674 10.2158 1.78674 12.3438 2.59486 13.6098C4.65106 16.8423 7.60517 18.71 10.7748 18.71Z"
           stroke="#01BE62"
-          stroke-width="1.34686"
-          stroke-linecap="round"
-          stroke-linejoin="round"
+          strokeWidth="1.34686"
+          strokeLinecap="round"
+          strokeLinejoin="round"
         />
       </svg>
     ),

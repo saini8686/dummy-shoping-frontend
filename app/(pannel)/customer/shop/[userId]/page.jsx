@@ -119,32 +119,10 @@ const Page = () => {
           <p className="text-red-500">No shop data found for this user.</p>
         ) : (
           <div className="bg-white p-6 rounded-lg shadow border border-gray-200 space-y-3 text-sm">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <Detail label="Username" value={shopDetails.username} />
-              <Detail label="Shop Name" value={shopDetails.shopname} />
-              <Detail label="Category" value={shopDetails.category} />
-              <Detail label="SMP" value={shopDetails.smp} />
-              <Detail label="GST Number" value={shopDetails.gst_number} />
-              <Detail label="Pincode" value={shopDetails.pincode} />
-              <Detail label="Village" value={shopDetails.village} />
-              <Detail label="City" value={shopDetails.city} />
-              <Detail label="District" value={shopDetails.district} />
-              <Detail label="State" value={shopDetails.state} />
-              <Detail label="Latitude" value={shopDetails.latitude} />
-              <Detail label="Longitude" value={shopDetails.longitude} />
-              <Detail
-                label="Created At"
-                value={new Date(shopDetails.createdAt).toLocaleString()}
-              />
-              <Detail
-                label="Updated At"
-                value={new Date(shopDetails.updatedAt).toLocaleString()}
-              />
-              <Detail label="Address" value={shopDetails.address} full />
-            </div>
-
             {/* Shop Images */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-6">
+            <h2 className="text-xl font-semibold mb-4 uppercase text-center">
+              <span className="text-green-600">{shopDetails.shopname}</span></h2>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-3">
               {shopUserData.shop_front_url && (
                 <ImageCard
                   label="Shop Front"
@@ -165,9 +143,17 @@ const Page = () => {
               )}
             </div>
 
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 rounded shadow border border-gray-200 p-4 mt-4">
+              <Detail label="Username" value={shopDetails.username} />
+              <Detail label="Category" value={shopDetails.category} />
+              <Detail label="GST Number" value={shopDetails.gst_number} />
+              <Detail label="Address" value={`${shopDetails.village}, ${shopDetails.city}, ${shopDetails.district}, ${shopDetails.state}`} />
+            </div>
+
             <h2 className="text-xl mt-2 capitalize font-semibold font-roboto !leading-130">
               Listed Products
             </h2>
+
             <ProductDetails shopId={shopId} />
 
             <CustomButton

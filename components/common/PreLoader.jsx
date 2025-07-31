@@ -31,14 +31,14 @@ const PreLoader = () => {
             width={205}
             height={97}
             sizes="100vw"
-            className="mb-5  w-[190x] mx-auto h-[71px] object-cover"
+            className="mb-5 w-fit mx-auto h-[71px] object-cover"
             alt="logo"
           />
         </div>
       )}
       {/* show */}
       <div className="w-full max-w-[540px] mx-auto min-h-screen bg-white fixed inset-0 z-50">
-        <div className="relative justify-between gap-10 flex-col flex z-10 min-h-screen">
+        <div className="relative justify-between gap-10 flex-col flex z-10 min-h-screen pt-10">
           {/* <div className="mt-10 px-4 flex w-full  justify-between items-center">
             {steps === "0" && (
               <p className="text-lg font-semibold text-black !leading-130">
@@ -73,7 +73,7 @@ const PreLoader = () => {
             width={205}
             height={97}
             sizes="100vw"
-            className="mb-5  w-[190px] mx-auto h-[73px] object-cover"
+            className="mb-5  w-fit mx-auto h-[73px] object-cover"
             alt="logo"
           />
           <div className="bg-greens-900 landing_hero_swiper rounded-t-3xl  h-[400px]   w-full pt-[56px] pb-6 px-7">

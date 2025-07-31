@@ -39,7 +39,7 @@ const Navbar = ({ userInfo }) => {
 
   const handleCopyReferral = () => {
     if (!referralCode) return;
-    const urlWithReferral = `${window.location.origin}/sign-up?auth=customer&referralCode=${referralCode}`;
+    const urlWithReferral = `${referralCode}`;
     navigator.clipboard.writeText(urlWithReferral);
     setCopied(true);
     toast.success("Referral code copied!");
@@ -54,10 +54,10 @@ const Navbar = ({ userInfo }) => {
         <Link href="/customer">
           <Image
             src="/assets/images/svg/logo.svg"
-            width={86}
+            width={100}
             height={39}
             sizes="100vw"
-            className="mb-5 w-[85px] h-[32px] object-cover"
+            className="mb-5 h-[32px] object-cover"
             alt="logo"
           />
         </Link>

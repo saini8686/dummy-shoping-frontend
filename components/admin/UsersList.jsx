@@ -63,9 +63,9 @@ const UsersList = () => {
             <Link href="/customer">
               <Image
                 src="/assets/images/svg/logo.svg"
-                width={86}
+                width={100}
                 height={39}
-                className="w-[85px] h-[32px] object-cover"
+                className="h-[32px] object-cover"
                 alt="logo"
               />
             </Link>
@@ -76,7 +76,7 @@ const UsersList = () => {
                 src="/assets/images/png/shopkepper/basic-detail-profile.png"
                 width={51}
                 height={51}
-                className="w-[51px] h-[51px] object-cover"
+                className="w-[51px] h-[51px] object-cover rounded-full"
                 alt="profile"
               />
               <p className="text-white font-medium block text-base">
