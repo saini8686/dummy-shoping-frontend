@@ -121,8 +121,19 @@ const Page = () => {
         ) : (
           <div className="bg-white p-6 rounded-lg shadow border border-gray-200 space-y-3 text-sm">
             {/* Shop Images */}
-            <h2 className="text-xl font-semibold mb-4 uppercase text-center">
-              <span className="text-green-600">{shopDetails.shopname}</span></h2>
+
+            <CustomButton
+              url="#"
+              customClass="mt-4 w-fit text-sm w-full text-center"
+              onClick={(e) => {
+                e.preventDefault();
+                setIsOpen(true);
+              }}
+            >
+              Pay
+            </CustomButton>
+            {/* <h2 className="text-xl font-semibold mb-4 uppercase text-center">
+              <span className="text-green-600">{shopDetails.shopname}</span></h2> */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-3">
               {shopUserData.shop_front_url && (
                 <ImageCard
@@ -147,7 +158,8 @@ const Page = () => {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 rounded shadow border border-gray-200 p-4 mt-4">
               <Detail label="Username" value={shopDetails.username} />
               <Detail label="Category" value={shopDetails.category} />
-              <Detail label="GST Number" value={shopDetails.gst_number} />
+              <Detail label="Shop No" value={shopDetails.userId} />
+              <Detail label="Shop Name" value={shopDetails.shopname} />
               <Detail label="Address" value={`${shopDetails.village}, ${shopDetails.city}, ${shopDetails.district}, ${shopDetails.state}`} />
             </div>
 
@@ -156,17 +168,6 @@ const Page = () => {
             </h2>
 
             <ProductDetails shopId={shopId} />
-
-            <CustomButton
-              url="#"
-              customClass="mt-4 w-fit text-sm w-full text-center"
-              onClick={(e) => {
-                e.preventDefault();
-                setIsOpen(true);
-              }}
-            >
-              Pay
-            </CustomButton>
           </div>
         )}
       </div>
