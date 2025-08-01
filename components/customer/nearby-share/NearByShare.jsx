@@ -219,7 +219,7 @@ const NearByShare = ({ search }) => {
           <div className="h-auto mt-6 rounded-xl shadow-lg p-4 bg-white transition hover:shadow-xl">
             <div className="flex gap-4">
               {/* Image + Ribbon */}
-              <div className="relative w-[121px] h-[140px] overflow-hidden rounded-lg">
+              <div className="relative w-[263px] h-[198px] overflow-hidden rounded-lg">
                 <img
                   src={
                     obj.shop_front_image === null
@@ -239,19 +239,17 @@ const NearByShare = ({ search }) => {
               {/* Info Block */}
               <div className="flex-1 flex flex-col justify-between">
                 <div>
-                  <div className="flex justify-between">
-                    <h2 className="text-lg font-semibold text-blacks-200 truncate">
-                      {obj?.name}
-                    </h2>
-                  </div>
+                  <h2 className="text-lg font-semibold text-blacks-200 truncate">
+                    Shop No: #<span className="text-green-600">{obj?.userId}</span>
+                  </h2>
+                  <h2 className="text-lg font-semibold text-blacks-200 truncate">
+                    Name: {obj?.name}
+                  </h2>
                   <p className="text-sm text-blacks-200">{obj?.category}</p>
                   <small className="text-sm text-green-600 font-medium block mt-1">
                     {obj?.address}
                   </small>
 
-                  <h2 className="text-lg font-semibold text-blacks-200 truncate">
-                    Shop No: #{obj?.userId}
-                  </h2>
                 </div>
 
                 <div className="mt-3">
