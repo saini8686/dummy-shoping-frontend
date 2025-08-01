@@ -165,7 +165,6 @@ const UsersList = () => {
               <p><strong>Name:</strong> {selectedUser.name}</p>
               <p><strong>Email:</strong> {selectedUser.email}</p>
               <p><strong>Mobile:</strong> {selectedUser.number}</p>
-              <p><strong>Status:</strong> {selectedUser.status}</p>
               <p><strong>Referral Code:</strong> {selectedUser.referralCode}</p>
               
             </div>
