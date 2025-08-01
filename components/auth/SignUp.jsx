@@ -60,6 +60,7 @@ const SignUp = () => {
       formDetails.email &&
       formDetails.password &&
       formDetails.address &&
+      formDetails.referralCode &&
       formDetails.number.length === 10;
 
     if (!isValid) {
@@ -191,9 +192,11 @@ const SignUp = () => {
           />
          {auth === "customer" && <CustomInput
             customClass="mt-4"
-            placeholder="Referral Code (Optional)"
+            placeholder="Referral Code"
             name="referralCode"
             type="text"
+            error={!formDetails.referralCode && error}
+            errorText="Referral Code is required"
             value={formDetails.referralCode}
             onChange={(e) => setFormDetails({ ...formDetails, referralCode: e.target.value })}
           />}
