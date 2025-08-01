@@ -231,7 +231,7 @@ const NearByShare = ({ search }) => {
                 />
 
                 {/* Clean Diagonal Ribbon */}
-                <span className="absolute top-2 left-[-25px] w-[100px] bg-reds-900 text-white text-[10px] font-bold py-[2px] text-center rotate-[-45deg] shadow-md z-10">
+                <span className="absolute top-2 left-[-25px] w-[100px] bg-reds-900 text-white text-[12px] font-bold py-[2px] text-center rotate-[-45deg] shadow-md z-10">
                   {obj.smp}% FS
                 </span>
               </div>
