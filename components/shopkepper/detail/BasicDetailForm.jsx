@@ -107,8 +107,11 @@ const BasicDetailForm = () => {
   const submitHandler = async (e) => {
     e.preventDefault();
 
-    const isAnyFieldEmpty = Object.values(formDetails).some(
-      (value) => value.trim() === "" || value.gst_number ===""
+
+    const { gst_number, ...requiredFields } = formDetails;
+
+    const isAnyFieldEmpty = Object.values(requiredFields).some(
+      (value) => value.trim?.() === ""
     );
     const isPhoneValid = /^\d{10}$/.test(formDetails.number);
 
@@ -177,8 +180,8 @@ const BasicDetailForm = () => {
             type="button"
             onClick={() => toggleAccordion(index)}
             className={`w-full flex justify-between duration-300 items-center text-left text-xl font-semibold px-5 py-3 text-blacks-200 ${openIndex === index
-                ? "bg-transparent !text-greens-900"
-                : "bg-[#F1FEF8]"
+              ? "bg-transparent !text-greens-900"
+              : "bg-[#F1FEF8]"
               }`}
           >
             {section.title}
@@ -345,7 +348,7 @@ const BasicDetailForm = () => {
                     />
 
                     <CustomInput
-                      placeholder="GST Number"
+                      placeholder="GST Number (optional)"
                       name="gst_number"
                       type="text"
                       value={formDetails.gst_number}
