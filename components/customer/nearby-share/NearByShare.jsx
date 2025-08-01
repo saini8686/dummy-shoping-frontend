@@ -240,16 +240,15 @@ const NearByShare = ({ search }) => {
               <div className="flex-1 flex flex-col justify-between">
                 <div>
                   <h2 className="text-lg font-semibold text-blacks-200 truncate">
-                    Shop No: #<span className="text-green-600">{obj?.userId}</span>
+                    Shop ID: #<span className="text-green-600">{obj?.userId}</span>
                   </h2>
                   <h2 className="text-lg font-semibold text-blacks-200 truncate">
-                    Name: {obj?.name}
+                    {obj?.name}
                   </h2>
                   <p className="text-sm text-blacks-200">{obj?.category}</p>
                   <small className="text-sm text-green-600 font-medium block mt-1">
                     {obj?.address}
                   </small>
-
                 </div>
 
                 <div className="mt-3">
