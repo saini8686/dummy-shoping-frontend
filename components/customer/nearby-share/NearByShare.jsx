@@ -72,7 +72,7 @@ const NearByShare = ({ search }) => {
       try {
         setLoading(true);
         const res = await getBasicDetails(search, page);
-        const allShops = res.data || [];
+        const allShops = res.data.filter(item => item.status === "approved") || [];
 
         // Calculate distance for each shop if user coordinates are available
         if (userCoords) {
