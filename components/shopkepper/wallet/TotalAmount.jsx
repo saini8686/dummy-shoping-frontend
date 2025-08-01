@@ -1,46 +1,36 @@
-"use client"
-import { CustomButton } from "@/components/common/CustomButton";
-import Icon from "@/components/common/Icons";
+"use client";
+
 import { useState } from "react";
 import { Dialog } from "@headlessui/react";
 import Cookies from "js-cookie";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { getUser } from "@/services/users.service"
-import { createPayment } from "@/services/payment.service"
 
-const TotalAmount = (params) => {
-  const totalAmount = params.total;
-  const isAdmin = params.isAdmin;
-  const isShopkeeper = params.isShopkeeper;
-  const breakdown = params.breakdown;
+import { CustomButton } from "@/components/common/CustomButton";
+import Icon from "@/components/common/Icons";
+import { getUser } from "@/services/users.service";
+import { createPayment } from "@/services/payment.service";
 
-  const token = Cookies.get("token");
-  const userId = Cookies.get("userId");
-
+const TotalAmount = ({ total, isAdmin, isShopkeeper, breakdown }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [amount, setAmount] = useState("");
-
   const [showBalance, setShowBalance] = useState(false);
   const [showBalance1, setShowBalance1] = useState(false);
   const [showBalance2, setShowBalance2] = useState(false);
 
+  const token = Cookies.get("token");
+  const userId = Cookies.get("userId");
+
   const handleSubmit = async () => {
     const value = parseFloat(amount);
 
-    if (isNaN(value)) {
-      toast.error("Please enter a valid number.");
+    if (isNaN(value) || value <= 0) {
+      toast.error("Please enter a valid amount greater than zero.");
       return;
     }
-
-    if (value <= 0) {
-      toast.error("Amount must be greater than zero.");
-      return;
-    }
-
 
     if (!token || !userId) {
-      toast.error("Missing required details.");
+      toast.error("Missing authentication information.");
       return;
     }
 
@@ -48,7 +38,7 @@ const TotalAmount = (params) => {
       const userInfo = await getUser(userId, token);
 
       const data = {
-        userId: userId,
+        userId,
         userName: userInfo?.name || "Shopkeeper",
         earnAmount: 0,
         totalAmount: value,
@@ -56,85 +46,84 @@ const TotalAmount = (params) => {
         transactionId: 1,
         rating: 0,
         status: "pending",
-        filepath: ""
+        filepath: "",
+        shopId: userId,
+        shopName: "shopkeeper",
       };
 
-      console.log(data);
-      
       await createPayment(data, token);
 
-      toast.success(`Requested successful ₹${value}`);
+      toast.success(`Recharge request successful for ₹${value.toFixed(2)}`);
       setIsOpen(false);
       setAmount("");
-      setRating(0);
     } catch (error) {
       toast.error("Recharge request failed. Please try again.");
     }
   };
 
+  const formatAmount = (val) => Number(val ?? 0).toFixed(2);
+
   return (
     <>
-    <ToastContainer />
+      <ToastContainer />
       <div className="px-6 w-full bg-greens-900/10 rounded-lg py-4">
         <div className="flex justify-between items-center">
-          <h2 className="text-blacks-200 text-sm !leading-130">
-            YOUR WALLET BALANCE
-          </h2>
+          <h2 className="text-blacks-200 text-sm">YOUR WALLET BALANCE</h2>
           <button onClick={() => setShowBalance((prev) => !prev)}>
             <Icon icon="greenEye" />
           </button>
         </div>
-        <p className="text-greens-900 text-2xl !leading-130 mt-3">
+        <p className="text-greens-900 text-2xl mt-3">
           {showBalance
             ? isAdmin
-              ? (breakdown?.wallet ?? 0).toFixed(2)
+              ? formatAmount(breakdown?.wallet)
               : isShopkeeper
-                ? (totalAmount?.recharge ?? 0).toFixed(2)
-                : (totalAmount?.wallet ?? 0).toFixed(2)
+                ? formatAmount(total?.recharge)
+                : formatAmount(total?.wallet)
             : "*******"}
         </p>
-        {isShopkeeper && <CustomButton
-          url="#"
-          customClass="mt-4 w-fit text-sm w-full text-center"
-          onClick={(e) => {
-            e.preventDefault();
-            setIsOpen(true);
-          }}
-        >
-          Recharge
-        </CustomButton>}
+
+        {isShopkeeper && (
+          <CustomButton
+            customClass="mt-4 w-full text-sm"
+            onClick={(e) => {
+              e.preventDefault();
+              setIsOpen(true);
+            }}
+          >
+            Recharge
+          </CustomButton>
+        )}
       </div>
-      {isAdmin &&
+
+      {isAdmin && (
         <div className="flex justify-between items-center pt-3">
           <div className="px-6 w-full bg-greens-900/10 rounded-lg py-4 mr-2">
             <div className="flex justify-between items-center">
-              <h2 className="text-blacks-200 text-sm !leading-130">
-                COMPANY 1
-              </h2>
+              <h2 className="text-blacks-200 text-sm">COMPANY 1</h2>
               <button onClick={() => setShowBalance1((prev) => !prev)}>
                 <Icon icon="greenEye" />
               </button>
             </div>
-            <p className="text-greens-900 text-2xl !leading-130 mt-3">
-              {showBalance1 ? breakdown?.wallet1 || 0.0 : "*******"}
+            <p className="text-greens-900 text-2xl mt-3">
+              {showBalance1 ? formatAmount(breakdown?.wallet1) : "*******"}
             </p>
           </div>
           <div className="px-6 w-full bg-greens-900/10 rounded-lg py-4 ms-2">
             <div className="flex justify-between items-center">
-              <h2 className="text-blacks-200 text-sm !leading-130">
-                COMPANY 2
-              </h2>
+              <h2 className="text-blacks-200 text-sm">COMPANY 2</h2>
               <button onClick={() => setShowBalance2((prev) => !prev)}>
                 <Icon icon="greenEye" />
               </button>
             </div>
-            <p className="text-greens-900 text-2xl !leading-130 mt-3">
-              {showBalance2 ? breakdown?.wallet2 || 0.0 : "*******"}
+            <p className="text-greens-900 text-2xl mt-3">
+              {showBalance2 ? formatAmount(breakdown?.wallet2) : "*******"}
             </p>
           </div>
         </div>
-      }
-      {/* Popup Dialog */}
+      )}
+
+      {/* Recharge Dialog */}
       <Dialog open={isOpen} onClose={() => setIsOpen(false)} className="relative z-50">
         <div className="fixed inset-0 bg-black/30" aria-hidden="true" />
         <div className="fixed inset-0 flex items-center justify-center p-4">

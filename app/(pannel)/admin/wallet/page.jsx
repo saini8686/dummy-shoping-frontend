@@ -24,6 +24,7 @@ const Page = () => {
       try {
         const userData = await getAllUserList();
 
+        const admininfo = userData.find(item => item.isAdmin == true)
         if (Array.isArray(userData)) {
           let wallet = 0, wallet1 = 0, wallet2 = 0;
 
@@ -32,14 +33,14 @@ const Page = () => {
             wallet2 += parseFloat(user.wallet2) || 0;
           });
 
-          setBreakdown({ wallet, wallet1, wallet2 });
+          setBreakdown({ wallet: admininfo.wallet, wallet1: admininfo.wallet1, wallet2: admininfo.wallet2 });
           setTotalAmount(wallet + wallet1 + wallet2);
         } else {
           setBreakdown({ wallet: 0, wallet1: 0, wallet2: 0 });
           setTotalAmount(0);
         }
 
-        const payData = await getAllNotifications ();
+        const payData = await getAllNotifications();
         setRecentTransactions(payData.data);
 
       } catch (error) {
@@ -55,7 +56,7 @@ const Page = () => {
       <HeaderCustomer name="Wallet" />
       <div className="pb-20 mt-10 px-4">
         <TotalAmount total={totalAmount} isAdmin={true} isShopkeeper={false} breakdown={breakdown} />
-        <RecentTransition transactions={recentTransactions} isShopkeeper = {false}  />
+        <RecentTransition transactions={recentTransactions} isShopkeeper={false} />
         <BottomBarAdmin />
       </div>
     </div>
