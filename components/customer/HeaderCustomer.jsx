@@ -23,7 +23,7 @@ const HeaderCustomer = ({ name, location ,classCard }) => {
             width={100}
             height={39}
             sizes="100vw"
-            className="h-[32px] object-cover"
+            className="object-cover"
             alt="logo"
           />
         </Link>

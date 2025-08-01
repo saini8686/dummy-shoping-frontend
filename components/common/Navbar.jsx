@@ -57,7 +57,7 @@ const Navbar = ({ userInfo }) => {
             width={100}
             height={39}
             sizes="100vw"
-            className="mb-5 h-[32px] object-cover"
+            className="mb-5 object-cover"
             alt="logo"
           />
         </Link>

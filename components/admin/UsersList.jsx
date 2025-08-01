@@ -65,7 +65,7 @@ const UsersList = () => {
                 src="/assets/images/svg/logo.svg"
                 width={100}
                 height={39}
-                className="h-[32px] object-cover"
+                className="object-cover"
                 alt="logo"
               />
             </Link>

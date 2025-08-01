@@ -19,7 +19,7 @@ const Header = () => {
           width={86}
           height={41}
           sizes="100vw"
-          className="h-[32px] object-cover"
+          className="object-cover"
           alt="logo"
         />
       </div>
