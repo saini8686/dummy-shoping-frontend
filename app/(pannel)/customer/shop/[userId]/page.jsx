@@ -82,7 +82,8 @@ const Page = () => {
         transactionId: shopId,
         rating: rating || 0,
         status: "pending",
-        filepath: ""
+        filepath: "",
+        mimetype: shopDetails?.shopname
       };
 
       await createPayment(data, token);

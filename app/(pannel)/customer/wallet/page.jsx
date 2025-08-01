@@ -21,18 +21,47 @@ const Page = () => {
     const fetchData = async () => {
       try {
         const userData = await getUser(userId, token);
-        console.log("User Data:", userData);
         setTotalAmount(userData);
 
         const payData = await getAllNotifications();
-        console.log("All Payments:", payData);
 
-        if (payData.success && userData?.userId) {
-          const filteredPayments = payData?.data.filter(
-            item => String(item.userId) === String(userData.userId)
+        if (payData.success) {
+          const userIdStr = String(userId);
+
+          // Step 1: Get all transactions related to the user (either made by or earned by)
+          const userPayments = payData.data.filter(
+            item =>
+              String(item.userId) === userIdStr ||
+              String(item.earnUserId) === userIdStr
           );
+
+          // Step 2: Filter transactions earned from others (earnUserId is user, but someone else paid)
+          const earnedFromOthers = userPayments.filter(
+            item =>
+              String(item.earnUserId) === userIdStr &&
+              String(item.userId) !== userIdStr
+          );
+
+          // Step 3: Filter userPayments to remove items that are in earnedFromOthers
+          const onlyUserPayments = userPayments.filter(
+            item =>
+              !earnedFromOthers.some(
+                earn =>
+                  String(earn.userId) === String(item.userId) &&
+                  String(earn.earnUserId) === String(item.earnUserId) &&
+                  String(earn.createdAt) === String(item.createdAt) // optional: use id if available
+              )
+          );
+
+          console.log("onlyUserPayments", onlyUserPayments);
+          console.log("earnedFromOthers", earnedFromOthers);
+
+          // Combine both separately filtered sets (if needed)
+          const filteredPayments = [...onlyUserPayments, ...earnedFromOthers];
           console.log("Filtered Payments:", filteredPayments);
+
           setRecentTransactions(filteredPayments);
+
         } else {
           console.warn("Missing payment data or userId for filtering.");
           setRecentTransactions([]);
@@ -50,8 +79,8 @@ const Page = () => {
     <div className="bg-white-low">
       <HeaderCustomer name="Wallet" />
       <div className="pb-20 mt-10 px-4">
-        <TotalAmount total={totalAmount} isAdmin={false} breakdown={""} />
-        <RecentTransition transactions={recentTransactions} />
+        <TotalAmount total={totalAmount} isAdmin={false} isShopkeeper={false} breakdown={""} />
+        <RecentTransition transactions={recentTransactions} isShopkeeper = {false}  />
         <BottomBar />
       </div>
     </div>

@@ -8,7 +8,7 @@ import "react-toastify/dist/ReactToastify.css";
 
 import { getAllPayments, updatePayment } from "@/services/payment.service";
 import { getBasicDetails } from "@/services/basic-details.service";
-import { getUser, updateUser } from "@/services/users.service";
+import { getAllUserList, getUser, updateUser } from "@/services/users.service";
 import { createNotification } from "@/services/notification.service";
 import { CustomButton } from "@/components/common/CustomButton";
 import Icon from "@/components/common/Icons";
@@ -26,6 +26,10 @@ const Payments = () => {
     setLoading(true);
     try {
       const userId = Cookies.get("userId");
+      const allUser = await getAllUserList();
+      const adminUser = allUser.find((item) => item.isAdmin);
+      setAdminInfo(adminUser);
+
       const all = await getAllPayments();
       const filtered = Array.isArray(all)
         ? all.filter((item) => String(item.transactionId) === String(userId))
@@ -47,9 +51,6 @@ const Payments = () => {
 
     const shopkeeprData = await getUser(userId, token);
     setShopkeeprData(shopkeeprData || null);
-
-    const adminData = await getUser(1, token);
-    setAdminInfo(adminData);
   };
 
   useEffect(() => {
@@ -87,11 +88,11 @@ const Payments = () => {
 
         await createNotification({
           userId: user.userId,
-          message: `Your payment of ₹${totalAmount} has been approved.`,
+          message: `Your payment of ₹${Number(totalAmount).toFixed(2)} has been approved.`,
           earnCoin: earnAmount,
           earnType: "shopping",
           earnUserId: user.userId,
-          earnUserName: userData?.name || "",
+          earnUserName: "self",
           status: "sent",
         });
 
@@ -100,8 +101,8 @@ const Payments = () => {
 
         const updatedAdmin = {
           ...adminInfo,
-          wallet1: (adminInfo.wallet1 || 0) + adminCommission1,
-          wallet2: (adminInfo.wallet2 || 0) + adminCommission2,
+          wallet1: Number(((adminInfo.wallet1 || 0) + adminCommission1).toFixed(2)),
+          wallet2: Number(((adminInfo.wallet2 || 0) + adminCommission2).toFixed(2)),
         };
         await updateUser(updatedAdmin);
 
@@ -119,17 +120,17 @@ const Payments = () => {
 
           const updatedParent = {
             ...parentData,
-            wallet: (parentData.wallet || 0) + referralEarn,
+            wallet: (Number(parentData.wallet || 0) + referralEarn).toFixed(2),
           };
           await updateUser(updatedParent);
 
           await createNotification({
-            userId: parentData.userId,
-            message: `You earned ₹${referralEarn} from your referral ${userData?.name}'s payment.`,
-            earnCoin: referralEarn || 0,
+            userId: userData.userId,
+            message: `You earned ₹${Number(referralEarn).toFixed(2)} from your referral ${userData?.name}'s payment.`,
+            earnCoin: Number(referralEarn).toFixed(2),
             earnType: "referral",
-            earnUserId: userData.userId,
-            earnUserName: userData.name,
+            earnUserId: parentData.userId,
+            earnUserName: parentData.name,
             status: "sent",
           });
         }
@@ -165,27 +166,67 @@ const Payments = () => {
       ) : payments.length === 0 ? (
         <p className="text-center text-gray-500 mt-10">No payments found.</p>
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-5 pt-3">
+        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-2 gap-6 pt-4">
           {payments.map((obj, i) => (
-            <div key={i} className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
-              <div className="bg-greens-900 px-4 py-2 text-white flex justify-between items-center">
-                <h2 className="font-semibold text-sm">#{i + 1} • {obj.userName}</h2>
-                <span className={`text-xs font-semibold px-2 py-1 rounded-full ${obj.status === "approved"
-                  ? "bg-green-200 text-green-900"
-                  : "bg-yellow-200 text-yellow-900"
-                  }`}>
-                  {obj.status.toUpperCase()}
+            <div
+              key={i}
+              className="bg-white rounded-2xl shadow-lg border border-gray-200 hover:shadow-xl transition-transform hover:scale-[1.015]"
+            >
+              {/* Header */}
+              <div className="bg-greens-900 px-5 py-3 flex justify-between items-center text-white rounded-t-2xl">
+                <h2 className="font-semibold text-base">#{i + 1} • {obj?.userName}</h2>
+                <span
+                  className={`text-xs font-semibold px-2 py-1 rounded-full uppercase tracking-wide ${obj.status === "approved"
+                    ? "bg-green-200 text-green-800"
+                    : obj.status === "pending"
+                      ? "bg-yellow-200 text-yellow-800"
+                      : "bg-red-200 text-red-800"
+                    }`}
+                >
+                  {obj.status}
                 </span>
               </div>
-              <div className="px-4 py-3 text-sm text-gray-800 space-y-2">
-                <div><strong>Amount:</strong> ₹{obj.totalAmount}</div>
-                <div><strong>Earned:</strong> ₹{obj.earnAmount}</div>
-                <div><strong>Method:</strong> {obj.paymentMethod}</div>
+
+              {/* Body */}
+              <div className="px-5 py-4 text-gray-800 text-sm space-y-2">
+                <div className="flex justify-between items-center">
+                  <span className="text-gray-500">Amount</span>
+                  <span className="text-lg text-green-700 font-bold">₹{Number(obj?.totalAmount ?? 0).toFixed(2)}</span>
+                </div>
+
+                <div className="flex justify-between items-center">
+                  <span className="text-gray-500">Shop</span>
+                  <span>
+                    {obj?.mimetype ?? "Shop Name"} ({obj?.transactionId ?? "N/A"})
+                  </span>
+                </div>
+
+                <div className="flex justify-between items-center">
+                  <span className="text-gray-500">Method</span>
+                  <span>{obj?.paymentMethod ?? "N/A"}</span>
+                </div>
+
+                <div className="flex justify-between items-center">
+                  <span className="text-gray-500">Rating</span>
+                  <span className="text-yellow-600 font-medium">{obj?.rating ?? "N/A"}</span>
+                </div>
+
+                <div className="flex justify-between items-center">
+                  <span className="text-gray-500">Date</span>
+                  <span>
+                    {new Date(obj?.createdAt).toLocaleString("en-IN", {
+                      dateStyle: "medium",
+                      timeStyle: "short",
+                    })}
+                  </span>
+                </div>
               </div>
-              <div className="px-4 pb-4">
+
+              {/* Action */}
+              <div className="px-5 pb-4">
                 <button
                   onClick={() => handleViewDetails(obj)}
-                  className="w-full bg-greens-900 text-white font-medium py-2 mt-2 rounded-md hover:bg-blue-700 transition"
+                  className="w-full bg-greens-900 hover:bg-greens-800 text-white text-sm font-semibold py-2 rounded-xl transition duration-200"
                 >
                   View Details
                 </button>
@@ -212,10 +253,10 @@ const Payments = () => {
             {selectedUser && (
               <div className="space-y-3 text-sm text-gray-700">
                 <p><strong>User Name:</strong> {selectedUser.userName}</p>
+                <p><strong>Shop:</strong> {selectedUser.mimetype ?? "Shop name" + "(" + selectedUser.transactionId + ")"}</p>
                 <p><strong>Amount:</strong> ₹{selectedUser.totalAmount}</p>
-                <p><strong>Status:</strong> {selectedUser.status}</p>
-                <p><strong>Shop No:</strong> {selectedUser.transactionId}</p>
                 <p><strong>Payment Method:</strong> {selectedUser.paymentMethod}</p>
+                <p><strong>Status:</strong> {selectedUser.status}</p>
               </div>
             )}
             {selectedUser?.status === "pending" && <div className="mt-6 flex justify-end gap-3">

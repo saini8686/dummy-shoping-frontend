@@ -41,7 +41,7 @@ const Page = () => {
         }
 
         const payData = await getAllNotifications ();
-        setRecentTransactions(payData);
+        setRecentTransactions(payData.data);
 
       } catch (error) {
         console.error("Error fetching data:", error);
@@ -55,8 +55,8 @@ const Page = () => {
     <div className="bg-white-low">
       <HeaderCustomer name="Wallet" />
       <div className="pb-20 mt-10 px-4">
-        <TotalAmount total={totalAmount} isAdmin={true} breakdown={breakdown} />
-        <RecentTransition transactions={recentTransactions} />
+        <TotalAmount total={totalAmount} isAdmin={true} isShopkeeper={false} breakdown={breakdown} />
+        <RecentTransition transactions={recentTransactions} isShopkeeper = {false}  />
         <BottomBarAdmin />
       </div>
     </div>

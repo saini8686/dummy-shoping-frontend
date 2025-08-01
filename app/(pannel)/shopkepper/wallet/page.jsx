@@ -8,6 +8,7 @@ import { useEffect, useState } from "react";
 import { getUser } from "@/services/users.service";
 import { getAllNotifications } from "@/services/notification.service";
 import Cookies from "js-cookie";
+import { getAllPayments } from "@/services/payment.service";
 
 const Page = () => {
   const [totalAmount, setTotalAmount] = useState(null);
@@ -23,12 +24,12 @@ const Page = () => {
         console.log("User Data:", userData);
         setTotalAmount(userData);
 
-        const payData = await getAllNotifications();
+        const payData = await getAllPayments();
         console.log("All Payments:", payData);
 
-        if (payData.success && userData?.userId) {
-          const filteredPayments = payData?.data.filter(
-            item => String(item.userId) === String(userData.userId)
+        if (payData && userData?.userId) {
+          const filteredPayments = payData?.filter(
+            item => String(item.transactionId) === String(userData.userId)
           );
           console.log("Filtered Payments:", filteredPayments);
           setRecentTransactions(filteredPayments);
@@ -49,8 +50,8 @@ const Page = () => {
     <div className="bg-white-low">
       <HeaderCustomer name="Wallet" />
       <div className="pb-20 mt-10 px-4">
-        <TotalAmount total={totalAmount} isAdmin={false} breakdown={""} />
-        <RecentTransition transactions={recentTransactions} />
+        <TotalAmount total={totalAmount} isAdmin={false} isShopkeeper={true} breakdown={""} />
+        <RecentTransition transactions={recentTransactions} isShopkeeper = {true} />
         <BottomBarShopKepper />
       </div>
     </div>
