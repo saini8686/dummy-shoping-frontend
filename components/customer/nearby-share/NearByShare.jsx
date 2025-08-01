@@ -25,6 +25,7 @@ const NearByShare = ({ search }) => {
   const [userCoords, setUserCoords] = useState(null);
   const [selectedCategory, setSelectedCategory] = useState("all");
   const [availableCategories, setAvailableCategories] = useState([]);
+  const [sortByDistance, setSortByDistance] = useState(true);
 
   const [isPlaying, setIsPlaying] = useState([]);
   const videoRefs = useRef([]);
@@ -72,6 +73,19 @@ const NearByShare = ({ search }) => {
         setLoading(true);
         const res = await getBasicDetails(search, page);
         const allShops = res.data || [];
+
+        // Calculate distance for each shop if user coordinates are available
+        if (userCoords) {
+          allShops.forEach(shop => {
+            shop.distance = getDistanceFromLatLonInKm(
+              shop.latitude,
+              shop.longitude,
+              userCoords.lat,
+              userCoords.lng
+            );
+          });
+        }
+
         setShops(allShops);
         setTotalPages(res.totalPages || 1);
 
@@ -87,15 +101,20 @@ const NearByShare = ({ search }) => {
     };
 
     fetchShops();
-  }, [search, page]);
+  }, [search, page, userCoords]);
 
   useEffect(() => {
     setPage(1);
   }, [search]);
 
-  const filteredShops = shops.filter((shop) =>
-    selectedCategory === "all" ? true : shop.category === selectedCategory
-  );
+  const filteredShops = shops
+    .filter((shop) =>
+      selectedCategory === "all" ? true : shop.category === selectedCategory
+    )
+    .sort((a, b) => {
+      if (!sortByDistance || !userCoords) return 0;
+      return a.distance - b.distance;
+    });
 
   return (
     <>
@@ -117,33 +136,36 @@ const NearByShare = ({ search }) => {
                 alt={obj.name}
                 className="w-[59px] h-[59px] rounded-md group-hover:border-greens-900 border border-transparent duration-300 shadow_low_black"
               />
-              <p className="text-black mt-2 text-sm text-center font-semibold">
+              <p className="text-black mt-2 text-md text-center font-semibold">
                 {obj.name}
               </p>
             </button>
-
           ))}
         </div>
       )}
 
-
-      {/* Optional dropdown filter */}
-      {/* {availableCategories.length > 0 && (
-        <div className="mt-4 flex justify-center">
-          <select
-            className="px-4 py-2 border border-greys-300 rounded text-sm"
-            value={selectedCategory}
-            onChange={(e) => setSelectedCategory(e.target.value)}
-          >
-            <option value="all">All Categories</option>
-            {availableCategories.map((cat, i) => (
-              <option key={i} value={cat}>
-                {cat}
-              </option>
-            ))}
-          </select>
+      {/* Sort by distance toggle */}
+      {userCoords && (
+        <div className="mt-4 flex items-center justify-end">
+          <label className="flex items-center cursor-pointer">
+            <span className="mr-2 text-sm font-medium text-blacks-200">
+              Sort by distance
+            </span>
+            <div className="relative">
+              <input
+                type="checkbox"
+                className="sr-only"
+                checked={sortByDistance}
+                onChange={() => setSortByDistance(!sortByDistance)}
+              />
+              <div className={`block w-10 h-6 rounded-full ${sortByDistance ? 'bg-greens-900' : 'bg-greys-300'}`}></div>
+              <div
+                className={`absolute left-1 top-1 bg-white w-4 h-4 rounded-full transition ${sortByDistance ? 'transform translate-x-4' : ''}`}
+              ></div>
+            </div>
+          </label>
         </div>
-      )} */}
+      )}
 
       {/* No shop message */}
       {filteredShops.length === 0 && !loading && (
@@ -221,17 +243,15 @@ const NearByShare = ({ search }) => {
                     <h2 className="text-lg font-semibold text-blacks-200 truncate">
                       {obj?.name}
                     </h2>
-                    <h2 className="text-lg font-semibold text-blacks-200 truncate">
-                      #{obj?.userId}
-                    </h2>
                   </div>
                   <p className="text-sm text-blacks-200">{obj?.category}</p>
-                  {/* <small className="text-sm text-green-600 font-medium block mt-1">
-                    {obj?.smp}% Future saving
-                  </small> */}
                   <small className="text-sm text-green-600 font-medium block mt-1">
                     {obj?.address}
                   </small>
+
+                  <h2 className="text-lg font-semibold text-blacks-200 truncate">
+                    Shop No: #{obj?.userId}
+                  </h2>
                 </div>
 
                 <div className="mt-3">
@@ -262,14 +282,7 @@ const NearByShare = ({ search }) => {
 
                   {/* Distance */}
                   <p className="text-xs italic font-medium text-reds-900">
-                    {userCoords
-                      ? `${getDistanceFromLatLonInKm(
-                        obj.latitude,
-                        obj.longitude,
-                        userCoords.lat,
-                        userCoords.lng
-                      ).toFixed(1)} km away`
-                      : ""}
+                    {obj.distance ? `${obj.distance.toFixed(1)} km away` : ""}
                   </p>
                 </div>
               </div>
