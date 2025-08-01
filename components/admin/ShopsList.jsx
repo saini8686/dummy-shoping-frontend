@@ -54,6 +54,22 @@ const ShopsList = () => {
     }
   };
 
+  const handleDeleteUser = async (userId) => {
+    const confirmDelete = confirm("Are you sure you want to delete this user?");
+    if (!confirmDelete) return;
+
+    try {
+      // TODO: Call API to delete user
+      // await deleteUser(userId);
+      setUserData((prev) => prev.filter((user) => user.userId !== userId));
+      deleteUser(userId);
+      alert("User deleted successfully.");
+    } catch (error) {
+      console.error("Delete failed:", error);
+      alert("Failed to delete user.");
+    }
+  };
+
 
   return (
     <div className="h-screen bg-gray-100 flex items-center justify-center">
@@ -156,6 +172,10 @@ const ShopsList = () => {
                         setNewStatus(user.status);
                         setShowStatusModal(true);
                       }}
+                    />
+                    <Trash2
+                      onClick={() => handleDeleteUser(user.userId)}
+                      className="w-6 h-6 text-red-500 cursor-pointer"
                     />
                   </div>
                 </div>
