@@ -28,7 +28,6 @@ const Page = () => {
           let wallet = 0, wallet1 = 0, wallet2 = 0;
 
           userData.forEach((user) => {
-            wallet += parseFloat(user.wallet) || 0;
             wallet1 += parseFloat(user.wallet1) || 0;
             wallet2 += parseFloat(user.wallet2) || 0;
           });
