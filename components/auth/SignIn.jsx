@@ -26,26 +26,26 @@ const SignIn = () => {
   const [address, setAddress] = useState(false);
 
   // ✅ Redirect if already logged in
-  useEffect(() => {
-    const token = Cookies.get("token");
-    const userRole = Cookies.get("userRole");
+  // useEffect(() => {
+  //   const token = Cookies.get("token");
+  //   const userRole = Cookies.get("userRole");
 
-    if (token && userRole) {
-      switch (userRole.toLowerCase()) {
-        case "admin":
-          router.replace("/admin/user-list");
-          break;
-        case "shopkeeper":
-          router.replace("/shopkepper/product");
-          break;
-        case "customer":
-          router.replace("/customer");
-          break;
-        default:
-          router.replace("/");
-      }
-    }
-  }, []);
+  //   if (token) {
+  //     switch (userRole.toLowerCase()) {
+  //       case "admin":
+  //         router.replace("/admin/user-list");
+  //         break;
+  //       case "shopkeeper":
+  //         router.replace("/shopkepper/product");
+  //         break;
+  //       case "customer":
+  //         router.replace("/customer");
+  //         break;
+  //       default:
+  //         router.replace("/");
+  //     }
+  //   }
+  // }, []);
 
   const submitHandler = async (e) => {
     e.preventDefault();

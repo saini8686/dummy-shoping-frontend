@@ -64,7 +64,7 @@ const UsersList = () => {
             >
               <Icon icon="back" className="invert" />
             </button>
-            <Link href="/customer">
+            <Link href="/admin/shop-list">
               <Image
                 src="/assets/images/svg/logo.svg"
                 width={100}

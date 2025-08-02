@@ -16,7 +16,7 @@ const NavbarShopkepper = ({ userInfo }) => {
         >
           <Icon icon="back" className="invert" />
         </button>
-        <Link href="/customer">
+        <Link href="/#">
           <Image
             src="/assets/images/svg/logo.svg"
             width={100}

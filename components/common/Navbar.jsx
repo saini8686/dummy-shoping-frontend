@@ -51,7 +51,7 @@ const Navbar = ({ userInfo }) => {
       {/* Top Logo + Referral */}
       <ToastContainer />
       <div className="flex justify-between gap-5 items-start">
-        <Link href="/customer">
+        <Link href="#">
           <Image
             src="/assets/images/svg/logo.svg"
             width={100}
