@@ -1,29 +1,34 @@
 "use client";
 import React, { useState, useEffect } from "react";
-import { Pencil, Trash2, User, View } from "lucide-react";
+import { Trash2, View } from "lucide-react";
 import Icon from "@/components/common/Icons";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
+import { ToastContainer, toast } from "react-toastify";
 import { getAllUserList, deleteUser } from "../../services/users.service";
 
 const UsersList = () => {
   const router = useRouter();
   const [userData, setUserData] = useState([]);
+  const [adminData, setAdminData] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [showModal, setShowModal] = useState(false);
   const [selectedUser, setSelectedUser] = useState(null);
+  const [showModal, setShowModal] = useState(false);
 
   useEffect(() => {
     const fetchUserDetails = async () => {
       try {
         const data = await getAllUserList();
-        const filterData = data.filter(
-          (item) => item.isShopkeeper === false && item.isAdmin === false
+        const filtered = data.filter(
+          (item) => !item.isShopkeeper && !item.isAdmin
         );
-        setUserData(filterData);
+        const findAdmin = data.find(item=>item.isAdmin = true);
+        setAdminData(findAdmin)
+        setUserData(filtered);
       } catch (error) {
         console.error("Error fetching user details:", error);
+        toast.error("Failed to fetch user data.");
       } finally {
         setLoading(false);
       }
@@ -37,19 +42,18 @@ const UsersList = () => {
     if (!confirmDelete) return;
 
     try {
-      // TODO: Call API to delete user
-      // await deleteUser(userId);
+      await deleteUser(userId);
       setUserData((prev) => prev.filter((user) => user.userId !== userId));
-      deleteUser(userId);
-      alert("User deleted successfully.");
+      toast.success("User deleted successfully.");
     } catch (error) {
       console.error("Delete failed:", error);
-      alert("Failed to delete user.");
+      toast.error("Failed to delete user.");
     }
   };
 
   return (
     <div className="h-screen bg-gray-100 flex items-center justify-center">
+      <ToastContainer />
       <div className="bg-white rounded-xl shadow-md h-full w-full flex flex-col relative">
         {/* Header */}
         <div className="pt-8 pb-4 rounded-b-3xl bg-greens-900 px-4 relative">
@@ -65,29 +69,29 @@ const UsersList = () => {
                 src="/assets/images/svg/logo.svg"
                 width={100}
                 height={39}
-                className="object-cover"
                 alt="logo"
               />
             </Link>
           </div>
           <div className="flex justify-between gap-5 mt-7 items-center">
             <div className="flex items-center gap-2">
-              <Image
-                src="/assets/images/png/shopkepper/basic-detail-profile.png"
+              <img
+                src={adminData?.profilePicture ? `${process.env.NEXT_PUBLIC_API_BASE?.replace(/\/$/, "")}/${adminData?.profilePicture}` : "/assets/images/png/shopkepper/basic-detail-profile.png"}
                 width={51}
                 height={51}
                 className="w-[51px] h-[51px] object-cover rounded-full"
                 alt="profile"
               />
               <p className="text-white font-medium block text-base">
-                <span>Hello Admin</span>
+                <span>Hello {adminData.name || "Admin"}</span>
                 <span className="text-sm text-white/70 mt-0.5 block">
                   Let’s make sales today
                 </span>
               </p>
             </div>
             <Link
-              href="/shopkepper/notification"
+              href="#"
+              // href="/shopkepper/notification"
               className="bg-white flex rounded-full justify-center items-center min-w-[34px] h-[34px]"
             >
               <Icon icon="notification" />
@@ -106,7 +110,7 @@ const UsersList = () => {
 
           <h3 className="mb-7 text-2xl font-bold text-black">Users List</h3>
 
-          {!loading && (
+          {!loading ? (
             <div className="overflow-y-auto flex-1 pb-16 user-list">
               {userData.map((user) => (
                 <div
@@ -146,12 +150,12 @@ const UsersList = () => {
                 </div>
               ))}
             </div>
+          ) : (
+            <p className="text-center text-sm text-gray-400 mt-4">Loading users...</p>
           )}
-
-          {loading && <p>Loading...</p>}
         </div>
 
-        {/* User Details Popup */}
+        {/* User Details Modal */}
         {showModal && selectedUser && (
           <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40">
             <div className="bg-white p-6 rounded-xl w-[90%] max-w-md relative">
@@ -166,7 +170,6 @@ const UsersList = () => {
               <p><strong>Email:</strong> {selectedUser.email}</p>
               <p><strong>Mobile:</strong> {selectedUser.number}</p>
               <p><strong>Referral Code:</strong> {selectedUser.referralCode}</p>
-              
             </div>
           </div>
         )}

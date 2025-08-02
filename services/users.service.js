@@ -50,9 +50,9 @@ export const updateUser = async (updatedDetails) => {
 
 
 // DELETE: Delete basic details by userId
-export const deleteUser = async (user_id) => {
+export const deleteUser = async (userId) => {
   const token = Cookies.get("token");
-  const res = await api.delete(`/api/users/${user_id}`, {
+  const res = await api.delete(`/api/delete/${userId}`, {
     headers: {
       Authorization: `Bearer ${token}`,
     },

@@ -1,15 +1,17 @@
 "use client";
 import React, { useState, useEffect } from "react";
-import { Pencil, Trash2, User, View } from "lucide-react";
+import { Pencil, Trash2, View } from "lucide-react";
 import Icon from "@/components/common/Icons";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import { getAllUserList, updateUser } from "../../services/users.service";
 import Image from "next/image";
+import { ToastContainer, toast } from "react-toastify";
+import { getAllUserList, updateUser, deleteUser } from "../../services/users.service";
 
 const ShopsList = () => {
   const router = useRouter();
   const [userData, setUserData] = useState([]);
+  const [adminData, setAdminData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [selectedUser, setSelectedUser] = useState(null);
   const [showStatusModal, setShowStatusModal] = useState(false);
@@ -19,12 +21,15 @@ const ShopsList = () => {
     const fetchUserDetails = async () => {
       try {
         const data = await getAllUserList();
-        const filterData = data.filter(
+        const filtered = data.filter(
           (item) => item.isShopkeeper === true && item.isAdmin === false
         );
-        setUserData(filterData);
+        const findAdmin = data.find(item => item.isAdmin = true);
+        setAdminData(findAdmin)
+        setUserData(filtered);
       } catch (error) {
-        console.error("Error fetching user details:", error);
+        toast.error("Failed to fetch users.");
+        console.error("Error:", error);
       } finally {
         setLoading(false);
       }
@@ -37,44 +42,61 @@ const ShopsList = () => {
     if (!selectedUser) return;
 
     try {
-      // Update user status
       const updatedUser = { ...selectedUser, status: newStatus };
       await updateUser(updatedUser);
 
-      // Update local state
-      const updatedUsers = userData.map((user) =>
-        user.userId === updatedUser.userId ? updatedUser : user
+      setUserData((prev) =>
+        prev.map((user) =>
+          user.userId === updatedUser.userId ? updatedUser : user
+        )
       );
 
-      setUserData(updatedUsers);
+      toast.success(`Status updated to "${newStatus}"`);
       setShowStatusModal(false);
       setSelectedUser(null);
     } catch (error) {
       console.error("Error updating status:", error);
+      toast.error("Failed to update status.");
     }
   };
 
   const handleDeleteUser = async (userId) => {
-    const confirmDelete = confirm("Are you sure you want to delete this user?");
-    if (!confirmDelete) return;
-
-    try {
-      // TODO: Call API to delete user
-      // await deleteUser(userId);
-      setUserData((prev) => prev.filter((user) => user.userId !== userId));
-      deleteUser(userId);
-      alert("User deleted successfully.");
-    } catch (error) {
-      console.error("Delete failed:", error);
-      alert("Failed to delete user.");
-    }
+    toast((t) => (
+      <div>
+        <p>Confirm delete?</p>
+        <div className="flex gap-2 mt-2">
+          <button
+            onClick={async () => {
+              try {
+                await deleteUser(userId);
+                setUserData((prev) => prev.filter((u) => u.userId !== userId));
+                toast.success("User deleted.");
+              } catch (err) {
+                console.error("Delete failed:", err);
+                toast.error("Delete failed.");
+              }
+              toast.dismiss(t.id);
+            }}
+            className="text-white bg-red-600 px-3 py-1 rounded text-sm"
+          >
+            Yes
+          </button>
+          <button
+            onClick={() => toast.dismiss(t.id)}
+            className="text-sm bg-gray-200 px-3 py-1 rounded"
+          >
+            Cancel
+          </button>
+        </div>
+      </div>
+    ));
   };
-
 
   return (
     <div className="h-screen bg-gray-100 flex items-center justify-center">
       <div className="bg-white rounded-xl shadow-md h-full w-full flex flex-col relative">
         {/* Header */}
+        <ToastContainer />
         <div className="pt-8 pb-4 rounded-b-3xl bg-greens-900 px-4 relative">
           <div className="flex justify-between items-center">
             <button
@@ -88,41 +110,37 @@ const ShopsList = () => {
                 src="/assets/images/svg/logo.svg"
                 width={100}
                 height={39}
-                sizes="100vw"
-                className="object-cover"
                 alt="logo"
               />
             </Link>
           </div>
           <div className="flex justify-between gap-5 mt-7 items-center">
             <div className="flex items-center gap-2">
-              <Image
-                src="/assets/images/png/shopkepper/basic-detail-profile.png"
+              <img
+                src={adminData?.profilePicture ? `${process.env.NEXT_PUBLIC_API_BASE?.replace(/\/$/, "")}/${adminData?.profilePicture}` : "/assets/images/png/shopkepper/basic-detail-profile.png"}
                 width={51}
                 height={51}
-                sizes="100vw"
-                className="w-[51px] h-[51px] object-cover rounded-full"
                 alt="profile"
+                className="w-[51px] h-[51px] object-cover rounded-full"
               />
               <p className="text-white font-medium block text-base">
-                <span className="block">Hello Admin</span>
-                <span className="block text-sm text-white/70 mt-0.5">
+                <span>Hello {adminData.name || "Admin"}</span>
+                <span className="text-sm text-white/70 mt-0.5 block">
                   Let’s make sales today
                 </span>
               </p>
             </div>
-            <div className="flex items-center gap-2">
-              <Link
-                href="/shopkepper/notification"
-                className="bg-white flex rounded-full justify-center items-center min-w-[34px] h-[34px]"
-              >
-                <Icon icon="notification" />
-              </Link>
-            </div>
+            <Link
+              href="#"
+              // href="/shopkepper/notification"
+              className="bg-white flex rounded-full justify-center items-center min-w-[34px] h-[34px]"
+            >
+              <Icon icon="notification" />
+            </Link>
           </div>
         </div>
 
-        {/* Content */}
+        {/* Body */}
         <div className="flex-1 flex flex-col overflow-hidden px-4">
           <div className="flex justify-between py-5 text-sm text-[#01BE62] font-medium">
             <p className="text-xl font-normal">
@@ -133,7 +151,9 @@ const ShopsList = () => {
 
           <h3 className="mb-7 text-2xl font-bold text-black">Shops List</h3>
 
-          {!loading && (
+          {loading ? (
+            <p>Loading...</p>
+          ) : (
             <div className="overflow-y-auto flex-1 pb-16 user-list">
               {userData.map((user) => (
                 <div
@@ -141,7 +161,10 @@ const ShopsList = () => {
                   className="flex items-center justify-between bg-[#F1FFF8] p-4 rounded-lg mb-3"
                 >
                   <div className="flex items-center">
-                    <Link href={`/admin/user-details?id=${user.userId}`} className="bg-white rounded-full me-6">
+                    <Link
+                      href={`/admin/user-details?id=${user.userId}`}
+                      className="bg-white rounded-full me-6"
+                    >
                       <Icon icon="userProfile" />
                     </Link>
                     <Link href={`/admin/user-details?id=${user.userId}`}>
@@ -182,10 +205,10 @@ const ShopsList = () => {
               ))}
             </div>
           )}
-          {loading && <p>Loading...</p>}
         </div>
       </div>
 
+      {/* Modal */}
       {showStatusModal && selectedUser && (
         <div className="fixed inset-0 z-50 bg-black bg-opacity-50 flex justify-center items-center">
           <div className="bg-white rounded-xl p-6 w-96">
