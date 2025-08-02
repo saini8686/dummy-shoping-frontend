@@ -734,10 +734,10 @@ export const SHOPKEPPER_PRODUCT_LIST = [
 ];
 
 export const BOTTOM_BAR_SHOPKEPPER_LIST = [
-  {
-    icon: "shopkepperCarryBag",
-    path: "/shopkepper/order",
-  },
+  // {
+  //   icon: "shopkepperCarryBag",
+  //   path: "/shopkepper/order",
+  // },
   {
     icon: "shopkepperOption",
     path: "/shopkepper/product",

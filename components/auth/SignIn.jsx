@@ -36,7 +36,7 @@ const SignIn = () => {
           router.replace("/admin/user-list");
           break;
         case "shopkeeper":
-          router.replace("/shopkepper/order");
+          router.replace("/shopkepper/product");
           break;
         case "customer":
           router.replace("/customer");
@@ -85,14 +85,14 @@ const SignIn = () => {
               router.push("/admin/user-list");
               break;
             case "shopkeeper":
-              router.push(`/shopkepper/order`);
+              router.push(`/shopkepper/product`);
               break;
             case "customer":
               await getLocation();
               router.push("/customer");
               break;
             default:
-              router.push("/shopkepper/order");
+              router.push("/shopkepper/product");
           }
         } else {
           toast.warning("You are not authorized to access this page");

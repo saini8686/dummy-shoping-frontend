@@ -159,7 +159,7 @@ const UploadShopImage = () => {
 
       {/* Navigation */}
       <Link
-        href="/shopkepper/order"
+        href="/shopkepper/product"
         className="text-greens-900 text-xl font-medium flex justify-center items-center gap-2 mt-6 group"
       >
         Next
