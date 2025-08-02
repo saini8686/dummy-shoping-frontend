@@ -1,6 +1,5 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import Image from "next/image";
 import { Dialog } from "@headlessui/react";
 import Cookies from "js-cookie";
 import { ToastContainer, toast } from "react-toastify";
@@ -10,6 +9,7 @@ import { getAllPayments, updatePayment } from "@/services/payment.service";
 import { getBasicDetails } from "@/services/basic-details.service";
 import { getAllUserList, getUser, updateUser } from "@/services/users.service";
 import { createNotification } from "@/services/notification.service";
+
 import { CustomButton } from "@/components/common/CustomButton";
 import Icon from "@/components/common/Icons";
 
@@ -21,6 +21,7 @@ const Payments = () => {
   const [shopDetails, setShopDetails] = useState(null);
   const [shopkeeprData, setShopkeeprData] = useState(null);
   const [adminInfo, setAdminInfo] = useState(null);
+  const [filterStatus, setFilterStatus] = useState("all");
 
   const fetchPayments = async () => {
     setLoading(true);
@@ -32,7 +33,9 @@ const Payments = () => {
 
       const all = await getAllPayments();
       const filtered = Array.isArray(all)
-        ? all.filter((item) => String(item.transactionId) === String(userId))
+        ? all
+            .filter((item) => String(item.transactionId) === String(userId))
+            .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
         : [];
       setPayments(filtered);
     } catch {
@@ -45,12 +48,10 @@ const Payments = () => {
   const fetchUserDetails = async () => {
     const userId = Cookies.get("userId");
     const token = Cookies.get("token");
-
     const shopData = await getBasicDetails(userId);
+    const keeperData = await getUser(userId, token);
     setShopDetails(shopData || null);
-
-    const shopkeeprData = await getUser(userId, token);
-    setShopkeeprData(shopkeeprData || null);
+    setShopkeeprData(keeperData || null);
   };
 
   useEffect(() => {
@@ -65,30 +66,27 @@ const Payments = () => {
 
   const handleApprove = async (user, status) => {
     try {
-      if (shopkeeprData?.recharge < user.totalAmount) {
-        toast.error("Insufficient balance to approve this payment. Please recharge your account.");
-        return;
-      }
       const token = Cookies.get("token");
-      const shopUserId = Cookies.get("userId");
-
-      const totalAmount = user.totalAmount;
-      const userData = await getUser(user.userId, token);
-      const smp = shopDetails?.smp || 1;
-      const smpPr = Number(smp) / 100;
 
       if (status === "approved") {
-        const earnAmount = Number(totalAmount) * smpPr;
+        if (shopkeeprData?.recharge < user.totalAmount) {
+          toast.error("Insufficient balance to approve this payment. Please recharge your account.");
+          return;
+        }
 
-        const updatedUser = {
+        const userData = await getUser(user.userId, token);
+        const smp = shopDetails?.smp || 1;
+        const smpPr = Number(smp) / 100;
+        const earnAmount = Number(user.totalAmount) * smpPr;
+
+        await updateUser({
           ...userData,
           wallet: (userData.wallet || 0) + earnAmount,
-        };
-        await updateUser(updatedUser);
+        });
 
         await createNotification({
           userId: user.userId,
-          message: `Your payment of ₹${Number(totalAmount).toFixed(2)} has been approved.`,
+          message: `Your payment of ₹${Number(user.totalAmount).toFixed(2)} has been approved.`,
           earnCoin: earnAmount,
           earnType: "shopping",
           earnUserId: user.userId,
@@ -96,38 +94,52 @@ const Payments = () => {
           status: "sent",
         });
 
-        const adminCommission1 = Number(totalAmount) * smpPr * 0.05;
-        const adminCommission2 = Number(totalAmount) * smpPr * 0.25;
+        const adminCommission1 = user.totalAmount * smpPr * 0.05;
+        const adminCommission2 = user.totalAmount * smpPr * 0.25;
 
-        const updatedAdmin = {
+        await createNotification({
+          userId: user.userId,
+          message: `₹${user.totalAmount.toFixed(2)} of 5% has been approved.`,
+          earnCoin: adminCommission1.toFixed(2),
+          earnType: "company1",
+          earnUserId: user.userId,
+          earnUserName: user.name,
+          status: "sent",
+        });
+        await createNotification({
+          userId: user.userId,
+          message: `₹${user.totalAmount.toFixed(2)} of 25% has been approved.`,
+          earnCoin: adminCommission2.toFixed(2),
+          earnType: "company2",
+          earnUserId: user.userId,
+          earnUserName: user.name,
+          status: "sent",
+        });
+
+        await updateUser({
           ...adminInfo,
-          wallet1: Number(((adminInfo.wallet1 || 0) + adminCommission1).toFixed(2)),
-          wallet2: Number(((adminInfo.wallet2 || 0) + adminCommission2).toFixed(2)),
-        };
-        await updateUser(updatedAdmin);
+          wallet1: Number(adminInfo.wallet1 || 0) + adminCommission1,
+          wallet2: Number(adminInfo.wallet2 || 0) + adminCommission2,
+        });
 
-        const shopRecharge = {
+        await updateUser({
           ...shopkeeprData,
-          recharge: (shopkeeprData.recharge || 0) - totalAmount,
-        };
-        await updateUser(shopRecharge);
+          recharge: (shopkeeprData.recharge || 0) - user.totalAmount,
+        });
 
         if (userData?.parentUserId) {
           const parentData = await getUser(userData.parentUserId, token);
-          console.log("parentData", parentData);
+          const referralEarn = user.totalAmount * smpPr * 0.2;
 
-          const referralEarn = totalAmount * smpPr * 0.2;
-
-          const updatedParent = {
+          await updateUser({
             ...parentData,
-            wallet: (Number(parentData.wallet || 0) + referralEarn).toFixed(2),
-          };
-          await updateUser(updatedParent);
+            wallet: Number(parentData.wallet || 0) + referralEarn,
+          });
 
           await createNotification({
             userId: userData.userId,
-            message: `You earned ₹${Number(referralEarn).toFixed(2)} from your referral ${userData?.name}'s payment.`,
-            earnCoin: Number(referralEarn).toFixed(2),
+            message: `You earned ₹${referralEarn.toFixed(2)} from your referral ${userData.name}'s payment.`,
+            earnCoin: referralEarn.toFixed(2),
             earnType: "referral",
             earnUserId: parentData.userId,
             earnUserName: parentData.name,
@@ -137,37 +149,57 @@ const Payments = () => {
       } else if (status === "rejected") {
         await createNotification({
           userId: user.userId,
-          message: `Your payment of ₹${totalAmount} has been rejected.`,
+          message: `Your payment of ₹${user.totalAmount.toFixed(2)} has been rejected.`,
           earnCoin: 0,
           earnType: "payment",
           earnUserId: user.userId,
-          earnUserName: userData?.name || "",
+          earnUserName: user.userName,
           status: "sent",
         });
       }
 
-      const updatedPayment = { ...user, status };
-      await updatePayment(user.payId, updatedPayment);
-
+      await updatePayment(user.payId, { ...user, status });
       toast.success(`Payment ${status} successfully`);
       setIsOpen(false);
       fetchPayments();
-    } catch (error) {
-      console.error("Approval failed:", error);
+    } catch {
       toast.error("Failed to update payment.");
     }
   };
 
+  const filteredPayments =
+    filterStatus === "all"
+      ? payments
+      : payments.filter((p) => p.status === filterStatus);
+
   return (
     <div className="mt-10 max-w-5xl mx-auto">
       <ToastContainer position="top-right" />
+
+      {/* Status Filter */}
+      <div className="flex justify-end mb-4 gap-2 px-2">
+        {["all", "pending", "approved", "rejected"].map((status) => (
+          <button
+            key={status}
+            onClick={() => setFilterStatus(status)}
+            className={`px-4 py-1 text-sm rounded-full border ${
+              filterStatus === status
+                ? "bg-greens-900 text-white"
+                : "bg-white text-gray-600"
+            }`}
+          >
+            {status.charAt(0).toUpperCase() + status.slice(1)}
+          </button>
+        ))}
+      </div>
+
       {loading ? (
         <p className="text-center text-gray-500 mt-10">Loading payments...</p>
-      ) : payments.length === 0 ? (
+      ) : filteredPayments.length === 0 ? (
         <p className="text-center text-gray-500 mt-10">No payments found.</p>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-2 gap-6 pt-4">
-          {payments.map((obj, i) => (
+          {filteredPayments.map((obj, i) => (
             <div
               key={i}
               className="bg-white rounded-2xl shadow-lg border border-gray-200 hover:shadow-xl transition-transform hover:scale-[1.015]"
@@ -176,12 +208,13 @@ const Payments = () => {
               <div className="bg-greens-900 px-5 py-3 flex justify-between items-center text-white rounded-t-2xl">
                 <h2 className="font-semibold text-base">#{i + 1} • {obj?.userName}</h2>
                 <span
-                  className={`text-xs font-semibold px-2 py-1 rounded-full uppercase tracking-wide ${obj.status === "approved"
-                    ? "bg-green-200 text-green-800"
-                    : obj.status === "pending"
+                  className={`text-xs font-semibold px-2 py-1 rounded-full uppercase tracking-wide ${
+                    obj.status === "approved"
+                      ? "bg-green-200 text-green-800"
+                      : obj.status === "pending"
                       ? "bg-yellow-200 text-yellow-800"
                       : "bg-red-200 text-red-800"
-                    }`}
+                  }`}
                 >
                   {obj.status}
                 </span>
@@ -196,9 +229,7 @@ const Payments = () => {
 
                 <div className="flex justify-between items-center">
                   <span className="text-gray-500">Shop</span>
-                  <span>
-                    {obj?.mimetype ?? "Shop Name"} ({obj?.transactionId ?? "N/A"})
-                  </span>
+                  <span>{obj?.mimetype ?? "Shop Name"} ({obj?.transactionId ?? "N/A"})</span>
                 </div>
 
                 <div className="flex justify-between items-center">
@@ -213,12 +244,9 @@ const Payments = () => {
 
                 <div className="flex justify-between items-center">
                   <span className="text-gray-500">Date</span>
-                  <span>
-                    {new Date(obj?.createdAt).toLocaleString("en-IN", {
-                      dateStyle: "medium",
-                      timeStyle: "short",
-                    })}
-                  </span>
+                  <span>{new Date(obj?.createdAt).toLocaleString("en-IN", {
+                    dateStyle: "medium", timeStyle: "short"
+                  })}</span>
                 </div>
               </div>
 
@@ -253,28 +281,30 @@ const Payments = () => {
             {selectedUser && (
               <div className="space-y-3 text-sm text-gray-700">
                 <p><strong>User Name:</strong> {selectedUser.userName}</p>
-                <p><strong>Shop:</strong> {selectedUser.mimetype ?? "Shop name" + "(" + selectedUser.transactionId + ")"}</p>
+                <p><strong>Shop:</strong> {selectedUser.mimetype ?? "Shop name"} ({selectedUser.transactionId})</p>
                 <p><strong>Amount:</strong> ₹{selectedUser.totalAmount}</p>
                 <p><strong>Payment Method:</strong> {selectedUser.paymentMethod}</p>
                 <p><strong>Status:</strong> {selectedUser.status}</p>
               </div>
             )}
-            {selectedUser?.status === "pending" && <div className="mt-6 flex justify-end gap-3">
-              <CustomButton
-                disabled={selectedUser?.totalAmount > 5000}
-                onClick={() => handleApprove(selectedUser, "rejected")}
-                className="px-4 py-2 rounded text-white bg-red-600 hover:bg-red-700"
-              >
-                Reject
-              </CustomButton>
-              <CustomButton
-                disabled={selectedUser?.totalAmount > 5000}
-                onClick={() => handleApprove(selectedUser, "approved")}
-                className="px-4 py-2 rounded text-white bg-green-600 hover:bg-green-700"
-              >
-                Approve
-              </CustomButton>
-            </div>}
+            {selectedUser?.status === "pending" && (
+              <div className="mt-6 flex justify-end gap-3">
+                <CustomButton
+                  disabled={selectedUser?.totalAmount > 5000}
+                  onClick={() => handleApprove(selectedUser, "rejected")}
+                  className="px-4 py-2 rounded text-white bg-red-600 hover:bg-red-700"
+                >
+                  Reject
+                </CustomButton>
+                <CustomButton
+                  disabled={selectedUser?.totalAmount > 5000}
+                  onClick={() => handleApprove(selectedUser, "approved")}
+                  className="px-4 py-2 rounded text-white bg-green-600 hover:bg-green-700"
+                >
+                  Approve
+                </CustomButton>
+              </div>
+            )}
           </Dialog.Panel>
         </div>
       </Dialog>

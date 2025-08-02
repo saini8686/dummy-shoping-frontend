@@ -6,9 +6,7 @@ import RecentTransition from "@/components/shopkepper/wallet/RecentTransition";
 import TotalAmount from "@/components/shopkepper/wallet/TotalAmount";
 import { useEffect, useState } from "react";
 import { getAllUserList } from "@/services/users.service";
-import { getAllPayments } from "@/services/payment.service";
-import { getAllNotifications } from "@/services/notification.service"
-import Cookies from "js-cookie";
+import { getAllNotifications } from "@/services/notification.service";
 
 const Page = () => {
   const [totalAmount, setTotalAmount] = useState(0);
@@ -22,29 +20,31 @@ const Page = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const userData = await getAllUserList();
+        const users = await getAllUserList();
+        const admin = users.find((u) => u.isAdmin === true);
 
-        const admininfo = userData.find(item => item.isAdmin == true)
-        if (Array.isArray(userData)) {
-          let wallet = 0, wallet1 = 0, wallet2 = 0;
+        if (admin) {
+          let wallet1 = 0;
+          let wallet2 = 0;
 
-          userData.forEach((user) => {
+          users.forEach((user) => {
             wallet1 += parseFloat(user.wallet1) || 0;
             wallet2 += parseFloat(user.wallet2) || 0;
           });
 
-          setBreakdown({ wallet: admininfo.wallet, wallet1: admininfo.wallet1, wallet2: admininfo.wallet2 });
-          setTotalAmount(wallet + wallet1 + wallet2);
-        } else {
-          setBreakdown({ wallet: 0, wallet1: 0, wallet2: 0 });
-          setTotalAmount(0);
+          setBreakdown({
+            wallet: parseFloat(admin.wallet) || 0,
+            wallet1: parseFloat(admin.wallet1) || 0,
+            wallet2: parseFloat(admin.wallet2) || 0,
+          });
+
+          setTotalAmount(wallet1 + wallet2 + (parseFloat(admin.wallet) || 0));
         }
 
-        const payData = await getAllNotifications();
-        setRecentTransactions(payData.data);
-
+        const notifResponse = await getAllNotifications();
+        setRecentTransactions(notifResponse?.data || []);
       } catch (error) {
-        console.error("Error fetching data:", error);
+        console.error("Error loading wallet data:", error);
       }
     };
 
@@ -55,8 +55,16 @@ const Page = () => {
     <div className="bg-white-low">
       <HeaderCustomer name="Wallet" />
       <div className="pb-20 mt-10 px-4">
-        <TotalAmount total={totalAmount} isAdmin={true} isShopkeeper={false} breakdown={breakdown} />
-        <RecentTransition transactions={recentTransactions} isShopkeeper={false} />
+        <TotalAmount
+          total={totalAmount}
+          isAdmin={true}
+          isShopkeeper={false}
+          breakdown={breakdown}
+        />
+        <RecentTransition
+          transactions={recentTransactions}
+          isShopkeeper={false}
+        />
         <BottomBarAdmin />
       </div>
     </div>

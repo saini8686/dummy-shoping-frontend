@@ -55,12 +55,15 @@ const SignUp = () => {
     e.preventDefault();
     setError(false);
 
+    if (auth === "customer" && formDetails.referralCode === "") {
+      toast.error("Referral Code is required.");
+      return;
+    }
     const isValid =
       formDetails.name &&
       formDetails.email &&
       formDetails.password &&
       formDetails.address &&
-      formDetails.referralCode &&
       formDetails.number.length === 10;
 
     if (!isValid) {
@@ -89,8 +92,8 @@ const SignUp = () => {
         setError(true);
       }
     } catch (err) {
-      console.error("Registration error:", err);
-      toast.error("Something went wrong.");
+      console.error("Registration error:", err.response.data.message);
+      toast.error("Error:" + err.response.data.message);
       setError(true);
     } finally {
       setIsLoading(false);
@@ -190,7 +193,7 @@ const SignUp = () => {
             value={formDetails.address}
             onChange={(e) => setFormDetails({ ...formDetails, address: e.target.value })}
           />
-         {auth === "customer" && <CustomInput
+          {auth === "customer" && <CustomInput
             customClass="mt-4"
             placeholder="Referral Code"
             name="referralCode"

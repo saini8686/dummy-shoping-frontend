@@ -71,7 +71,6 @@ const UploadShopImage = () => {
     }
 
     setUploading(true);
-    const toastId = toast.loading("Uploading images...");
 
     try {
       // Upload shop front image if selected
@@ -104,10 +103,9 @@ const UploadShopImage = () => {
         );
       }
 
-      toast.success("Images uploaded successfully!", { id: toastId });
+      toast.success("Images uploaded successfully!");
     } catch (error) {
-      toast.error("Failed to upload images", { id: toastId });
-      console.error("Upload error:", error);
+      toast.error("Failed to upload images");
     } finally {
       setUploading(false);
     }

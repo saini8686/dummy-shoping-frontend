@@ -10,6 +10,8 @@ import { CustomButton } from "@/components/common/CustomButton";
 import Icon from "@/components/common/Icons";
 import { getUser } from "@/services/users.service";
 import { createPayment } from "@/services/payment.service";
+import Link from "next/link";
+
 
 const TotalAmount = ({ total, isAdmin, isShopkeeper, breakdown }) => {
   const [isOpen, setIsOpen] = useState(false);
@@ -84,15 +86,24 @@ const TotalAmount = ({ total, isAdmin, isShopkeeper, breakdown }) => {
         </p>
 
         {isShopkeeper && (
-          <CustomButton
-            customClass="mt-4 w-full text-sm"
-            onClick={(e) => {
-              e.preventDefault();
-              setIsOpen(true);
-            }}
-          >
-            Recharge
-          </CustomButton>
+          <div className="flex flex-col sm:flex-row justify-end items-center gap-3 mt-4">
+            <CustomButton
+              customClass="w-full sm:w-auto text-sm px-4 py-2 bg-primary text-white rounded-sm transition"
+              onClick={(e) => {
+                e.preventDefault();
+                setIsOpen(true);
+              }}
+            >
+              Recharge
+            </CustomButton>
+
+            <Link
+              href="/shopkepper/recharge-status"
+              className="w-full sm:w-auto text-sm text-center px-4 py-2 border text-[#01BA5D] rounded-sm transition"
+            >
+              View Status
+            </Link>
+          </div>
         )}
       </div>
 

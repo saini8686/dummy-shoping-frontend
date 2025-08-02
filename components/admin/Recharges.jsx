@@ -17,23 +17,15 @@ const Recharges = () => {
   const [loading, setLoading] = useState(true);
   const [selectedUser, setSelectedUser] = useState(null);
   const [isOpen, setIsOpen] = useState(false);
-  const [shopDetails, setShopDetails] = useState(null);
   const [adminInfo, setAdminInfo] = useState(null);
+  const [isProcessing, setIsProcessing] = useState(false);
+  const [statusFilter, setStatusFilter] = useState("all");
 
   const getPercentageLabel = (value) => {
-    const valueToLabelMap = {
-      3: 1,
-      5: 2,
-      10: 3,
-      12: 4,
-      15: 5,
-      20: 8,
-      25: 10,
-      30: 15,
-      40: 20,
-      50: 25,
+    const map = {
+      3: 1, 5: 2, 10: 3, 12: 4, 15: 5, 20: 8, 25: 10, 30: 15, 40: 20, 50: 25,
     };
-    return valueToLabelMap[value] ?? null;
+    return map[value] ?? 0;
   };
 
   const fetchPayments = async () => {
@@ -50,12 +42,13 @@ const Recharges = () => {
       setAdminInfo(adminUser);
 
       const filtered = Array.isArray(allPayments)
-        ? allPayments.filter((item) => item.paymentMethod === "recharge")
+        ? allPayments
+            .filter((p) => p.paymentMethod === "recharge")
+            .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
         : [];
 
       setPayments(filtered);
     } catch (error) {
-      console.error("Error fetching payments:", error);
       setPayments([]);
     } finally {
       setLoading(false);
@@ -72,17 +65,15 @@ const Recharges = () => {
   };
 
   const handleApprove = async (user, status) => {
+    setIsProcessing(true);
     try {
       const token = Cookies.get("token");
       const totalAmount = Number(user.totalAmount);
       const userData = await getUser(user.userId, token);
       const shopData = await getBasicDetails(user.userId);
       const smp = Number(shopData?.smp || 0);
-      console.log("smp",smp);
-      const smpToPs = getPercentageLabel(smp)
+      const smpToPs = getPercentageLabel(smp);
       const smpPercent = smpToPs * 0.01;
-      console.log("smpPercent",smpPercent);
-      
 
       if (status === "approved") {
         const updatedUser = {
@@ -91,28 +82,22 @@ const Recharges = () => {
         };
         await updateUser(updatedUser);
 
+        const rechargeAmount = totalAmount * smpPercent;
+
         await createNotification({
           userId: user.userId,
           message: `Your recharge of ₹${totalAmount.toFixed(2)} has been approved.`,
-          earnCoin: 0,
+          earnCoin: rechargeAmount,
           earnType: "recharge",
           earnUserId: user.userId,
           earnUserName: userData?.name || "self",
           status: "sent",
         });
 
-        
-        console.log("totalAmount", totalAmount);
-        console.log("smpPercent", smpPercent);
-        const rechargeAmount = (totalAmount ?? 1) * smpPercent;
-        console.log("rechargeAmount", rechargeAmount);
-        console.log("adminInfo", adminInfo);
-
         const updatedAdmin = {
           ...adminInfo,
           wallet: Number(((adminInfo.wallet || 0) + rechargeAmount).toFixed(2)),
         };
-        console.log("updatedAdmin", updatedAdmin);
         await updateUser(updatedAdmin);
       }
 
@@ -134,44 +119,66 @@ const Recharges = () => {
       setIsOpen(false);
       fetchPayments();
     } catch (error) {
-      console.error("Approval failed:", error);
       toast.error("Failed to update recharge.");
+    } finally {
+      setIsProcessing(false);
     }
   };
+
+  const filteredPayments = payments.filter((p) => {
+    if (statusFilter === "all") return true;
+    return p.status === statusFilter;
+  });
 
   return (
     <div className="mt-10 max-w-5xl mx-auto">
       <ToastContainer position="top-right" />
 
+      {/* Status Filter */}
+      <div className="flex justify-end mb-4 gap-2 px-2">
+        {["all", "pending", "approved", "rejected"].map((status) => (
+          <button
+            key={status}
+            onClick={() => setStatusFilter(status)}
+            className={`px-4 py-1 text-sm rounded-full border ${
+              statusFilter === status
+                ? "bg-greens-900 text-white"
+                : "bg-white text-gray-600"
+            }`}
+          >
+            {status.charAt(0).toUpperCase() + status.slice(1)}
+          </button>
+        ))}
+      </div>
+
       {loading ? (
         <p className="text-center text-gray-500 mt-10">Loading payments...</p>
-      ) : payments.length === 0 ? (
+      ) : filteredPayments.length === 0 ? (
         <p className="text-center text-gray-500 mt-10">No payments found.</p>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pt-4">
-          {payments.map((obj, i) => (
+          {filteredPayments.map((obj, i) => (
             <div
               key={obj.payId || i}
               className="bg-white rounded-2xl shadow-lg border border-gray-200 hover:shadow-xl transition-transform hover:scale-[1.015]"
             >
-              {/* Header */}
               <div className="bg-greens-900 px-5 py-3 flex justify-between items-center text-white rounded-t-2xl">
                 <h2 className="font-semibold text-base">
                   #{i + 1} • {obj?.userName}
                 </h2>
                 <span
-                  className={`text-xs font-semibold px-2 py-1 rounded-full uppercase tracking-wide ${obj.status === "approved"
+                  className={`text-xs font-semibold px-2 py-1 rounded-full uppercase tracking-wide ${
+                    obj.status === "approved"
                       ? "bg-green-200 text-green-800"
                       : obj.status === "pending"
-                        ? "bg-yellow-200 text-yellow-800"
-                        : "bg-red-200 text-red-800"
-                    }`}
+                      ? "bg-yellow-200 text-yellow-800"
+                      : "bg-red-200 text-red-800"
+                  }`}
                 >
                   {obj.status}
                 </span>
               </div>
 
-              {/* Body */}
               <div className="px-5 py-4 text-gray-800 text-sm space-y-2">
                 <div className="flex justify-between">
                   <span className="text-gray-500">Amount</span>
@@ -181,15 +188,13 @@ const Recharges = () => {
                 </div>
                 <div className="flex justify-between">
                   <span className="text-gray-500">Shop</span>
-                  <span>{obj?.mimetype ?? "Shop Name"} ({obj?.transactionId ?? "N/A"})</span>
+                  <span>
+                    {obj?.shopName ?? "Shop Name"} ({obj?.shopId ?? "N/A"})
+                  </span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-gray-500">Method</span>
+                  <span className="text-gray-500">Payment Type</span>
                   <span>{obj?.paymentMethod ?? "N/A"}</span>
-                </div>
-                <div className="flex justify-between">
-                  <span className="text-gray-500">Rating</span>
-                  <span className="text-yellow-600 font-medium">{obj?.rating ?? "N/A"}</span>
                 </div>
                 <div className="flex justify-between">
                   <span className="text-gray-500">Date</span>
@@ -202,7 +207,6 @@ const Recharges = () => {
                 </div>
               </div>
 
-              {/* Action */}
               <div className="px-5 pb-4">
                 <button
                   onClick={() => handleViewDetails(obj)}
@@ -222,7 +226,9 @@ const Recharges = () => {
         <div className="fixed inset-0 flex items-center justify-center p-4">
           <Dialog.Panel className="bg-white rounded-lg shadow-xl max-w-md w-full p-6">
             <div className="flex items-center justify-between mb-4">
-              <Dialog.Title className="text-xl font-semibold mb-4">Payment Details</Dialog.Title>
+              <Dialog.Title className="text-xl font-semibold mb-4">
+                Payment Details
+              </Dialog.Title>
               <button
                 className="px-4 py-2 rounded bg-gray-300 text-gray-800 hover:bg-gray-400"
                 onClick={() => setIsOpen(false)}
@@ -234,7 +240,7 @@ const Recharges = () => {
             {selectedUser && (
               <div className="space-y-3 text-sm text-gray-700">
                 <p><strong>User Name:</strong> {selectedUser.userName}</p>
-                <p><strong>Shop:</strong> {selectedUser.mimetype ?? "Shop name"} ({selectedUser.transactionId})</p>
+                <p><strong>Shop:</strong> {selectedUser.shopName ?? "Shop name"} ({selectedUser.shopId})</p>
                 <p><strong>Amount:</strong> ₹{selectedUser.totalAmount}</p>
                 <p><strong>Payment Method:</strong> {selectedUser.paymentMethod}</p>
                 <p><strong>Status:</strong> {selectedUser.status}</p>
@@ -244,18 +250,18 @@ const Recharges = () => {
             {selectedUser?.status === "pending" && (
               <div className="mt-6 flex justify-end gap-3">
                 <CustomButton
-                  disabled={selectedUser?.totalAmount > 5000}
+                  disabled={isProcessing || selectedUser?.totalAmount > 5000}
                   onClick={() => handleApprove(selectedUser, "rejected")}
                   className="px-4 py-2 rounded text-white bg-red-600 hover:bg-red-700"
                 >
-                  Reject
+                  {isProcessing ? "Processing..." : "Reject"}
                 </CustomButton>
                 <CustomButton
-                  disabled={selectedUser?.totalAmount > 5000}
+                  disabled={isProcessing || selectedUser?.totalAmount > 5000}
                   onClick={() => handleApprove(selectedUser, "approved")}
                   className="px-4 py-2 rounded text-white bg-green-600 hover:bg-green-700"
                 >
-                  Approve
+                  {isProcessing ? "Processing..." : "Approve"}
                 </CustomButton>
               </div>
             )}
