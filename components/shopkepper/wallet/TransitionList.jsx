@@ -13,7 +13,7 @@ const TransitionList = ({ transition, isShopkeeper }) => {
             {isShopkeeper ? "Payment Approved"  : transition.message || "Referral Reward"}
           </span>
           <span className="block text-sm !leading-130 mt-1 font-normal text-greys-1400">
-            {isShopkeeper ? `User Name: ${transition.userName}` :`Earned From: ${transition.earnUserName || "Unknown"}`}
+            {isShopkeeper ? `User Name: ${transition.userName}` : `Earned From: ${transition.earnUserName || transition.earnType || "Unknown"}`}
           </span>
         </p>
       </div>
