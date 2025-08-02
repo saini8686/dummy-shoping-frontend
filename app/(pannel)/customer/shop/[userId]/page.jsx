@@ -1,23 +1,23 @@
 "use client";
 
-import BottomBar from "@/components/common/BottomBar";
-import HeaderCustomer from "@/components/customer/HeaderCustomer";
 import React, { useEffect, useState } from "react";
-import { Dialog } from "@headlessui/react";
 import { useParams } from "next/navigation";
 import Cookies from "js-cookie";
-import { getBasicDetails } from "@/services/basic-details.service";
-import { createPayment } from "@/services/payment.service";
-import { getUser, updateUser } from "@/services/users.service";
-import { CustomButton } from "@/components/common/CustomButton";
+import { Dialog } from "@headlessui/react";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+
+import HeaderCustomer from "@/components/customer/HeaderCustomer";
+import BottomBar from "@/components/common/BottomBar";
+import { CustomButton } from "@/components/common/CustomButton";
 import ProductDetails from "@/components/customer/product/ProductDetails";
-// import Image from "next/image"; // Optional: if you switch to next/image
+
+import { getBasicDetails } from "@/services/basic-details.service";
+import { getUser, updateUser } from "@/services/users.service";
+import { createPayment } from "@/services/payment.service";
 
 const Page = () => {
-  const params = useParams();
-  const shopId = params.userId;
+  const { userId: shopId } = useParams();
   const userId = Cookies.get("userId");
   const token = Cookies.get("token");
 
@@ -28,74 +28,60 @@ const Page = () => {
   const [shopDetails, setShopDetails] = useState(null);
   const [loading, setLoading] = useState(true);
 
-  const fetchDetails = async () => {
-    try {
-      const shopUserData = await getUser(shopId, token);
-      setShopUserData(shopUserData);
-
-      const shopData = await getBasicDetails(shopId);
-      setShopDetails(shopData || null);
-    } catch (error) {
-      toast.error("Failed to fetch data.");
-      console.error("Fetch error:", error);
-    } finally {
-      setLoading(false);
-    }
-  };
-
   useEffect(() => {
+    const fetchDetails = async () => {
+      try {
+        const [shopUser, shopData] = await Promise.all([
+          getUser(shopId, token),
+          getBasicDetails(shopId)
+        ]);
+        setShopUserData(shopUser);
+        setShopDetails(shopData || null);
+      } catch (error) {
+        toast.error("Failed to fetch shop data.");
+        console.error("Fetch error:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
     if (shopId && userId && token) fetchDetails();
-  }, [shopId]);
+  }, [shopId, userId, token]);
 
   const handleSubmit = async () => {
     const value = parseFloat(amount);
 
-    if (isNaN(value)) {
-      toast.error("Please enter a valid number.");
-      return;
-    }
-
-    if (value <= 0) {
-      toast.error("Amount must be greater than zero.");
-      return;
-    }
-
-    if (!rating || rating < 1 || rating > 5) {
-      toast.error("Please select a rating (1–5 stars).");
-      return;
-    }
-
-    if (!token || !userId || !shopId) {
-      toast.error("Missing required details.");
-      return;
-    }
+    if (isNaN(value) || value <= 0) return toast.error("Enter a valid amount.");
+    if (!rating || rating < 1 || rating > 5) return toast.error("Rate this shop (1–5 stars).");
 
     try {
       const userInfo = await getUser(userId, token);
 
       const data = {
-        userId: userId,
+        userId,
         userName: userInfo?.name || "User",
         earnAmount: 0,
         totalAmount: value,
         paymentMethod: "online",
         transactionId: shopId,
-        rating: rating || 0,
+        rating,
         status: "pending",
         filepath: "",
         mimetype: shopDetails?.shopname,
-        shopId: shopId,
-        shopName: shopDetails?.shopname,
+        shopId,
+        shopName: shopDetails?.shopname
       };
 
       await createPayment(data, token);
 
-      const shopData = {
+      const reviewTotal = (shopUserData.review || 0) * (shopUserData.reviewCount || 0);
+      const updatedUser = {
         ...shopUserData,
-        review: ((shopUserData.review * shopUserData.reviewCount + rating) / (shopUserData.reviewCount + 1)),
-        reviewCount: shopUserData.reviewCount + 1,
-      }
-      await updateUser(shopData);
+        review: (reviewTotal + rating) / ((shopUserData.reviewCount || 0) + 1),
+        reviewCount: (shopUserData.reviewCount || 0) + 1
+      };
+
+      await updateUser(updatedUser);
 
       toast.success(`Payment successful ₹${value}`);
       setIsOpen(false);
@@ -103,7 +89,7 @@ const Page = () => {
       setRating(0);
     } catch (error) {
       console.error("Payment failed:", error);
-      toast.error("Payment failed. Please try again.");
+      toast.error("Payment failed. Try again.");
     }
   };
 
@@ -114,52 +100,40 @@ const Page = () => {
 
       <div className="px-4 pb-20 pt-8">
         {loading ? (
-          <p className="text-gray-500">Loading...</p>
+          <div className="text-center text-gray-500 py-12 text-sm animate-pulse">Loading shop details...</div>
         ) : !shopDetails ? (
           <p className="text-red-500">No shop data found for this user.</p>
         ) : (
           <div className="bg-white p-6 rounded-lg shadow border border-gray-200 space-y-3 text-sm">
-            {/* Shop Images */}
-
             <CustomButton
-              url="#"
-              customClass="mt-4 w-fit text-sm w-full text-center"
-              onClick={(e) => {
-                e.preventDefault();
-                setIsOpen(true);
-              }}
+              customClass="mt-4 w-full text-sm text-center"
+              onClick={() => setIsOpen(true)}
             >
               Pay
             </CustomButton>
-            {/* <h2 className="text-xl font-semibold mb-4 uppercase text-center">
-              <span className="text-green-600">{shopDetails.shopname}</span></h2> */}
+
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-3">
-              {shopUserData.shop_front_url && (
-                <ImageCard
-                  label="Shop Front"
-                  url={`${process.env.NEXT_PUBLIC_API_BASE?.replace(/\/$/, "")}/${shopUserData.shop_front_url?.replace(/^\//, "")}`}
-                />
+              {shopUserData?.shop_front_url && (
+                <ImageCard label="Shop Front" url={`${process.env.NEXT_PUBLIC_API_BASE?.replace(/\/$/, "")}/${shopUserData.shop_front_url?.replace(/^\//, "")}`} />
               )}
-              {shopUserData.shop_counter_url && (
-                <ImageCard
-                  label="Counter View"
-                  url={`${process.env.NEXT_PUBLIC_API_BASE?.replace(/\/$/, "")}/${shopUserData.shop_counter_url?.replace(/^\//, "")}`}
-                />
+              {shopUserData?.shop_counter_url && (
+                <ImageCard label="Counter View" url={`${process.env.NEXT_PUBLIC_API_BASE?.replace(/\/$/, "")}/${shopUserData.shop_counter_url?.replace(/^\//, "")}`} />
               )}
-              {shopUserData.other_img_url && (
-                <ImageCard
-                  label="Other View"
-                  url={`${process.env.NEXT_PUBLIC_API_BASE?.replace(/\/$/, "")}/${shopUserData.other_img_url?.replace(/^\//, "")}`}
-                />
+              {shopUserData?.other_img_url && (
+                <ImageCard label="Other View" url={`${process.env.NEXT_PUBLIC_API_BASE?.replace(/\/$/, "")}/${shopUserData.other_img_url?.replace(/^\//, "")}`} />
               )}
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 rounded shadow border border-gray-200 p-4 mt-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 rounded border border-gray-200 p-4 mt-4">
               <Detail label="Username" value={shopDetails.username} />
               <Detail label="Category" value={shopDetails.category} />
               <Detail label="Shop No" value={shopDetails.userId} />
               <Detail label="Shop Name" value={shopDetails.shopname} />
-              <Detail label="Address" value={`${shopDetails.village}, ${shopDetails.city}, ${shopDetails.district}, ${shopDetails.state}`} />
+              <Detail
+                full
+                label="Address"
+                value={`${shopDetails.village}, ${shopDetails.city}, ${shopDetails.district}, ${shopDetails.state}`}
+              />
             </div>
 
             <h2 className="text-xl mt-2 capitalize font-semibold font-roboto !leading-130">
@@ -171,7 +145,6 @@ const Page = () => {
         )}
       </div>
 
-      {/* Popup Dialog */}
       <Dialog open={isOpen} onClose={() => setIsOpen(false)} className="relative z-50">
         <div className="fixed inset-0 bg-black/30" aria-hidden="true" />
         <div className="fixed inset-0 flex items-center justify-center p-4">
@@ -194,8 +167,7 @@ const Page = () => {
                 <span
                   key={star}
                   onClick={() => setRating(star)}
-                  className={`text-2xl cursor-pointer transition ${star <= rating ? "text-yellow-400" : "text-gray-300"
-                    }`}
+                  className={`text-2xl cursor-pointer transition ${star <= rating ? "text-yellow-400" : "text-gray-300"}`}
                 >
                   ★
                 </span>
@@ -236,8 +208,6 @@ const Detail = ({ label, value, full = false }) => (
 
 const ImageCard = ({ label, url }) => (
   <div className="border rounded-md overflow-hidden shadow-sm">
-    {/* Uncomment below and configure next.config.js if using next/image */}
-    {/* <Image src={url} alt={label} width={400} height={200} className="w-full h-40 object-cover" /> */}
     <img src={url} alt={label} className="w-full h-40 object-cover" />
     <div className="p-2 text-sm text-center text-gray-700 font-medium">{label}</div>
   </div>
