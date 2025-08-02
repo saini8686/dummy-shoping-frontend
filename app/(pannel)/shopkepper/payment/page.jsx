@@ -11,7 +11,7 @@ const page = () => {
     <div className="bg-white-low">
       <HeaderCustomer name="Payment" />
       <div className="pb-20 relative z-[1] mt-8 px-4">
-        <SearchBar />
+        {/* <SearchBar /> */}
         <Payments />
         <BottomBarShopKepper />
       </div>
