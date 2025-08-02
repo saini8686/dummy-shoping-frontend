@@ -19,9 +19,9 @@ const TransitionList = ({ transition, isShopkeeper }) => {
       </div>
       <p className="text-right">
         {isShopkeeper ? <span className="block text-base !leading-130 font-semibold text-reds-900">
-          - ₹{transition.totalAmount?.toFixed(2) || "0.00"}
+          - {transition.totalAmount?.toFixed(2) || "0.00"} SMP
         </span> : <span className="block text-base !leading-130 font-semibold text-greens-900">
-          + ₹{transition.earnCoin?.toFixed(2) || "0.00"}
+          + {transition.earnCoin?.toFixed(2) || "0.00"} SMP
         </span>}
         <span className="block text-sm !leading-130 mt-1 font-normal text-greys-1400">
           {moment(transition.createdAt).format("DD MMM YYYY, hh:mm A")}

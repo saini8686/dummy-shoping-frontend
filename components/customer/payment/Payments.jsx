@@ -109,7 +109,7 @@ const CoustomerPayments = () => {
                 <strong>Amount:</strong> ₹{obj.totalAmount}
               </div>
               <div>
-                <strong>Earned:</strong> ₹{obj.earnAmount}
+                <strong>Earned:</strong> {obj.earnAmount} SMP
               </div>
               <div>
                 <strong>Method:</strong> {obj.paymentMethod}

@@ -90,7 +90,7 @@ const Payments = () => {
 
         await createNotification({
           userId: user.userId,
-          message: `Your payment of ₹${Number(user.totalAmount).toFixed(2)} has been approved.`,
+          message: `Your shopping of ₹${Number(user.totalAmount).toFixed(2)} has been approved.`,
           earnCoin: earnAmount,
           earnType: "shopping",
           earnUserId: user.userId,
@@ -142,7 +142,7 @@ const Payments = () => {
 
           await createNotification({
             userId: parentData.userId,
-            message: `You earned ₹${referralEarn.toFixed(2)} from your referral ${userData.name}'s payment.`,
+            message: `You earned ${referralEarn.toFixed(2)} SMP from your referral ${userData.name}'s payment.`,
             earnCoin: referralEarn.toFixed(2),
             earnType: "referral",
             earnUserId: userData.userId,
@@ -153,7 +153,7 @@ const Payments = () => {
       } else if (status === "rejected") {
         await createNotification({
           userId: user.userId,
-          message: `Your payment of ₹${user.totalAmount.toFixed(2)} has been rejected.`,
+          message: `Your shopping of ₹${user.totalAmount.toFixed(2)} has been rejected.`,
           earnCoin: 0,
           earnType: "payment",
           earnUserId: user.userId,

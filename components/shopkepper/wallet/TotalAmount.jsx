@@ -70,7 +70,7 @@ const TotalAmount = ({ total, isAdmin, isShopkeeper, breakdown }) => {
       <ToastContainer />
       <div className="px-6 w-full bg-greens-900/10 rounded-lg py-4">
         <div className="flex justify-between items-center">
-          <h2 className="text-blacks-200 text-sm">YOUR WALLET BALANCE</h2>
+          <h2 className="text-blacks-200 text-sm">YOUR LOCKED WALLET</h2>
           <button onClick={() => setShowBalance((prev) => !prev)}>
             <Icon icon="greenEye" />
           </button>
