@@ -39,7 +39,8 @@ const Page = () => {
           const earnedFromOthers = userPayments.filter(
             item =>
               String(item.earnUserId) === userIdStr &&
-              String(item.userId) !== userIdStr
+              String(item.userId) !== userIdStr &&
+              item.earnType !== "company1" && item.earnType !== "company1"
           );
 
           // Step 3: Filter userPayments to remove items that are in earnedFromOthers
@@ -80,7 +81,7 @@ const Page = () => {
       <HeaderCustomer name="Wallet" />
       <div className="pb-20 mt-10 px-4">
         <TotalAmount total={totalAmount} isAdmin={false} isShopkeeper={false} breakdown={""} />
-        <RecentTransition transactions={recentTransactions} isShopkeeper = {false}  />
+        <RecentTransition transactions={recentTransactions} isShopkeeper={false} />
         <BottomBar />
       </div>
     </div>
