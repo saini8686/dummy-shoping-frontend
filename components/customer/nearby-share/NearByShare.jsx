@@ -243,7 +243,7 @@ const NearByShare = ({ search }) => {
                     Shop ID: #<span className="text-green-600">{obj?.userId}</span>
                   </h2>
                   <h2 className="text-lg font-semibold text-blacks-200 truncate">
-                    {obj?.name}
+                    {obj?.shopName}
                   </h2>
                   <p className="text-sm text-blacks-200">{obj?.category}</p>
                   <small className="text-sm text-green-600 font-medium block mt-1">
