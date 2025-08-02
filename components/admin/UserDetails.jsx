@@ -75,7 +75,7 @@ const UserDetails = () => {
             <p className="text-sm text-[#575757]">Email: {userData.email}</p>
             <p className="text-sm text-[#575757]">Mobile: {userData.number}</p>
             <p className="text-sm text-[#575757]">Status: {userData.status}</p>
-            <p className="text-sm text-[#575757]">
+            {/* <p className="text-sm text-[#575757]">
               Recharge: ₹{userData.recharge}
               <button
                 onClick={() => {
@@ -86,7 +86,7 @@ const UserDetails = () => {
               >
                 Update
               </button>
-            </p>
+            </p> */}
           </div>
         </div>
       </div>
