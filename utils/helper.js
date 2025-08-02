@@ -769,10 +769,10 @@ export const BOTTOM_BAR_ADMIN_LIST = [
     icon: "shopkepperWallet",
     path: "/admin/wallet",
   },
-  {
-    icon: "shopkepperChartL",
-    path: "/admin/payment",
-  },
+  // {
+  //   icon: "shopkepperChartL",
+  //   path: "/admin/payment",
+  // },
   {
     icon: "shopkepperProfile",
     path: "/admin/profile",
