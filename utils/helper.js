@@ -735,10 +735,6 @@ export const SHOPKEPPER_PRODUCT_LIST = [
 
 export const BOTTOM_BAR_SHOPKEPPER_LIST = [
   {
-    icon: "shopkepperCarryBag",
-    path: "/shopkepper/upload-image",
-  },
-  {
     icon: "shopkepperOption",
     path: "/shopkepper/product",
   },
@@ -749,6 +745,10 @@ export const BOTTOM_BAR_SHOPKEPPER_LIST = [
   {
     icon: "shopkepperChartL",
     path: "/shopkepper/payment",
+  },
+  {
+    icon: "imageUpload",
+    path: "/shopkepper/upload-image",
   },
   {
     icon: "shopkepperProfile",
