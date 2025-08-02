@@ -42,7 +42,8 @@ const Page = () => {
         }
 
         const notifResponse = await getAllNotifications();
-        setRecentTransactions(notifResponse?.data || []);
+        const filterData = notifResponse?.data.filter(item => item.earnType === "company1" && item.earnType === "company2" && item.earnType === "recharge") || []
+        setRecentTransactions(filterData);
       } catch (error) {
         console.error("Error loading wallet data:", error);
       }

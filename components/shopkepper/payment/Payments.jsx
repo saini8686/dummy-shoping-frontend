@@ -22,6 +22,8 @@ const Payments = () => {
   const [shopkeeprData, setShopkeeprData] = useState(null);
   const [adminInfo, setAdminInfo] = useState(null);
   const [filterStatus, setFilterStatus] = useState("all");
+  const [loadingAction, setLoadingAction] = useState(null); // 'approve' or 'reject'
+
 
   const fetchPayments = async () => {
     setLoading(true);
@@ -34,8 +36,8 @@ const Payments = () => {
       const all = await getAllPayments();
       const filtered = Array.isArray(all)
         ? all
-            .filter((item) => String(item.transactionId) === String(userId))
-            .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
+          .filter((item) => String(item.transactionId) === String(userId))
+          .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
         : [];
       setPayments(filtered);
     } catch {
@@ -65,12 +67,14 @@ const Payments = () => {
   };
 
   const handleApprove = async (user, status) => {
+    setLoadingAction(status); // start loader
     try {
       const token = Cookies.get("token");
 
       if (status === "approved") {
         if (shopkeeprData?.recharge < user.totalAmount) {
           toast.error("Insufficient balance to approve this payment. Please recharge your account.");
+          setLoadingAction(null);
           return;
         }
 
@@ -137,12 +141,12 @@ const Payments = () => {
           });
 
           await createNotification({
-            userId: userData.userId,
+            userId: parentData.userId,
             message: `You earned ₹${referralEarn.toFixed(2)} from your referral ${userData.name}'s payment.`,
             earnCoin: referralEarn.toFixed(2),
             earnType: "referral",
-            earnUserId: parentData.userId,
-            earnUserName: parentData.name,
+            earnUserId: userData.userId,
+            earnUserName: userData.name,
             status: "sent",
           });
         }
@@ -164,8 +168,11 @@ const Payments = () => {
       fetchPayments();
     } catch {
       toast.error("Failed to update payment.");
+    } finally {
+      setLoadingAction(null); // reset loader
     }
   };
+
 
   const filteredPayments =
     filterStatus === "all"
@@ -182,11 +189,10 @@ const Payments = () => {
           <button
             key={status}
             onClick={() => setFilterStatus(status)}
-            className={`px-4 py-1 text-sm rounded-full border ${
-              filterStatus === status
-                ? "bg-greens-900 text-white"
-                : "bg-white text-gray-600"
-            }`}
+            className={`px-4 py-1 text-sm rounded-full border ${filterStatus === status
+              ? "bg-greens-900 text-white"
+              : "bg-white text-gray-600"
+              }`}
           >
             {status.charAt(0).toUpperCase() + status.slice(1)}
           </button>
@@ -208,13 +214,12 @@ const Payments = () => {
               <div className="bg-greens-900 px-5 py-3 flex justify-between items-center text-white rounded-t-2xl">
                 <h2 className="font-semibold text-base">#{i + 1} • {obj?.userName}</h2>
                 <span
-                  className={`text-xs font-semibold px-2 py-1 rounded-full uppercase tracking-wide ${
-                    obj.status === "approved"
-                      ? "bg-green-200 text-green-800"
-                      : obj.status === "pending"
+                  className={`text-xs font-semibold px-2 py-1 rounded-full uppercase tracking-wide ${obj.status === "approved"
+                    ? "bg-green-200 text-green-800"
+                    : obj.status === "pending"
                       ? "bg-yellow-200 text-yellow-800"
                       : "bg-red-200 text-red-800"
-                  }`}
+                    }`}
                 >
                   {obj.status}
                 </span>
@@ -290,18 +295,33 @@ const Payments = () => {
             {selectedUser?.status === "pending" && (
               <div className="mt-6 flex justify-end gap-3">
                 <CustomButton
-                  disabled={selectedUser?.totalAmount > 5000}
+                  disabled={selectedUser?.totalAmount > 5000 || loadingAction === "rejected"}
                   onClick={() => handleApprove(selectedUser, "rejected")}
-                  className="px-4 py-2 rounded text-white bg-red-600 hover:bg-red-700"
+                  className="px-4 py-2 rounded text-white bg-red-600 hover:bg-red-700 flex items-center justify-center gap-2"
                 >
-                  Reject
+                  {loadingAction === "rejected" ? (
+                    <>
+                      <span className="loader-spinner w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                      Rejecting...
+                    </>
+                  ) : (
+                    "Reject"
+                  )}
                 </CustomButton>
+
                 <CustomButton
-                  disabled={selectedUser?.totalAmount > 5000}
+                  disabled={selectedUser?.totalAmount > 5000 || loadingAction === "approved"}
                   onClick={() => handleApprove(selectedUser, "approved")}
-                  className="px-4 py-2 rounded text-white bg-green-600 hover:bg-green-700"
+                  className="px-4 py-2 rounded text-white bg-green-600 hover:bg-green-700 flex items-center justify-center gap-2"
                 >
-                  Approve
+                  {loadingAction === "approved" ? (
+                    <>
+                      <span className="loader-spinner w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                      Approving...
+                    </>
+                  ) : (
+                    "Approve"
+                  )}
                 </CustomButton>
               </div>
             )}
