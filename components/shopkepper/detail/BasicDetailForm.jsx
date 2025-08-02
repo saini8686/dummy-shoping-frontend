@@ -107,6 +107,22 @@ const BasicDetailForm = () => {
   const submitHandler = async (e) => {
     e.preventDefault();
 
+    // Inside submitHandler, after validation
+    try {
+      const allShops = await getAllBasicDetails();
+      const isShopnameTaken = allShops.some(
+        (shop) => shop.shopname?.toLowerCase() === formDetails.shopname.trim().toLowerCase()
+      );
+
+      if (isShopnameTaken) {
+        toast.error("This shop name is already taken. Please choose another.");
+        return;
+      }
+    } catch (err) {
+      console.error("Failed to check shop name uniqueness", err);
+      toast.error("Something went wrong while checking shop name uniqueness.");
+      return;
+    }
 
     const { gst_number, ...requiredFields } = formDetails;
 
