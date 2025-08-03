@@ -7,13 +7,13 @@ const Bill = ({ totalPrice }) => {
       <div className="flex justify-between items-center">
         <p className="text-sm font-normal text-blacks-200">Subtotal</p>
         <p className="text-sm font-normal text-blacks-200">
-          ₹{totalPrice.toFixed(2)}
+          {totalPrice.toFixed(2)}
         </p>
       </div>
       <div className="flex justify-between mt-4 items-center">
         <p className="text-sm font-normal text-blacks-200">Total</p>
         <p className="text-sm font-normal text-blacks-200">
-          ₹{totalPrice.toFixed(2)}
+          {totalPrice.toFixed(2)}
         </p>
       </div>
       <CustomButton customClass="w-full py-3.5 mt-8">

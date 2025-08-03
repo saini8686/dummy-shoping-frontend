@@ -50,7 +50,7 @@ const Users = () => {
                 {obj.productName}
               </span>
               <span className="text-greys-1400 block text-sm font-normal !leading-130">
-                ₹{obj?.productPrize}
+                {obj?.productPrize}
               </span>
             </p>
           </div>
@@ -83,7 +83,7 @@ const Users = () => {
                   />
                 </div>
                 <p><strong>Name:</strong> {selectedUser.productName}</p>
-                <p><strong>Price:</strong> ₹{selectedUser.productPrize}</p>
+                <p><strong>Price:</strong> {selectedUser.productPrize}</p>
                 <p>
                   <strong>Status:</strong>{" "}
                   {selectedUser.inStock ? "In Stock" : "Out of Stock"}

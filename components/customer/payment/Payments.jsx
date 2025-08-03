@@ -106,7 +106,7 @@ const CoustomerPayments = () => {
 
             <div className="px-4 py-3 text-sm text-gray-800 space-y-2">
               <div>
-                <strong>Amount:</strong> ₹{obj.totalAmount}
+                <strong>Amount:</strong> {obj.totalAmount}
               </div>
               <div>
                 <strong>Earned:</strong> {obj.earnAmount} SMP
@@ -160,7 +160,7 @@ const CoustomerPayments = () => {
                   <strong>User Name:</strong> {selectedUser.userName}
                 </p>
                 <p>
-                  <strong>Amount:</strong> ₹{selectedUser.totalAmount}
+                  <strong>Amount:</strong> {selectedUser.totalAmount}
                 </p>
                 <p>
                   <strong>Status:</strong> {selectedUser.status}

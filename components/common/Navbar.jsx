@@ -39,7 +39,7 @@ const Navbar = ({ userInfo }) => {
 
   const handleCopyReferral = () => {
     if (!referralCode) return;
-    const urlWithReferral = `${referralCode}`;
+    const urlWithReferral = `${window.location.origin}/sign-up?auth=customer&referralCode=${referralCode}`;
     navigator.clipboard.writeText(urlWithReferral);
     setCopied(true);
     toast.success("Referral code copied!");

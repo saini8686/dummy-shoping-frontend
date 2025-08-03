@@ -23,7 +23,7 @@ const Dashboard = () => {
               <div className="font-semibold">{user.name}</div>
               <div className="text-sm text-gray-500">{user.email}</div>
               <div className="text-xs text-green-600 mt-1">
-                Wallet: ₹{user.wallet}
+                Wallet: {user.wallet}
               </div>
             </div>
           ))}
@@ -38,7 +38,7 @@ const Dashboard = () => {
             <div key={pay.id} className="bg-white p-4 mb-2 rounded shadow">
               <div className="font-semibold">{pay.name}</div>
               <div className="text-sm text-gray-600">
-                Amount: ₹{pay.amount}
+                Amount: {pay.amount}
               </div>
               <div className="text-xs text-gray-400">Date: {pay.date}</div>
             </div>
@@ -53,7 +53,7 @@ const Dashboard = () => {
         <div className="p-4 text-center">
           <div className="bg-yellow-100 p-6 rounded-xl shadow">
             <div className="text-sm text-gray-600">Total Wallet Balance</div>
-            <div className="text-2xl font-bold text-yellow-700">₹{total}</div>
+            <div className="text-2xl font-bold text-yellow-700">{total}</div>
           </div>
         </div>
       );

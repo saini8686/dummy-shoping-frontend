@@ -172,7 +172,7 @@ const AddProductForm = () => {
               }
             />
             <CustomInput
-              placeholder="Product Price (₹)"
+              placeholder="Product Price"
               name="productPrize"
               type="number"
               error={!formDetails.productPrize && error}
@@ -186,7 +186,7 @@ const AddProductForm = () => {
               }
             />
             <CustomInput
-              placeholder="Discount Price (₹)"
+              placeholder="Discount Price"
               name="discountPrize"
               type="number"
               error={!formDetails.discountPrize && error}

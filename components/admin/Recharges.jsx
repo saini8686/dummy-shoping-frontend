@@ -86,7 +86,7 @@ const Recharges = () => {
 
         await createNotification({
           userId: user.userId,
-          message: `Your recharge of ₹${totalAmount.toFixed(2)} has been approved.`,
+          message: `Your recharge of ${totalAmount.toFixed(2)} has been approved.`,
           earnCoin: rechargeAmount,
           earnType: "recharge",
           earnUserId: user.userId,
@@ -104,7 +104,7 @@ const Recharges = () => {
       if (status === "rejected") {
         await createNotification({
           userId: user.userId,
-          message: `Your recharge of ₹${totalAmount.toFixed(2)} has been rejected.`,
+          message: `Your recharge of ${totalAmount.toFixed(2)} has been rejected.`,
           earnCoin: 0,
           earnType: "recharge",
           earnUserId: user.userId,
@@ -183,7 +183,7 @@ const Recharges = () => {
                 <div className="flex justify-between">
                   <span className="text-gray-500">Amount</span>
                   <span className="text-lg text-green-700 font-bold">
-                    ₹{Number(obj?.totalAmount ?? 0).toFixed(2)}
+                    {Number(obj?.totalAmount ?? 0).toFixed(2)}
                   </span>
                 </div>
                 <div className="flex justify-between">
@@ -241,7 +241,7 @@ const Recharges = () => {
               <div className="space-y-3 text-sm text-gray-700">
                 <p><strong>User Name:</strong> {selectedUser.userName}</p>
                 <p><strong>Shop:</strong> {selectedUser.shopName ?? "Shop name"} ({selectedUser.shopId})</p>
-                <p><strong>Amount:</strong> ₹{selectedUser.totalAmount}</p>
+                <p><strong>Amount:</strong> {selectedUser.totalAmount}</p>
                 <p><strong>Payment Method:</strong> {selectedUser.paymentMethod}</p>
                 <p><strong>Status:</strong> {selectedUser.status}</p>
               </div>

@@ -55,7 +55,7 @@ const TotalAmount = ({ total, isAdmin, isShopkeeper, breakdown }) => {
 
       await createPayment(data, token);
 
-      toast.success(`Recharge request successful for ₹${value.toFixed(2)}`);
+      toast.success(`Recharge request successful for ${value.toFixed(2)}`);
       setIsOpen(false);
       setAmount("");
     } catch (error) {

@@ -70,7 +70,7 @@ const page = () => {
                             </div>
                             <div className="text-right">
                                 <span className="block text-base !leading-130 font-semibold text-greens-900">
-                                    ₹ {Number(payment.totalAmount || 0).toFixed(2)}
+                                     {Number(payment.totalAmount || 0).toFixed(2)}
                                 </span>
                                 <span className="block text-sm !leading-130 mt-1 font-normal text-greys-1400">
                                     {payment.createdAt

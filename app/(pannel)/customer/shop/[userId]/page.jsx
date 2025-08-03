@@ -83,7 +83,7 @@ const Page = () => {
 
       await updateUser(updatedUser);
 
-      toast.success(`Payment successful ₹${value}`);
+      toast.success(`Payment successful ${value}`);
       setIsOpen(false);
       setAmount("");
       setRating(0);

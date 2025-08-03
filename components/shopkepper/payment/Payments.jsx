@@ -90,7 +90,7 @@ const Payments = () => {
 
         await createNotification({
           userId: user.userId,
-          message: `Your shopping of ₹${Number(user.totalAmount).toFixed(2)} has been approved.`,
+          message: `Your shopping of ${Number(user.totalAmount).toFixed(2)} has been approved.`,
           earnCoin: earnAmount,
           earnType: "shopping",
           earnUserId: user.userId,
@@ -103,7 +103,7 @@ const Payments = () => {
 
         await createNotification({
           userId: user.userId,
-          message: `₹${user.totalAmount.toFixed(2)} of 5% has been approved.`,
+          message: `${user.totalAmount.toFixed(2)} of 5% has been approved.`,
           earnCoin: adminCommission1.toFixed(2),
           earnType: "company1",
           earnUserId: user.userId,
@@ -112,7 +112,7 @@ const Payments = () => {
         });
         await createNotification({
           userId: user.userId,
-          message: `₹${user.totalAmount.toFixed(2)} of 25% has been approved.`,
+          message: `${user.totalAmount.toFixed(2)} of 25% has been approved.`,
           earnCoin: adminCommission2.toFixed(2),
           earnType: "company2",
           earnUserId: user.userId,
@@ -153,7 +153,7 @@ const Payments = () => {
       } else if (status === "rejected") {
         await createNotification({
           userId: user.userId,
-          message: `Your shopping of ₹${user.totalAmount.toFixed(2)} has been rejected.`,
+          message: `Your shopping of ${user.totalAmount.toFixed(2)} has been rejected.`,
           earnCoin: 0,
           earnType: "payment",
           earnUserId: user.userId,
@@ -229,7 +229,7 @@ const Payments = () => {
               <div className="px-5 py-4 text-gray-800 text-sm space-y-2">
                 <div className="flex justify-between items-center">
                   <span className="text-gray-500">Amount</span>
-                  <span className="text-lg text-green-700 font-bold">₹{Number(obj?.totalAmount ?? 0).toFixed(2)}</span>
+                  <span className="text-lg text-green-700 font-bold">{Number(obj?.totalAmount ?? 0).toFixed(2)}</span>
                 </div>
 
                 <div className="flex justify-between items-center">
@@ -287,7 +287,7 @@ const Payments = () => {
               <div className="space-y-3 text-sm text-gray-700">
                 <p><strong>User Name:</strong> {selectedUser.userName}</p>
                 <p><strong>Shop:</strong> {selectedUser.mimetype ?? "Shop name"} ({selectedUser.transactionId})</p>
-                <p><strong>Amount:</strong> ₹{selectedUser.totalAmount}</p>
+                <p><strong>Amount:</strong> {selectedUser.totalAmount}</p>
                 <p><strong>Payment Method:</strong> {selectedUser.paymentMethod}</p>
                 <p><strong>Status:</strong> {selectedUser.status}</p>
               </div>

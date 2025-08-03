@@ -20,7 +20,7 @@ const CartAddCard = ({ product }) => {
           {product.productName}
         </p>
         <p className="font-normal !leading-130 text-sm text-greys-200 mt-2">
-          {product.amount}, ₹{product.price}
+          {product.amount}, {product.price}
         </p>
         <button className="w-8 flex justify-center items-center ml-auto h-8 bg-greens-900 rounded-2xl">
           <Icon icon="plus" />

@@ -82,7 +82,7 @@ const UserDetails = () => {
             <p className="text-sm text-gray-700">Mobile: {userData.number}</p>
             <p className="text-sm text-gray-700">Status: {userData.status}</p>
             <p className="text-sm text-gray-700 mt-1">
-              Recharge: ₹{userData.recharge || 0}
+              Recharge: {userData.recharge || 0}
               <button
                 onClick={() => {
                   setRechargeModalOpen(true);
