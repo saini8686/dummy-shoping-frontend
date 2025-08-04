@@ -17,7 +17,7 @@ const AddProductForm = () => {
   const [formDetails, setFormDetails] = useState({
     productName: "",
     description: "",
-    productImage: "", // base64 string
+    productImage: "",
     inStock: false,
     discountPrize: "",
     productCategory: "",
@@ -34,7 +34,7 @@ const AddProductForm = () => {
     reader.onloadend = () => {
       setFormDetails((prev) => ({
         ...prev,
-        [key]: reader.result, // base64 string
+        [key]: reader.result,
       }));
     };
     if (file) reader.readAsDataURL(file);
@@ -55,6 +55,7 @@ const AddProductForm = () => {
       try {
         setError(false);
         const userId = Cookies.get("userId");
+        console.log("userId:", userId);
 
         const payload = {
           ...formDetails,
@@ -65,7 +66,6 @@ const AddProductForm = () => {
         console.log("Product Created:", res);
         setProduct(res);
 
-        // Reset form
         setFormDetails({
           productName: "",
           description: "",
@@ -89,9 +89,7 @@ const AddProductForm = () => {
     }
   };
 
-  const closeConfirm = () => {
-    setConfirm(false);
-  };
+  const closeConfirm = () => setConfirm(false);
 
   const showProductDetail = () => {
     router.push(`/shopkepper/product/add-product?product=confirm&id=${productDetails?.product?.id}`);
@@ -109,7 +107,7 @@ const AddProductForm = () => {
       {product === "confirm" ? (
         <ConfirmProduct />
       ) : (
-        <form onSubmit={submitHandler}>
+        <form onSubmit={submitHandler} noValidate>
           <div className="space-y-4">
             <CustomInput
               placeholder="Product Name"
@@ -118,12 +116,7 @@ const AddProductForm = () => {
               error={!formDetails.productName && error}
               errorText="Product name is required"
               value={formDetails.productName}
-              onChange={(e) =>
-                setFormDetails({
-                  ...formDetails,
-                  productName: e.target.value,
-                })
-              }
+              onChange={(e) => setFormDetails({ ...formDetails, productName: e.target.value })}
             />
             <CustomInput
               placeholder="Describe the Product"
@@ -132,12 +125,7 @@ const AddProductForm = () => {
               error={!formDetails.description && error}
               errorText="Description is required"
               value={formDetails.description}
-              onChange={(e) =>
-                setFormDetails({
-                  ...formDetails,
-                  description: e.target.value,
-                })
-              }
+              onChange={(e) => setFormDetails({ ...formDetails, description: e.target.value })}
             />
             <CustomUploadImage
               image={formDetails.productImage}
@@ -150,12 +138,7 @@ const AddProductForm = () => {
               error={!formDetails.productCategory && error}
               errorText="Product category is required"
               value={formDetails.productCategory}
-              onChange={(e) =>
-                setFormDetails({
-                  ...formDetails,
-                  productCategory: e.target.value,
-                })
-              }
+              onChange={(e) => setFormDetails({ ...formDetails, productCategory: e.target.value })}
             />
             <CustomInput
               placeholder="Product Unit"
@@ -164,12 +147,7 @@ const AddProductForm = () => {
               error={!formDetails.productUnit && error}
               errorText="Product unit is required"
               value={formDetails.productUnit}
-              onChange={(e) =>
-                setFormDetails({
-                  ...formDetails,
-                  productUnit: e.target.value,
-                })
-              }
+              onChange={(e) => setFormDetails({ ...formDetails, productUnit: e.target.value })}
             />
             <CustomInput
               placeholder="Product Price"
@@ -178,12 +156,7 @@ const AddProductForm = () => {
               error={!formDetails.productPrize && error}
               errorText="Product price is required"
               value={formDetails.productPrize}
-              onChange={(e) =>
-                setFormDetails({
-                  ...formDetails,
-                  productPrize: e.target.value,
-                })
-              }
+              onChange={(e) => setFormDetails({ ...formDetails, productPrize: e.target.value })}
             />
             <CustomInput
               placeholder="Discount Price"
@@ -192,32 +165,25 @@ const AddProductForm = () => {
               error={!formDetails.discountPrize && error}
               errorText="Discount price is required"
               value={formDetails.discountPrize}
-              onChange={(e) =>
-                setFormDetails({
-                  ...formDetails,
-                  discountPrize: e.target.value,
-                })
-              }
+              onChange={(e) => setFormDetails({ ...formDetails, discountPrize: e.target.value })}
             />
             <div className="flex justify-between items-center">
               <p>Mark Product in Stock</p>
               <input
                 type="checkbox"
-                className="w-5 h-5 cursor-pointer accent-greens-900"
+                className="w-5 h-5 cursor-pointer accent-green-700"
                 id="inStock"
                 name="inStock"
                 checked={formDetails.inStock}
-                onChange={(e) =>
-                  setFormDetails({
-                    ...formDetails,
-                    inStock: e.target.checked,
-                  })
-                }
+                onChange={(e) => setFormDetails({ ...formDetails, inStock: e.target.checked })}
               />
             </div>
-            <CustomButton isSubmit customClass="w-full">
+
+            {/* ✅ ADD PRODUCT BUTTON */}
+            <CustomButton isSubmit customClass="w-full relative z-10">
               Add Product
             </CustomButton>
+
             {confirm && (
               <ProductAddedModal
                 showProductDetail={showProductDetail}

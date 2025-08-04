@@ -6,7 +6,7 @@ const CustomUploadImage = ({ name, image, onChange }) => {
     const file = e.target.files[0];
     if (!file) return;
 
-    const isValid = ["image/jpeg", "image/png"].includes(file.type);
+    const isValid = ["image/*"].includes(file.type);
     if (!isValid) {
       alert("Only JPEG and PNG images are allowed.");
       return;
@@ -27,7 +27,7 @@ const CustomUploadImage = ({ name, image, onChange }) => {
       <label className="h-[130px] rounded-lg flex justify-center items-center border border-dashed border-black w-full mt-4 cursor-pointer overflow-hidden">
         <input
           type="file"
-          accept="image/png, image/jpeg"
+          accept="image/*"
           onChange={handleFileChange}
           className="hidden"
         />

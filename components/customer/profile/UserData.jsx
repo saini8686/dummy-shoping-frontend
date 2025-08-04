@@ -1,18 +1,17 @@
 "use client";
+import React, { useState, useEffect, useRef } from "react";
 import { CustomButton } from "@/components/common/CustomButton";
 import Icon from "@/components/common/Icons";
-import { USER_PROFILE_DATA } from "@/utils/helper";
-import React, { useState, useEffect } from "react";
 import Cookies from "js-cookie";
-import { uploadImageToServer, updateUser } from "@/services/users.service";
 import { ToastContainer, toast } from "react-toastify";
+import { uploadImageToServer, updateUser } from "@/services/users.service";
+import { USER_PROFILE_DATA } from "@/utils/helper";
 
 const UserData = ({ userInfo }) => {
   const [userProfile, setUserProfile] = useState({
     imageSrc: "/asset/images/png/profile/avtar.png",
     fullName: "",
     number: "",
-    // password: "",
     address: "",
   });
 
@@ -20,6 +19,7 @@ const UserData = ({ userInfo }) => {
   const [imageFile, setImageFile] = useState(null);
   const [loadingProfile, setLoadingProfile] = useState(false);
   const [loading, setLoading] = useState(false);
+  const fileInputRef = useRef(null);
 
   useEffect(() => {
     if (userInfo) {
@@ -27,7 +27,6 @@ const UserData = ({ userInfo }) => {
         imageSrc: userInfo?.profilePicture || "/assets/images/png/profile/avtar.png",
         fullName: userInfo?.name || "",
         number: userInfo?.number || "",
-        // password: "",
         address: userInfo?.address || "",
       });
     }
@@ -37,14 +36,11 @@ const UserData = ({ userInfo }) => {
     const file = e.target.files[0];
     if (file) {
       setImageFile(file);
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setUserProfile((prev) => ({
-          ...prev,
-          imageSrc: reader.result,
-        }));
-      };
-      reader.readAsDataURL(file);
+      const imageUrl = URL.createObjectURL(file);
+      setUserProfile((prev) => ({
+        ...prev,
+        imageSrc: imageUrl,
+      }));
     }
   };
 
@@ -65,8 +61,10 @@ const UserData = ({ userInfo }) => {
     setLoadingProfile(true);
     try {
       const result = await uploadImageToServer(imageFile, userId, "user", "profilePicture");
-      if (!result) {
+      if (result) {
         toast.success("Profile image uploaded successfully.");
+      } else {
+        toast.error("Server did not return a success response.");
       }
     } catch (error) {
       console.error("Upload failed:", error);
@@ -83,20 +81,13 @@ const UserData = ({ userInfo }) => {
       ...userInfo,
       name: userProfile.fullName,
       number: userProfile.number,
-      // password: userProfile.password,
       address: userProfile.address,
     };
 
     setLoading(true);
     try {
-      console.log("fetching user with updated data:", updatedData);
-      
       const response = await updateUser(updatedData);
-
-      if (!response) {
-        throw new Error("Update failed");
-      }
-
+      if (!response) throw new Error("Update failed");
       toast.success("Profile updated successfully!");
     } catch (error) {
       console.error("Update failed:", error);
@@ -108,16 +99,17 @@ const UserData = ({ userInfo }) => {
 
   const getImageSrc = () => {
     const { imageSrc } = userProfile;
-
     if (!imageSrc || imageSrc === "null") {
       return "/assets/images/png/profile/avtar.png";
     }
-
-    if (imageSrc.startsWith("data:image") || imageSrc.startsWith("http")) {
+    if (imageSrc.startsWith("data:image") || imageSrc.startsWith("http") || imageSrc.startsWith("blob:")) {
       return imageSrc;
     }
-
     return `${process.env.NEXT_PUBLIC_API_BASE?.replace(/\/$/, "")}/${imageSrc}`;
+  };
+
+  const triggerFileInput = () => {
+    fileInputRef.current?.click();
   };
 
   return (
@@ -135,14 +127,15 @@ const UserData = ({ userInfo }) => {
           <input
             type="file"
             accept="image/*"
+            ref={fileInputRef}
             onChange={handleImageChange}
             className="hidden"
-            id="avatar-upload"
           />
-          <span className="w-11 h-11 cursor-pointer hover:bg-white hover:!text-reds-900 duration-300 rounded-full absolute bottom-0 right-0 flex justify-center items-center text-white bg-reds-900">
-            <label htmlFor="avatar-upload" className="cursor-pointer">
-              <Icon icon="camera" />
-            </label>
+          <span
+            className="w-11 h-11 cursor-pointer hover:bg-white hover:!text-reds-900 duration-300 rounded-full absolute bottom-0 right-0 flex justify-center items-center text-white bg-reds-900"
+            onClick={triggerFileInput}
+          >
+            <Icon icon="camera" />
           </span>
         </div>
 
