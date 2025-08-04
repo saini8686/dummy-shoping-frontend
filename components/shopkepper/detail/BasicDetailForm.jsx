@@ -11,6 +11,7 @@ import { ToastContainer, toast } from "react-toastify";
 import { submitBasicDetails } from "../../../services/basic-details.service";
 import Cookies from "js-cookie";
 import "react-toastify/dist/ReactToastify.css";
+import { getAllBasicDetails } from "@/services/basic-details.service"
 
 const BasicDetailForm = () => {
   const router = useRouter();

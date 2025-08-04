@@ -6,20 +6,20 @@ const CustomUploadImage = ({ name, image, onChange }) => {
     const file = e.target.files[0];
     if (!file) return;
 
-    const isValid = ["image/*"].includes(file.type);
+    const isValid = file.type.startsWith("image/");
     if (!isValid) {
-      alert("Only JPEG and PNG images are allowed.");
+      alert("Only image files are allowed.");
       return;
     }
 
     onChange(file);
   };
 
+
   return (
     <div
-      className={`${
-        name && "h-[198px] py-3.5 mt-[18px] px-3 rounded-lg bg-greys-100 w-full"
-      }`}
+      className={`${name && "h-[198px] py-3.5 mt-[18px] px-3 rounded-lg bg-greys-100 w-full"
+        }`}
     >
       {name && (
         <h3 className="text-blacks-200 font-semibold text-base">{name}</h3>
@@ -44,7 +44,7 @@ const CustomUploadImage = ({ name, image, onChange }) => {
               Select File
             </p>
             <p className="text-greys-dark-400 font-normal text-xs text-center max-w-[170px]">
-              Supported formats: JPEG, PNG only
+              Supported formats: Images
             </p>
           </div>
         )}
