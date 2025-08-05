@@ -186,7 +186,7 @@ const NearByShare = ({ search }) => {
                 <video
                   ref={(el) => (videoRefs.current[i] = el)}
                   height={160}
-                  className="h-[160px] object-cover w-full"
+                  className="h-[263px] object-cover w-full"
                   src={obj}
                   loop
                   muted
