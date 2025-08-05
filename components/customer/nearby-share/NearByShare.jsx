@@ -189,7 +189,6 @@ const NearByShare = ({ search }) => {
                   className="h-[263px] object-cover w-full"
                   src={obj}
                   loop
-                  muted
                   onClick={() => togglePlay(i)}
                 />
                 {!isPlaying[i] && (
