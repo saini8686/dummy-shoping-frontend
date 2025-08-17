@@ -248,6 +248,16 @@ const NearByShare = ({ search }) => {
                   <small className="text-sm text-green-600 font-medium block mt-1">
                     {obj?.address}
                   </small>
+                  {obj.latitude && obj.longitude && (
+                    <a
+                      href={`https://www.google.com/maps?q=${obj.latitude},${obj.longitude}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-blue-600 text-sm font-medium mt-2 inline-block"
+                    >
+                      📍 View on Map
+                    </a>
+                  )}
                 </div>
 
                 <div className="mt-3">
