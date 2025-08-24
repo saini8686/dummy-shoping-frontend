@@ -8,14 +8,16 @@ import "react-toastify/dist/ReactToastify.css";
 
 import { CustomButton } from "@/components/common/CustomButton";
 import Icon from "@/components/common/Icons";
-import { getUser } from "@/services/users.service";
+import { getUser, updateUserWallet2UsingSMP } from "@/services/users.service";
 import { createPayment } from "@/services/payment.service";
 import Link from "next/link";
 
 
 const TotalAmount = ({ total, isAdmin, isShopkeeper, breakdown }) => {
   const [isOpen, setIsOpen] = useState(false);
+  const [isOpenSMP, setIsOpenSMP] = useState(false);
   const [amount, setAmount] = useState("");
+  const [smp, setSMP] = useState("");
   const [showBalance, setShowBalance] = useState(false);
   const [showBalance1, setShowBalance1] = useState(false);
   const [showBalance2, setShowBalance2] = useState(false);
@@ -58,6 +60,30 @@ const TotalAmount = ({ total, isAdmin, isShopkeeper, breakdown }) => {
       toast.success(`Recharge request successful for ${value.toFixed(2)}`);
       setIsOpen(false);
       setAmount("");
+    } catch (error) {
+      toast.error("Recharge request failed. Please try again.");
+    }
+  };
+
+  const handleSubmitSMP = async () => {
+    const value = parseFloat(smp);
+
+    if (isNaN(value) || value <= 0) {
+      toast.error("Please enter a valid amount greater than zero.");
+      return;
+    }
+
+    if (!token || !smp) {
+      toast.error("Missing authentication information.");
+      return;
+    }
+
+    try {
+      const userInfo = await updateUserWallet2UsingSMP(smp, token);
+
+      userInfo && toast.success(`Customer Unlock Wallet updated successfully`);
+      setIsOpenSMP(false);
+      setSMP("");
     } catch (error) {
       toast.error("Recharge request failed. Please try again.");
     }
@@ -108,31 +134,65 @@ const TotalAmount = ({ total, isAdmin, isShopkeeper, breakdown }) => {
       </div>
 
       {isAdmin && (
-        <div className="flex justify-between items-center pt-3">
-          <div className="px-6 w-full bg-greens-900/10 rounded-lg py-4 mr-2">
-            <div className="flex justify-between items-center">
-              <h2 className="text-blacks-200 text-sm">COMPANY 1</h2>
-              <button onClick={() => setShowBalance1((prev) => !prev)}>
-                <Icon icon="greenEye" />
-              </button>
+        <>
+          <div className="flex justify-between items-center pt-3">
+            <div className="px-6 w-full bg-greens-900/10 rounded-lg py-4 mr-2">
+              <div className="flex justify-between items-center">
+                <h2 className="text-blacks-200 text-sm">COMPANY 1</h2>
+                <button onClick={() => setShowBalance1((prev) => !prev)}>
+                  <Icon icon="greenEye" />
+                </button>
+              </div>
+              <p className="text-greens-900 text-2xl mt-3">
+                {showBalance1 ? formatAmount(breakdown?.wallet1) : "*******"}
+              </p>
             </div>
-            <p className="text-greens-900 text-2xl mt-3">
-              {showBalance1 ? formatAmount(breakdown?.wallet1) : "*******"}
-            </p>
-          </div>
-          <div className="px-6 w-full bg-greens-900/10 rounded-lg py-4 ms-2">
-            <div className="flex justify-between items-center">
-              <h2 className="text-blacks-200 text-sm">COMPANY 2</h2>
-              <button onClick={() => setShowBalance2((prev) => !prev)}>
-                <Icon icon="greenEye" />
-              </button>
+            <div className="px-6 w-full bg-greens-900/10 rounded-lg py-4 ms-2">
+              <div className="flex justify-between items-center">
+                <h2 className="text-blacks-200 text-sm">COMPANY 2</h2>
+                <button onClick={() => setShowBalance2((prev) => !prev)}>
+                  <Icon icon="greenEye" />
+                </button>
+              </div>
+              <p className="text-greens-900 text-2xl mt-3">
+                {showBalance2 ? formatAmount(breakdown?.wallet2) : "*******"}
+              </p>
             </div>
-            <p className="text-greens-900 text-2xl mt-3">
-              {showBalance2 ? formatAmount(breakdown?.wallet2) : "*******"}
-            </p>
           </div>
-        </div>
+          <div className="w-full mt-3">
+            <CustomButton
+              customClass="w-full sm:w-auto text-sm px-4 py-2 bg-primary text-white rounded-sm transition"
+              onClick={(e) => {
+                e.preventDefault();
+                setIsOpenSMP(true);
+              }}
+            >
+              Update Customer Unlock Wallet
+            </CustomButton>
+          </div>
+        </>
       )}
+
+      {(!isAdmin && !isShopkeeper) && (
+        <>
+          {/* Wallet Cards */}
+          <div className="flex flex-col sm:flex-row justify-between items-stretch pt-3 gap-3">
+            {/* COMPANY 2 */}
+            <div className="flex-1 px-6 py-4 bg-greens-900/10 rounded-lg">
+              <div className="flex justify-between items-center">
+                <h2 className="text-blacks-200 text-sm font-medium">UNLOCK WALLET</h2>
+                <button onClick={() => setShowBalance2((prev) => !prev)}>
+                  <Icon icon="greenEye" />
+                </button>
+              </div>
+              <p className="text-greens-900 text-2xl mt-3 font-semibold">
+                {showBalance2 ? formatAmount(breakdown?.wallet2) : "*******"}
+              </p>
+            </div>
+          </div>
+        </>
+      )}
+
 
       {/* Recharge Dialog */}
       <Dialog open={isOpen} onClose={() => setIsOpen(false)} className="relative z-50">
@@ -160,6 +220,40 @@ const TotalAmount = ({ total, isAdmin, isShopkeeper, breakdown }) => {
               </CustomButton>
               <CustomButton
                 onClick={handleSubmit}
+                className="px-4 py-2 rounded-md bg-blue-600 hover:bg-blue-700 text-white"
+              >
+                Submit
+              </CustomButton>
+            </div>
+          </Dialog.Panel>
+        </div>
+      </Dialog>
+
+      <Dialog open={isOpenSMP} onClose={() => setIsOpenSMP(false)} className="relative z-50">
+        <div className="fixed inset-0 bg-black/30" aria-hidden="true" />
+        <div className="fixed inset-0 flex items-center justify-center p-4">
+          <Dialog.Panel className="w-full max-w-md bg-white rounded-lg p-6 shadow-lg">
+            <Dialog.Title className="text-lg font-semibold text-gray-800 mb-4">
+              Enter the transfer amount to Customer Unlock Wallet in %
+            </Dialog.Title>
+
+            <input
+              type="number"
+              placeholder="Amount in %"
+              value={smp}
+              onChange={(e) => setSMP(e.target.value)}
+              className="w-full px-4 py-2 border rounded-md mb-4 focus:outline-none focus:ring focus:border-blue-300"
+            />
+
+            <div className="flex justify-end gap-2">
+              <CustomButton
+                onClick={() => setIsOpenSMP(false)}
+                className="px-4 py-2 rounded-md !bg-transparent !text-[#01be62] hover:!bg-gray-100"
+              >
+                Cancel
+              </CustomButton>
+              <CustomButton
+                onClick={handleSubmitSMP}
                 className="px-4 py-2 rounded-md bg-blue-600 hover:bg-blue-700 text-white"
               >
                 Submit

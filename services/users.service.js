@@ -31,6 +31,18 @@ export const getUser = async (user_Id, token) => {
   return res.data;
 };
 
+export const updateUserWallet2UsingSMP = async (smp, token) => {
+  console.log("Fetching user with ID:", smp);
+  console.log("Using token:", token);
+
+  const res = await api.get(`/api/update-smp/${smp}`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+  return res.data;
+};
+
 // UPDATE: Update basic details by userId
 export const updateUser = async (updatedDetails) => {
   const token = Cookies.get("token");
