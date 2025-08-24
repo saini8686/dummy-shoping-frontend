@@ -186,7 +186,7 @@ const TotalAmount = ({ total, isAdmin, isShopkeeper, breakdown }) => {
                 </button>
               </div>
               <p className="text-greens-900 text-2xl mt-3 font-semibold">
-                {showBalance2 ? formatAmount(breakdown?.wallet2) : "*******"}
+                {showBalance2 ? formatAmount(total?.wallet2) : "*******"}
               </p>
             </div>
           </div>
