@@ -213,10 +213,10 @@ export const BOTTOM_BAR_LIST = [
     icon: "home",
     path: "/customer",
   },
-  // {
-  //   icon: "shop",
-  //   path: "/customer/item-details",
-  // },
+  {
+    icon: "shopkepperOption",
+    path: "/customer/user-list",
+  },
   {
     icon: "other",
     path: "/customer/payment",
