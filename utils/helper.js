@@ -505,11 +505,16 @@ export const SETTING_LIST = [
     name: "Edit Profile",
     path: "/customer/profile/edit-profile",
   },
-  // {
-  //   icon: "profileLocation",
-  //   name: "My Address",
-  //   path: "/customer/profile/my-address",
-  // },
+  {
+    icon: "shopkepperProfile",
+    name: "Top 10 Users",
+    path: "/customer/user-list",
+  },
+  {
+    icon: "shopkepperProfile",
+    name: "Top 10 Shops",
+    path: "/customer/shop-list",
+  },
   {
     icon: "profileOrder",
     name: "My Orders",
