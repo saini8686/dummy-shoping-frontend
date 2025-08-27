@@ -175,11 +175,11 @@ const SignUp = () => {
           />
           <CustomInput
             customClass="mt-4"
-            placeholder="Number"
+            placeholder="Mobile Number"
             name="number"
             type="number"
             error={(!formDetails.number || formDetails.number.length !== 10) && error}
-            errorText="Number must be 10 digits"
+            errorText="Mobile Number must be 10 digits"
             value={formDetails.number}
             onChange={(e) => setFormDetails({ ...formDetails, number: e.target.value })}
           />

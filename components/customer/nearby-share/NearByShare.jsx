@@ -30,66 +30,97 @@ const NearByShare = ({ search }) => {
   const [isPlaying, setIsPlaying] = useState([]);
   const videoRefs = useRef([]);
 
+  // 🎬 Video toggle
   const togglePlay = (index) => {
     const updatedPlaying = Array(videoRefs.current.length).fill(false);
+
     videoRefs.current.forEach((video, i) => {
-      if (video) {
-        if (i === index) {
-          if (video.paused) {
-            video.play();
-            updatedPlaying[i] = true;
-          } else {
-            video.pause();
-            updatedPlaying[i] = false;
-          }
+      if (!video) return;
+
+      if (i === index) {
+        if (video.paused) {
+          video.play();
+          updatedPlaying[i] = true;
         } else {
           video.pause();
+          updatedPlaying[i] = false;
         }
+      } else {
+        video.pause();
       }
     });
 
     setIsPlaying(updatedPlaying);
   };
 
+  // Init video state
   useEffect(() => {
     setIsPlaying(Array(VEDIO_LIST.length).fill(false));
   }, []);
 
+  // 📍 Get location: first try geolocation, fallback to cookies
   useEffect(() => {
-    const lat = Cookies.get("latitude");
-    const lng = Cookies.get("longitude");
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        (pos) => {
+          const { latitude, longitude } = pos.coords;
 
-    if (lat && lng) {
-      setUserCoords({
-        lat: parseFloat(lat),
-        lng: parseFloat(lng)
-      });
+          // Save to cookies
+          Cookies.set("latitude", latitude, { sameSite: "Lax" });
+          Cookies.set("longitude", longitude, { sameSite: "Lax" });
+
+          // Save to state
+          setUserCoords({ lat: latitude, lng: longitude });
+        },
+        (err) => {
+          console.error("Geolocation error:", err);
+
+          // Fallback: cookies
+          const lat = Cookies.get("latitude");
+          const lng = Cookies.get("longitude");
+          if (lat && lng) {
+            setUserCoords({ lat: parseFloat(lat), lng: parseFloat(lng) });
+          }
+        }
+      );
+    } else {
+      // Browser doesn’t support geolocation
+      const lat = Cookies.get("latitude");
+      const lng = Cookies.get("longitude");
+      if (lat && lng) {
+        setUserCoords({ lat: parseFloat(lat), lng: parseFloat(lng) });
+      }
     }
   }, []);
 
+  // 🏪 Fetch shops
   useEffect(() => {
     const fetchShops = async () => {
       try {
         setLoading(true);
         const res = await getBasicDetails(search, page);
-        const allShops = res.data.filter(item => item.status === "approved") || [];
+        const allShops = res.data.filter((item) => item.status === "approved") || [];
 
-        // Calculate distance for each shop if user coordinates are available
+        // Add distance if location known
         if (userCoords) {
-          allShops.forEach(shop => {
-            shop.distance = getDistanceFromLatLonInKm(
-              shop.latitude,
-              shop.longitude,
-              userCoords.lat,
-              userCoords.lng
-            );
+          allShops.forEach((shop) => {
+            if (shop.latitude && shop.longitude) {
+              shop.distance = getDistanceFromLatLonInKm(
+                shop.latitude,
+                shop.longitude,
+                userCoords.lat,
+                userCoords.lng
+              );
+            } else {
+              shop.distance = null;
+            }
           });
         }
 
         setShops(allShops);
         setTotalPages(res.totalPages || 1);
 
-        const categories = Array.from(new Set(allShops.map(shop => shop.category)));
+        const categories = Array.from(new Set(allShops.map((shop) => shop.category)));
         setAvailableCategories(categories);
 
         if (!showAdsOnce) setShowAdsOnce(true);
@@ -103,18 +134,30 @@ const NearByShare = ({ search }) => {
     fetchShops();
   }, [search, page, userCoords]);
 
+  // Reset page on new search
   useEffect(() => {
     setPage(1);
   }, [search]);
 
+  // 🪄 Filter + sort
+  // 🪄 Filter + sort
   const filteredShops = shops
     .filter((shop) =>
       selectedCategory === "all" ? true : shop.category === selectedCategory
     )
     .sort((a, b) => {
-      if (!sortByDistance || !userCoords) return 0;
-      return a.distance - b.distance;
+      if (!userCoords) return 0;
+
+      if (sortByDistance) {
+        if (a.distance == null) return 1;
+        if (b.distance == null) return -1;
+        return a.distance - b.distance;
+      }
+
+      // ✅ Default: keep API order
+      return 0;
     });
+
 
   return (
     <>
@@ -158,9 +201,13 @@ const NearByShare = ({ search }) => {
                 checked={sortByDistance}
                 onChange={() => setSortByDistance(!sortByDistance)}
               />
-              <div className={`block w-10 h-6 rounded-full ${sortByDistance ? 'bg-greens-900' : 'bg-greys-300'}`}></div>
               <div
-                className={`absolute left-1 top-1 bg-white w-4 h-4 rounded-full transition ${sortByDistance ? 'transform translate-x-4' : ''}`}
+                className={`block w-10 h-6 rounded-full ${sortByDistance ? "bg-greens-900" : "bg-greys-300"
+                  }`}
+              ></div>
+              <div
+                className={`absolute left-1 top-1 bg-white w-4 h-4 rounded-full transition ${sortByDistance ? "translate-x-4" : ""
+                  }`}
               ></div>
             </div>
           </label>
@@ -174,12 +221,7 @@ const NearByShare = ({ search }) => {
 
       {/* Video Ads */}
       {showAdsOnce && (
-        <Swiper
-          loop={true}
-          slidesPerView={1}
-          spaceBetween={16}
-          modules={[EffectFade, Autoplay]}
-        >
+        <Swiper loop slidesPerView={1} spaceBetween={16} modules={[EffectFade, Autoplay]}>
           {VEDIO_LIST.map((obj, i) => (
             <SwiperSlide key={i} className="h-full">
               <div className="relative max-w-[540px] w-full mx-auto mt-8">
@@ -194,7 +236,7 @@ const NearByShare = ({ search }) => {
                 {!isPlaying[i] && (
                   <button
                     onClick={() => togglePlay(i)}
-                    className="absolute inset-0 flex items-center justify-center bg-[#D1D1D1]/80 "
+                    className="absolute inset-0 flex items-center justify-center bg-[#D1D1D1]/80"
                   >
                     <Image
                       src="/assets/images/svg/play.svg"
@@ -223,13 +265,12 @@ const NearByShare = ({ search }) => {
                   src={
                     obj.shop_front_image === null
                       ? "/assets/images/png/shop/shop-1.png"
-                      : `${process.env.NEXT_PUBLIC_API_BASE?.replace(/\/$/, "")}/${obj.shop_front_image}`
+                      : `${process.env.NEXT_PUBLIC_API_BASE?.replace(/\/$/, "")}/${obj.shop_front_image
+                      }`
                   }
                   alt="shopImage"
                   className="object-cover w-full h-full rounded-lg"
                 />
-
-                {/* Clean Diagonal Ribbon */}
                 <span className="absolute top-2 left-[-25px] w-[100px] bg-reds-900 text-white text-[12px] font-bold py-[2px] text-center rotate-[-45deg] shadow-md z-10">
                   {obj.smp}% FS
                 </span>
@@ -261,10 +302,7 @@ const NearByShare = ({ search }) => {
                 </div>
 
                 <div className="mt-3">
-                  <CustomButton
-                    url={`../customer/${obj.path}`}
-                    customClass="w-fit text-sm"
-                  >
+                  <CustomButton url={`../customer/${obj.path}`} customClass="w-fit text-sm">
                     View Shop
                   </CustomButton>
                 </div>
