@@ -21,9 +21,13 @@ const UsersList = () => {
       try {
         const data = await getAllUserList();
         const filtered = data.filter((item) => item.userRole === "customer");
-        const findAdmin = data.find(item=>item.isAdmin = true);
+        const findAdmin = data.find(item => item.isAdmin = true);
         setAdminData(findAdmin)
-        setUserData(filtered);
+        const sorted = [...filtered].sort(
+          (a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+        );
+
+        setUserData(sorted);
       } catch (error) {
         console.error("Error fetching user details:", error);
         toast.error("Failed to fetch user data.");
