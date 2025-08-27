@@ -129,6 +129,7 @@ const Payments = () => {
         await updateUser({
           ...shopkeeprData,
           recharge: (shopkeeprData.recharge || 0) - user.totalAmount,
+          wallet: (shopkeeprData.wallet || 0) + user.totalAmount,
         });
 
         if (userData?.parentUserId) {
