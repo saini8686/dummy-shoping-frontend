@@ -11,7 +11,6 @@ const page = () => {
     <Suspense>
       <HeaderCustomer name="Top 10 Customers" />
       <Top10UsersList />
-      <BottomBar />
     </Suspense>
   )
 }

@@ -10,7 +10,6 @@ const page = () => {
     <Suspense>
     <HeaderCustomer name="Top 10 Shops" />
     <Top10ShopsList/>
-    <BottomBar />
     </Suspense>
   )
 }
