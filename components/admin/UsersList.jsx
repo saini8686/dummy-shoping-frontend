@@ -21,7 +21,7 @@ const UsersList = () => {
       try {
         const data = await getAllUserList();
         const filtered = data.filter(
-          (item) => !item.isShopkeeper && !item.isAdmin
+          (item) => !item.isshopkepper && !item.isAdmin
         );
         const findAdmin = data.find(item=>item.isAdmin = true);
         setAdminData(findAdmin)

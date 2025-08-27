@@ -22,10 +22,10 @@ const Top10ShopsList = () => {
       try {
         const data = await getAllUserList();
 
-        // ✅ Only shopkeepers
-        const filtered = data.filter((item) => item.isShopkeeper === true);
+        // ✅ Only shopkeppers
+        const filtered = data.filter((item) => item.isshopkepper === true);
 
-        // ✅ Sort shopkeepers by wallet (highest first) and take Top 10
+        // ✅ Sort shopkeppers by wallet (highest first) and take Top 10
         const top10 = filtered
           .sort((a, b) => (b.wallet || 0) - (a.wallet || 0))
           .slice(0, 10);

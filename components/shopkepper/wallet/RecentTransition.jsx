@@ -5,7 +5,7 @@ import Image from "next/image";
 
 const RecentTransition = (params) => {
   const TRANSITION_LIST = params.transactions  || [];  
-  const isShopkeeper = params.isShopkeeper || false;  
+  const isshopkepper = params.isshopkepper || false;  
   return (
     <>
       <div className="flex justify-between items-center mt-10">
@@ -39,7 +39,7 @@ const RecentTransition = (params) => {
         </div>
       )}
       {TRANSITION_LIST.map((obj, i) => (
-        <TransitionList transition={obj} key={i} isShopkeeper={isShopkeeper} />
+        <TransitionList transition={obj} key={i} isshopkepper={isshopkepper} />
       ))}
     </>
   );

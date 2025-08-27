@@ -82,8 +82,8 @@ const Page = () => {
     <div className="bg-white-low">
       <HeaderCustomer name="Wallet" />
       <div className="pb-20 mt-10 px-4">
-        <TotalAmount total={totalAmount} isAdmin={false} isShopkeeper={false} breakdown={""} />
-        <RecentTransition transactions={recentTransactions} isShopkeeper={false} />
+        <TotalAmount total={totalAmount} isAdmin={false} isshopkepper={false} breakdown={""} />
+        <RecentTransition transactions={recentTransactions} isshopkepper={false} />
         <BottomBar />
       </div>
     </div>

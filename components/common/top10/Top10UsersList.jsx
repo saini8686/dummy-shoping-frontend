@@ -21,8 +21,8 @@ const Top10UsersList = () => {
       try {
         const data = await getAllUserList();
 
-        // ✅ exclude admins & shopkeepers
-        const filtered = data.filter(item => !item.isShopkeeper && !item.isAdmin);
+        // ✅ exclude admins & shopkeppers
+        const filtered = data.filter(item => !item.isshopkepper && !item.isAdmin);
 
         // ✅ sort customers by wallet balance (descending) and take only top 10
         const top10 = filtered

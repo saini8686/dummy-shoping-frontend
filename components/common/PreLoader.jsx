@@ -1,26 +1,48 @@
 "use client";
 import Image from "next/image";
 import { useEffect, useState } from "react";
+import { useSearchParams, useRouter } from "next/navigation";
 
-import { useSearchParams } from "next/navigation";
 import InstructionStep from "../login-steps/InstructionStep";
 import SelectRole from "../login-steps/SelectRole";
 import LoginOptions from "../login-steps/LoginOptions";
-import Icon from "./Icons";
-import Link from "next/link";
+import Cookies from "js-cookie";
+
 const PreLoader = () => {
   const [loading, setLoading] = useState(true);
-  const [activeIndex, setActiveIndex] = useState(0);
   const searchParams = useSearchParams();
-  let steps = searchParams.get("steps");
-  if (!steps) {
-    steps = "0";
-  }
+  const router = useRouter();
+  let steps = searchParams.get("steps") || "0";
+
+  // ✅ Check auth on load
   useEffect(() => {
-    setTimeout(() => {
+    const token = Cookies.get("token");
+    const userRole = Cookies.get("userRole");
+
+    if (token && userRole) {
+      switch (userRole.toLowerCase()) {
+        case "admin":
+          router.replace("/admin/user-list");
+          break;
+        case "shopkepper":
+          router.replace("/shopkepper/product");
+          break;
+        case "customer":
+          router.replace("/customer");
+          break;
+        default:
+          router.replace("/sign-in");
+      }
+    }
+  }, [router]);
+
+  // Preloader effect
+  useEffect(() => {
+    const timer = setTimeout(() => {
       setLoading(false);
     }, 2000);
-  }, [loading]);
+    return () => clearTimeout(timer);
+  }, []);
 
   return (
     <div>
@@ -36,54 +58,21 @@ const PreLoader = () => {
           />
         </div>
       )}
-      {/* show */}
+
+      {/* Main content */}
       <div className="w-full max-w-[540px] mx-auto min-h-screen bg-white fixed inset-0 z-50">
         <div className="relative justify-between gap-10 flex-col flex z-10 min-h-screen pt-10">
-          {/* <div className="mt-10 px-4 flex w-full  justify-between items-center">
-            {steps === "0" && (
-              <p className="text-lg font-semibold text-black !leading-130">
-                {activeIndex + 1}
-                <span className="text-greys-600">/3</span>
-              </p>
-            )}
-            {steps != "0" && (
-              <Link
-                href={
-                  steps === "0"
-                    ? "?steps=0"
-                    : steps === "1"
-                    ? "?steps=0"
-                    : "?steps=1"
-                }
-              >
-                <Icon icon="back" />
-              </Link>
-            )}
-            {steps === "0" && (
-              <Link
-                href="?steps=1"
-                className="text-reds-900 font-semibold text-xl !!leading-130"
-              >
-                Skip
-              </Link>
-            )}
-          </div> */}
           <Image
             src="/assets/images/svg/main-logo.svg"
             width={205}
             height={97}
             sizes="100vw"
-            className="mb-5  w-fit mx-auto h-[73px] object-cover"
+            className="mb-5 w-fit mx-auto h-[73px] object-cover"
             alt="logo"
           />
-          <div className="bg-greens-900 landing_hero_swiper rounded-t-3xl  h-[400px]   w-full pt-[56px] pb-6 px-7">
-            {steps === "0" ? (
-              <SelectRole />
-            ) : steps === "1" ? (
-              <SelectRole />
-            ) : (
-              <LoginOptions />
-            )}
+
+          <div className="bg-greens-900 landing_hero_swiper rounded-t-3xl h-[400px] w-full pt-[56px] pb-6 px-7">
+            {steps === "0" || steps === "1" ? <SelectRole /> : <LoginOptions />}
           </div>
         </div>
       </div>

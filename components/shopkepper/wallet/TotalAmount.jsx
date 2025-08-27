@@ -13,7 +13,7 @@ import { createPayment } from "@/services/payment.service";
 import Link from "next/link";
 
 
-const TotalAmount = ({ total, isAdmin, isShopkeeper, breakdown }) => {
+const TotalAmount = ({ total, isAdmin, isshopkepper, breakdown }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [isOpenSMP, setIsOpenSMP] = useState(false);
   const [amount, setAmount] = useState("");
@@ -43,7 +43,7 @@ const TotalAmount = ({ total, isAdmin, isShopkeeper, breakdown }) => {
 
       const data = {
         userId,
-        userName: userInfo?.name || "Shopkeeper",
+        userName: userInfo?.name || "shopkepper",
         earnAmount: 0,
         totalAmount: value,
         paymentMethod: "recharge",
@@ -52,7 +52,7 @@ const TotalAmount = ({ total, isAdmin, isShopkeeper, breakdown }) => {
         status: "pending",
         filepath: "",
         shopId: userId,
-        shopName: "shopkeeper",
+        shopName: "shopkepper",
       };
 
       await createPayment(data, token);
@@ -105,13 +105,13 @@ const TotalAmount = ({ total, isAdmin, isShopkeeper, breakdown }) => {
           {showBalance
             ? isAdmin
               ? formatAmount(breakdown?.wallet)
-              : isShopkeeper
+              : isshopkepper
                 ? formatAmount(total?.recharge)
                 : formatAmount(total?.wallet)
             : "*******"}
         </p>
 
-        {isShopkeeper && (
+        {isshopkepper && (
           <div className="flex flex-col sm:flex-row justify-end items-center gap-3 mt-4">
             <CustomButton
               customClass="w-full sm:w-auto text-sm px-4 py-2 bg-primary text-white rounded-sm transition"
@@ -173,7 +173,7 @@ const TotalAmount = ({ total, isAdmin, isShopkeeper, breakdown }) => {
         </>
       )}
 
-      {(!isAdmin && !isShopkeeper) && (
+      {(!isAdmin && !isshopkepper) && (
         <>
           {/* Wallet Cards */}
           <div className="flex flex-col sm:flex-row justify-between items-stretch pt-3 gap-3">

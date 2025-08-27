@@ -59,12 +59,12 @@ const Page = () => {
         <TotalAmount
           total={totalAmount}
           isAdmin={true}
-          isShopkeeper={false}
+          isshopkepper={false}
           breakdown={breakdown}
         />
         <RecentTransition
           transactions={recentTransactions}
-          isShopkeeper={false}
+          isshopkepper={false}
         />
         <BottomBarAdmin />
       </div>

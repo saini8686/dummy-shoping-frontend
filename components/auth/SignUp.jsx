@@ -77,7 +77,7 @@ const SignUp = () => {
       const data = {
         ...formDetails,
         userRole: auth || "customer",
-        isShopkeeper: auth === "shopkepper",
+        isshopkepper: auth === "shopkepper",
         isAdmin: auth?.includes("admin") || false,
       };
 

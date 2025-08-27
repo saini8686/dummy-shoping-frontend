@@ -17,7 +17,7 @@ const SignIn = () => {
 
   const searchParams = useSearchParams();
   const router = useRouter();
-  const auth = searchParams.get("auth"); // expected role from query
+  const auth = searchParams.get("auth"); // e.g., 'admin', 'shopkepper', 'customer'
 
   // ✅ Auto-login if already authenticated
   useEffect(() => {
@@ -25,29 +25,21 @@ const SignIn = () => {
     const userRole = Cookies.get("userRole");
 
     if (token && userRole) {
-      if (auth === userRole.toLowerCase()) {
-        switch (userRole.toLowerCase()) {
-          case "admin":
-            router.replace("/admin/user-list");
-            break;
-          case "shopkeeper":
-            router.replace("/shopkepper/product");
-            break;
-          case "customer":
-            router.replace("/customer");
-            break;
-          default:
-            router.replace("/");
-        }
-      } else {
-        // ❌ logout if role mismatch
-        Cookies.remove("token");
-        Cookies.remove("userId");
-        Cookies.remove("userRole");
-        router.replace("/");
+      switch (userRole.toLowerCase()) {
+        case "admin":
+          router.replace("/admin/user-list");
+          break;
+        case "shopkepper":
+          router.replace("/shopkepper/product");
+          break;
+        case "customer":
+          router.replace("/customer");
+          break;
+        default:
+          router.replace("/");
       }
     }
-  }, [auth, router]);
+  }, [router]);
 
   const submitHandler = async (e) => {
     e.preventDefault();
@@ -65,30 +57,33 @@ const SignIn = () => {
       const response = await login(email, password);
 
       if (response?.token && response?.userId && response?.userRole) {
-        // Only allow approved accounts for admin/shopkeeper
+        // Only allow approved accounts for admin/shopkepper
         if (
-          (response.userRole === "admin" || response.userRole === "shopkeeper") &&
+          (response.userRole === "admin" || response.userRole === "shopkepper") &&
           response.status !== "approved"
         ) {
           toast.error("Your account is not active. Please contact support.");
           return;
         }
 
+        // ✅ Store credentials in cookies
+        Cookies.set("token", response.token, { sameSite: "Lax", secure: true });
+        Cookies.set("userId", response.userId.toString(), { sameSite: "Lax", secure: true });
+        Cookies.set("userRole", response.userRole.toLowerCase(), { sameSite: "Lax", secure: true });
+
         const role = response.userRole.toLowerCase();
 
+          console.log("Login Successful" + response.userRole);
+          console.log("Login Successful" + auth);
+          console.log("Login Successful" + auth);
         if (auth === role) {
-          // ✅ Store credentials
-          Cookies.set("token", response.token, { sameSite: "Lax", secure: true });
-          Cookies.set("userId", response.userId.toString(), { sameSite: "Lax", secure: true });
-          Cookies.set("userRole", role, { sameSite: "Lax", secure: true });
-
           toast.success("Login Successful");
 
           switch (role) {
             case "admin":
               router.push("/admin/user-list");
               break;
-            case "shopkeeper":
+            case "shopkepper":
               router.push("/shopkepper/product");
               break;
             case "customer":
@@ -98,13 +93,11 @@ const SignIn = () => {
               router.push("/");
           }
         } else {
-          // ❌ logout if not authorized for this page
           toast.warning("You are not authorized to access this page");
           Cookies.remove("token");
           Cookies.remove("userId");
           Cookies.remove("userRole");
           setError(true);
-          router.push("/");
         }
       } else {
         toast.error("Invalid credentials");
@@ -124,7 +117,7 @@ const SignIn = () => {
     Cookies.remove("token");
     Cookies.remove("userId");
     Cookies.remove("userRole");
-    router.push("/");
+    router.push(`/sign-in?auth=${auth || "customer"}`);
   };
 
   return (

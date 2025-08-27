@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import { getAllProducts, updateProduct, deleteProduct } from "../../../services/product.service";
 import Cookies from "js-cookie";
-import { Pencil, Trash2 } from "lucide-react";
+import { Pencil, Trash2, Plus } from "lucide-react";
 import CustomUploadImage from "../detail/CustomUploadImage";
 
 const ProductIn = () => {
@@ -11,6 +11,7 @@ const ProductIn = () => {
   const [loading, setLoading] = useState(true);
   const [editProduct, setEditProduct] = useState(null);
   const [formDetails, setFormDetails] = useState({});
+  const [showAddNew, setShowAddNew] = useState(false);
 
   useEffect(() => {
     const userId = Cookies.get("userId");
@@ -41,6 +42,7 @@ const ProductIn = () => {
   const closeEditModal = () => {
     setEditProduct(null);
     setFormDetails({});
+    setShowAddNew(false);
   };
 
   const handleChange = (e) => {
@@ -63,18 +65,26 @@ const ProductIn = () => {
   };
 
   const handleSave = async () => {
-    if (!editProduct) return;
+    if (!editProduct && !showAddNew) return;
 
     try {
-      const updatedProduct = { ...editProduct, ...formDetails };
-      await updateProduct(editProduct.id, updatedProduct);
+      const updatedProduct = editProduct
+        ? { ...editProduct, ...formDetails }
+        : { ...formDetails, userId: Number(Cookies.get("userId")) };
 
-      setProducts((prev) =>
-        prev.map((p) => (p.id === editProduct.id ? updatedProduct : p))
-      );
+      if (editProduct) {
+        await updateProduct(editProduct.id, updatedProduct);
+        setProducts((prev) =>
+          prev.map((p) => (p.id === editProduct.id ? updatedProduct : p))
+        );
+      } else {
+        // For add new, just push locally (API call can be added)
+        setProducts((prev) => [...prev, { ...updatedProduct, id: Date.now() }]);
+      }
+
       closeEditModal();
     } catch (err) {
-      console.error("Error updating product:", err);
+      console.error("Error saving product:", err);
     }
   };
 
@@ -90,156 +100,193 @@ const ProductIn = () => {
     }
   };
 
-  if (loading) return <p>Loading products...</p>;
-  if (!products || products.length === 0) return <p>No products found.</p>;
+  if (loading) return <p className="text-center py-10">Loading products...</p>;
+  if (!products || products.length === 0)
+    return <p className="text-center py-10">No products found.</p>;
 
   return (
     <div className="mt-7">
-      {products.map((obj, i) => (
-        <div
-          key={obj.id || obj._id || i}
-          className="flex justify-between items-center mt-3 pb-1 border-b border-white-100"
+      {/* Title & Add New Button */}
+      <div className="flex justify-between items-center mb-4">
+        <h2 className="text-2xl font-bold text-gray-800">My Products</h2>
+        {/* <button
+          onClick={() => setShowAddNew(true)}
+          className="flex items-center gap-2 px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700 transition-colors"
         >
-          <div className="flex items-center gap-1.5">
-            <div className="border rounded-lg w-[60px] h-[60px] flex justify-center items-center border-white-100">
-              <Image
-                src={obj?.productImage}
-                alt="product"
-                width={60}
-                height={60}
-                className="w-full h-full"
+          <Plus className="w-4 h-4" /> Add New Product
+        </button> */}
+      </div>
+
+      {/* Product List */}
+      <div className="space-y-4">
+        {products.map((obj) => (
+          <div
+            key={obj.id || obj._id}
+            className="bg-white rounded-lg shadow-md p-4 flex gap-4 hover:shadow-lg transition-shadow duration-300"
+          >
+            {/* Product Image */}
+            <div className="flex-shrink-0 w-24 h-24 border rounded-lg overflow-hidden">
+              <img
+                src={obj.productImage || "/placeholder.png"}
+                alt={obj.productName}
+                className="w-full h-full object-cover"
               />
             </div>
-            <p>
-              <span className="text-blacks-400 block text-base font-medium !leading-130">
-                {obj.productName}
-              </span>
-              <span className="text-greys-1400 block text-sm font-normal !leading-130">
-                {obj.productPrize}
-              </span>
-            </p>
-          </div>
 
-          <div className="flex items-center gap-2">
-            <Pencil
-              className="w-6 h-6 text-[#01BA5D] cursor-pointer"
-              onClick={() => openEditModal(obj)}
-            />
-            <Trash2
-              className="w-6 h-6 text-red-600 cursor-pointer"
-              onClick={() => handleDelete(obj.id)}
-            />
-            <p
-              className={`py-1 px-2.5 text-sm text-[#324E32] font-semibold !leading-130 w-fit ${
-                obj.inStock ? "bg-[#EAFFEA]" : "bg-[#E6E6E6]"
-              }`}
-            >
-              {obj.inStock ? "In Stock" : "Out of Stock"}
-            </p>
-          </div>
-        </div>
-      ))}
+            {/* Product Details */}
+            <div className="flex-1 flex flex-col justify-between">
+              <div className="flex flex-col gap-1">
+                <h3 className="text-lg font-semibold text-gray-800">{obj.productName}</h3>
+                <p className="text-sm text-gray-500">
+                  <span className="font-medium">Category:</span> {obj.productCategory || "-"}
+                </p>
+                <p className="text-sm text-gray-700 flex items-center gap-2">
+                  <span className="font-medium">Price:</span> ₹{obj.productPrize}
+                  {obj.discountPrize && (
+                    <span className="text-gray-400 line-through ml-2">
+                      ₹{obj.discountPrize}
+                    </span>
+                  )}
+                </p>
+                {obj.description && (
+                  <p className="text-xs text-gray-500 truncate max-w-[300px]">
+                    <span className="font-medium">Description:</span> {obj.description}
+                  </p>
+                )}
+              </div>
 
-      {/* Edit Modal */}
-      {editProduct && (
+              {/* Stock & Actions */}
+              <div className="flex justify-between items-center mt-3">
+                <span
+                  className={`px-2 py-1 rounded text-xs font-semibold ${obj.inStock ? "bg-green-100 text-green-800" : "bg-gray-200 text-gray-600"
+                    }`}
+                >
+                  {obj.inStock ? "In Stock" : "Out of Stock"}
+                </span>
+
+                <div className="flex gap-2">
+                  <button
+                    onClick={() => openEditModal(obj)}
+                    className="px-3 py-1 text-green-600 border border-green-600 rounded hover:bg-green-50 transition-colors duration-200"
+                  >
+                    Edit
+                  </button>
+                  <button
+                    onClick={() => handleDelete(obj.id)}
+                    className="px-3 py-1 text-red-600 border border-red-600 rounded hover:bg-red-50 transition-colors duration-200"
+                  >
+                    Delete
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
+
+
+      {/* Edit / Add Modal */}
+      {(editProduct || showAddNew) && (
         <div className="fixed inset-0 flex justify-center items-center bg-black bg-opacity-40 z-50">
-          <div className="bg-white p-6 rounded-lg w-[400px] overflow-y-auto max-h-[90vh]">
-            <h2 className="text-xl font-semibold mb-4">Edit Product</h2>
+          <div className="bg-white p-6 rounded-lg w-full max-w-md overflow-y-auto max-h-[90vh] shadow-lg">
+            <h2 className="text-xl font-semibold mb-4">
+              {showAddNew ? "Add New Product" : "Edit Product"}
+            </h2>
 
-            <label className="block mb-2">
-              Name:
+            <label className="block mb-3">
+              <span className="font-medium text-gray-700">Name:</span>
               <input
                 type="text"
                 name="productName"
                 value={formDetails.productName}
                 onChange={handleChange}
-                className="w-full border px-2 py-1 rounded mt-1"
+                className="w-full border px-3 py-2 rounded mt-1 focus:outline-none focus:ring-2 focus:ring-green-400"
               />
             </label>
 
-            <label className="block mb-2">
-              Description:
+            <label className="block mb-3">
+              <span className="font-medium text-gray-700">Description:</span>
               <textarea
                 name="description"
                 value={formDetails.description}
                 onChange={handleChange}
-                className="w-full border px-2 py-1 rounded mt-1"
+                className="w-full border px-3 py-2 rounded mt-1 focus:outline-none focus:ring-2 focus:ring-green-400"
               />
             </label>
 
-            <label className="block mb-2">
-              Product Image:
+            <label className="block mb-3">
+              <span className="font-medium text-gray-700">Product Image:</span>
               <CustomUploadImage
                 image={formDetails.productImage}
                 onChange={handleImageUpload}
               />
             </label>
 
-            <label className="block mb-2">
-              Category:
+            <label className="block mb-3">
+              <span className="font-medium text-gray-700">Category:</span>
               <input
                 type="text"
                 name="productCategory"
                 value={formDetails.productCategory}
                 onChange={handleChange}
-                className="w-full border px-2 py-1 rounded mt-1"
+                className="w-full border px-3 py-2 rounded mt-1 focus:outline-none focus:ring-2 focus:ring-green-400"
               />
             </label>
 
-            <label className="block mb-2">
-              Unit:
+            <label className="block mb-3">
+              <span className="font-medium text-gray-700">Unit:</span>
               <input
                 type="number"
                 name="productUnit"
                 value={formDetails.productUnit}
                 onChange={handleChange}
-                className="w-full border px-2 py-1 rounded mt-1"
+                className="w-full border px-3 py-2 rounded mt-1 focus:outline-none focus:ring-2 focus:ring-green-400"
               />
             </label>
 
-            <label className="block mb-2">
-              Price:
+            <label className="block mb-3">
+              <span className="font-medium text-gray-700">Price:</span>
               <input
                 type="number"
                 name="productPrize"
                 value={formDetails.productPrize}
                 onChange={handleChange}
-                className="w-full border px-2 py-1 rounded mt-1"
+                className="w-full border px-3 py-2 rounded mt-1 focus:outline-none focus:ring-2 focus:ring-green-400"
               />
             </label>
 
-            <label className="block mb-2">
-              Discount Price:
+            <label className="block mb-3">
+              <span className="font-medium text-gray-700">Discount Price:</span>
               <input
                 type="number"
                 name="discountPrize"
                 value={formDetails.discountPrize}
                 onChange={handleChange}
-                className="w-full border px-2 py-1 rounded mt-1"
+                className="w-full border px-3 py-2 rounded mt-1 focus:outline-none focus:ring-2 focus:ring-green-400"
               />
             </label>
 
-            <label className="flex items-center mb-4">
-              <span>In Stock:</span>
+            <label className="flex items-center mb-4 gap-2">
               <input
                 type="checkbox"
                 name="inStock"
                 checked={formDetails.inStock}
                 onChange={handleChange}
-                className="ml-2 w-5 h-5 accent-greens-900"
+                className="w-5 h-5 accent-green-600"
               />
+              <span className="font-medium text-gray-700">In Stock</span>
             </label>
 
-            <div className="flex justify-end gap-2">
+            <div className="flex justify-end gap-3">
               <button
                 onClick={closeEditModal}
-                className="px-4 py-2 bg-gray-300 rounded"
+                className="px-4 py-2 bg-gray-300 rounded hover:bg-gray-400 transition-colors"
               >
                 Cancel
               </button>
               <button
                 onClick={handleSave}
-                className="px-4 py-2 bg-green-500 text-white rounded"
+                className="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700 transition-colors"
               >
                 Save
               </button>
