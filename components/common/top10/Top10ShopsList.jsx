@@ -23,7 +23,7 @@ const Top10ShopsList = () => {
         const data = await getAllUserList();
 
         // ✅ Only shopkeppers
-        const filtered = data.filter((item) => item.isShopkeeper === true && item.status === "approved");
+        const filtered = data.filter((item) => item.userRole === "shopkepper" && item.status === "approved");
 
         // ✅ Sort shopkeppers by wallet (highest first) and take Top 10
         const top10 = filtered

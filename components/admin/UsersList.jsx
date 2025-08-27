@@ -20,9 +20,7 @@ const UsersList = () => {
     const fetchUserDetails = async () => {
       try {
         const data = await getAllUserList();
-        const filtered = data.filter(
-          (item) => !item.isshopkepper && !item.isAdmin
-        );
+        const filtered = data.filter((item) => item.userRole === "customer");
         const findAdmin = data.find(item=>item.isAdmin = true);
         setAdminData(findAdmin)
         setUserData(filtered);
