@@ -187,3 +187,4 @@ const SignIn = () => {
 };
 
 export default SignIn;
+"use client";
