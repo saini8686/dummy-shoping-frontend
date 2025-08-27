@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import { getAllProducts } from "../../../services/product.service";
 import { createPayment } from "../../../services/payment.service";
-import { getUserById } from "@/services/users.service"; // ✅ added
+import { getUser } from "@/services/users.service"; // ✅ added
 import Cookies from "js-cookie";
 import { CustomButton } from "@/components/common/CustomButton";
 import { Dialog } from "@headlessui/react";
@@ -70,7 +70,7 @@ const ProductDetails = ({ shopId }) => {
         return;
       }
 
-      const userInfo = await getUserById(userId, token);
+      const userInfo = await getUser(userId, token);
       const value = parseFloat(amount);
 
       const data = {

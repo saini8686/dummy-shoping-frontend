@@ -19,7 +19,7 @@ export const getAllUserList = async () => { // Get token from browser cookies
 
   return res.data;
 };
-export const getUserById = async (user_Id, token) => {
+export const getUser = async (user_Id, token) => {
   console.log("Fetching user with ID:", user_Id);
   console.log("Using token:", token);
 
