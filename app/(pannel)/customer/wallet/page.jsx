@@ -5,7 +5,7 @@ import BottomBarShopKepper from "@/components/shopkepper/common/BottomBarShopKep
 import RecentTransition from "@/components/shopkepper/wallet/RecentTransition";
 import TotalAmount from "@/components/shopkepper/wallet/TotalAmount";
 import { useEffect, useState } from "react";
-import { getUser } from "@/services/users.service";
+import { getUserById } from "@/services/users.service";
 import { getAllNotifications } from "@/services/notification.service";
 import Cookies from "js-cookie";
 import BottomBar from "@/components/common/BottomBar";
@@ -20,7 +20,7 @@ const Page = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const userData = await getUser(userId, token);
+        const userData = await getUserById(userId, token);
         setTotalAmount(userData);
 
         const payData = await getAllNotifications();

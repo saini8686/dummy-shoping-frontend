@@ -6,7 +6,7 @@ import SearchBar from "@/components/common/SearchBar";
 import Navbar from "@/components/common/Navbar";
 import NearByShare from "@/components/customer/nearby-share/NearByShare";
 import Cookies from "js-cookie";
-import { getUser } from "@/services/users.service";
+import { getUserById } from "@/services/users.service";
 
 const Page = () => {
   const userId = Cookies.get("userId");
@@ -18,7 +18,7 @@ const Page = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const userData = await getUser(userId, token);
+        const userData = await getUserById(userId, token);
         console.log("User Data:", userData);
         setUserInfo(userData);
       } catch (error) {

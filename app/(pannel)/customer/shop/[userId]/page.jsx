@@ -13,7 +13,7 @@ import { CustomButton } from "@/components/common/CustomButton";
 import ProductDetails from "@/components/customer/product/ProductDetails";
 
 import { getBasicDetails } from "@/services/basic-details.service";
-import { getUser, updateUser } from "@/services/users.service";
+import { getUserById, updateUser } from "@/services/users.service";
 import { createPayment } from "@/services/payment.service";
 
 const Page = () => {
@@ -35,7 +35,7 @@ const Page = () => {
     const fetchDetails = async () => {
       try {
         const [shopUser, shopData] = await Promise.all([
-          getUser(shopId, token),
+          getUserById(shopId, token),
           getBasicDetails(shopId),
         ]);
         setShopUserData(shopUser);
@@ -60,7 +60,7 @@ const Page = () => {
       return toast.error("Rate this shop (1–5 stars).");
 
     try {
-      const userInfo = await getUser(userId, token);
+      const userInfo = await getUserById(userId, token);
 
       const data = {
         userId,

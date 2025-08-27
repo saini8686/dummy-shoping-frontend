@@ -8,7 +8,7 @@ import "react-toastify/dist/ReactToastify.css";
 
 import { CustomButton } from "@/components/common/CustomButton";
 import Icon from "@/components/common/Icons";
-import { getUser, updateUserWallet2UsingSMP } from "@/services/users.service";
+import { getUserById, updateUserWallet2UsingSMP } from "@/services/users.service";
 import { createPayment } from "@/services/payment.service";
 import Link from "next/link";
 
@@ -39,7 +39,7 @@ const TotalAmount = ({ total, isAdmin, isShopkeeper, breakdown }) => {
     }
 
     try {
-      const userInfo = await getUser(userId, token);
+      const userInfo = await getUserById(userId, token);
 
       const data = {
         userId,
