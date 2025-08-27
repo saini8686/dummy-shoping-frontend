@@ -20,11 +20,11 @@ const Top10ShopsList = () => {
   useEffect(() => {
     const fetchUserDetails = async () => {
       try {
-        const data = await getAllUserList();        
+        const data = await getAllUserList();
 
         // ✅ Only shopkeppers
         const filtered = data.filter((item) => item.isShopkeeper === true && item.status === "approved");
-        
+
         // ✅ Sort shopkeppers by wallet (highest first) and take Top 10
         const top10 = filtered
           .sort((a, b) => (b.wallet || 0) - (a.wallet || 0))
@@ -138,7 +138,7 @@ const Top10ShopsList = () => {
                         {user?.name}
                       </h4>
                       <p className="text-[#858585] text-xs">{user?.email}</p>
-                      <span
+                      {/* <span
                         className={`inline-block mt-1 text-xs font-medium px-2 py-1 rounded-full ${user.status === "approved"
                           ? "bg-green-100 text-green-700"
                           : user.status === "pending"
@@ -147,7 +147,8 @@ const Top10ShopsList = () => {
                           }`}
                       >
                         {user.status}
-                      </span>
+                      </span> */}
+                      <p className="text-[#858585] text-xs">Total Sales: {user?.wallet + user?.wallet2}</p>
                     </Link>
                   </div>
                 </div>
