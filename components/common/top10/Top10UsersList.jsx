@@ -78,10 +78,6 @@ const Top10UsersList = () => {
                   <div className="flex items-center">
                     <button
                       className="bg-white rounded-full me-6"
-                      onClick={() => {
-                        setSelectedUser(user);
-                        setShowModal(true);
-                      }}
                     >
                       <Icon icon="userProfile" />
                     </button>

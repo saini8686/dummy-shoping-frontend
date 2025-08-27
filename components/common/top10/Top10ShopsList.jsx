@@ -128,7 +128,7 @@ const Top10ShopsList = () => {
                 >
                   <div className="flex items-center">
                     <Link
-                      href={`/admin/user-details?id=${user.userId}`}
+                      href="#"
                       className="bg-white rounded-full me-6"
                     >
                       <Icon icon="userProfile" />
