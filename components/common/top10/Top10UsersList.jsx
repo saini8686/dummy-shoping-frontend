@@ -86,7 +86,7 @@ const Top10UsersList = () => {
                         {user?.name}
                       </h4>
                       <p className="text-[#858585] text-xs">Email: {user?.email}</p>
-                      <p className="text-[#858585] text-xs">Total Buy: {user?.wallet + user?.wallet2}</p>
+                      <p className="text-[#858585] text-xs">Total Earning SMP: {user?.wallet + user?.wallet2}</p>
                     </div>
                   </div>
                 </div>
