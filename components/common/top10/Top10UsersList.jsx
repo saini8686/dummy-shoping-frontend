@@ -85,7 +85,8 @@ const Top10UsersList = () => {
                       <h4 className="text-[#01BE62] text-base font-bold mb-2">
                         {user?.name}
                       </h4>
-                      <p className="text-[#858585] text-xs">{user?.email}</p>
+                      <p className="text-[#858585] text-xs">Email: {user?.email}</p>
+                      <p className="text-[#858585] text-xs">Total Sales: {user?.wallet + user?.wallet2}</p>
                     </div>
                   </div>
                 </div>
