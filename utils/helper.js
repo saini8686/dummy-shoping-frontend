@@ -383,7 +383,7 @@ export const LIST_PRODUCT_FILTER = [
     name: "Fruits",
   },
 ];
-export const VEDIO_LIST = ["/assets/video/sow-pay.mp4", "/assets/video/sow-pay.mp4", "/assets/video/sow-pay.mp4"]
+export const VEDIO_LIST = ["/assets/video/sow-pay.mp4", "", "", "/assets/video/sow-pay1.mp4", "", "", "/assets/video/sow-pay.mp4", "/assets/video/sow-pay.mp4", "/assets/video/sow-pay.mp4"]
 export const GROSERY_SLIDER_LIST = [
   {
     productName: "Fresh Vegetables",

@@ -108,7 +108,7 @@ const Navbar = ({ userInfo }) => {
       </div>
 
       <p className="text-lg text-white font-roboto mt-4 font-medium !leading-130">
-        Your Order will be packed in 11 minutes
+        आपका स्वागत है आज आप क्या खरीदना पसंद करेंगे?
       </p>
     </div>
   );

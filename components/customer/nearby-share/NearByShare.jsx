@@ -21,7 +21,6 @@ const NearByShare = ({ search }) => {
   const [loading, setLoading] = useState(true);
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
-  const [showAdsOnce, setShowAdsOnce] = useState(false);
   const [userCoords, setUserCoords] = useState(null);
   const [selectedCategory, setSelectedCategory] = useState("all");
   const [availableCategories, setAvailableCategories] = useState([]);
@@ -122,8 +121,6 @@ const NearByShare = ({ search }) => {
 
         const categories = Array.from(new Set(allShops.map((shop) => shop.category)));
         setAvailableCategories(categories);
-
-        if (!showAdsOnce) setShowAdsOnce(true);
       } catch (err) {
         console.error("Failed to fetch shops", err);
       } finally {
@@ -140,24 +137,26 @@ const NearByShare = ({ search }) => {
   }, [search]);
 
   // 🪄 Filter + sort
-  // 🪄 Filter + sort
   const filteredShops = shops
     .filter((shop) =>
       selectedCategory === "all" ? true : shop.category === selectedCategory
     )
     .sort((a, b) => {
-      if (!userCoords) return 0;
+      if (!sortByDistance || !userCoords) return 0;
 
-      if (sortByDistance) {
-        if (a.distance == null) return 1;
-        if (b.distance == null) return -1;
-        return a.distance - b.distance;
-      }
+      // Handle cases where distance might be null or undefined
+      const aDistance = a.distance !== null && a.distance !== undefined ? a.distance : Infinity;
+      const bDistance = b.distance !== null && b.distance !== undefined ? b.distance : Infinity;
 
-      // ✅ Default: keep API order
-      return 0;
+      return aDistance - bDistance;
     });
 
+  // Function to check if we should show video after a specific shop index
+  const shouldShowVideoAfter = (index) => {
+    // Show video after shop indices 1, 3, 5, 7 (which are 0-indexed: 0, 2, 4, 6)
+    const videoPositions = [0, 3, 6];
+    return videoPositions.includes(index);
+  };
 
   return (
     <>
@@ -188,7 +187,7 @@ const NearByShare = ({ search }) => {
       )}
 
       {/* Sort by distance toggle */}
-      {userCoords && (
+      {/* {userCoords && (
         <div className="mt-4 flex items-center justify-end">
           <label className="flex items-center cursor-pointer">
             <span className="mr-2 text-sm font-medium text-blacks-200">
@@ -212,49 +211,14 @@ const NearByShare = ({ search }) => {
             </div>
           </label>
         </div>
-      )}
+      )} */}
 
       {/* No shop message */}
       {filteredShops.length === 0 && !loading && (
         <p className="mt-6 text-center text-greys-400">No shops found.</p>
       )}
 
-      {/* Video Ads */}
-      {showAdsOnce && (
-        <Swiper loop slidesPerView={1} spaceBetween={16} modules={[EffectFade, Autoplay]}>
-          {VEDIO_LIST.map((obj, i) => (
-            <SwiperSlide key={i} className="h-full">
-              <div className="relative max-w-[540px] w-full mx-auto mt-8">
-                <video
-                  ref={(el) => (videoRefs.current[i] = el)}
-                  height={160}
-                  className="h-[263px] object-cover w-full"
-                  src={obj}
-                  loop
-                  onClick={() => togglePlay(i)}
-                />
-                {!isPlaying[i] && (
-                  <button
-                    onClick={() => togglePlay(i)}
-                    className="absolute inset-0 flex items-center justify-center bg-[#D1D1D1]/80"
-                  >
-                    <Image
-                      src="/assets/images/svg/play.svg"
-                      width={56}
-                      height={56}
-                      sizes="100vw"
-                      alt="Play"
-                      className="w-[56px] h-[56px]"
-                    />
-                  </button>
-                )}
-              </div>
-            </SwiperSlide>
-          ))}
-        </Swiper>
-      )}
-
-      {/* Shops */}
+      {/* Shops and Videos */}
       {filteredShops.map((obj, i) => (
         <div key={i}>
           <div className="h-auto mt-6 rounded-xl shadow-lg p-4 bg-white transition hover:shadow-xl">
@@ -332,6 +296,35 @@ const NearByShare = ({ search }) => {
               </div>
             </div>
           </div>
+
+          {/* Show video after specific shop indices (1, 3, 5, 7) */}
+          {shouldShowVideoAfter(i) && i < VEDIO_LIST.length && (
+            <div className="relative max-w-[540px] w-full mx-auto mt-8">
+              <video
+                ref={(el) => (videoRefs.current[i] = el)}
+                height={160}
+                className="h-[263px] object-cover w-full"
+                src={VEDIO_LIST[i]}
+                loop
+                onClick={() => togglePlay(i)}
+              />
+              {!isPlaying[i] && (
+                <button
+                  onClick={() => togglePlay(i)}
+                  className="absolute inset-0 flex items-center justify-center bg-[#D1D1D1]/80"
+                >
+                  <Image
+                    src="/assets/images/svg/play.svg"
+                    width={56}
+                    height={56}
+                    sizes="100vw"
+                    alt="Play"
+                    className="w-[56px] h-[56px]"
+                  />
+                </button>
+              )}
+            </div>
+          )}
 
           {i === filteredShops.length - 2 && <OfferSlider />}
         </div>
