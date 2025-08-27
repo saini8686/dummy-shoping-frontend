@@ -119,7 +119,7 @@ const Page = () => {
               customClass="mt-4 w-full text-sm text-center"
               onClick={() => setIsOpen(true)}
             >
-              Pay
+              Enter Shopping Amount
             </CustomButton>
 
             {/* --- Shop Images --- */}
