@@ -43,8 +43,8 @@ const Recharges = () => {
 
       const filtered = Array.isArray(allPayments)
         ? allPayments
-            .filter((p) => p.paymentMethod === "recharge")
-            .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
+          .filter((p) => p.paymentMethod === "recharge")
+          .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
         : [];
 
       setPayments(filtered);
@@ -140,11 +140,10 @@ const Recharges = () => {
           <button
             key={status}
             onClick={() => setStatusFilter(status)}
-            className={`px-4 py-1 text-sm rounded-full border ${
-              statusFilter === status
+            className={`px-4 py-1 text-sm rounded-full border ${statusFilter === status
                 ? "bg-greens-900 text-white"
                 : "bg-white text-gray-600"
-            }`}
+              }`}
           >
             {status.charAt(0).toUpperCase() + status.slice(1)}
           </button>
@@ -167,13 +166,12 @@ const Recharges = () => {
                   #{i + 1} • {obj?.userName}
                 </h2>
                 <span
-                  className={`text-xs font-semibold px-2 py-1 rounded-full uppercase tracking-wide ${
-                    obj.status === "approved"
+                  className={`text-xs font-semibold px-2 py-1 rounded-full uppercase tracking-wide ${obj.status === "approved"
                       ? "bg-green-200 text-green-800"
                       : obj.status === "pending"
-                      ? "bg-yellow-200 text-yellow-800"
-                      : "bg-red-200 text-red-800"
-                  }`}
+                        ? "bg-yellow-200 text-yellow-800"
+                        : "bg-red-200 text-red-800"
+                    }`}
                 >
                   {obj.status}
                 </span>
@@ -208,12 +206,28 @@ const Recharges = () => {
               </div>
 
               <div className="px-5 pb-4">
-                <button
+                {/* <button
                   onClick={() => handleViewDetails(obj)}
                   className="w-full bg-greens-900 hover:bg-greens-800 text-white text-sm font-semibold py-2 rounded-xl transition duration-200"
                 >
                   View Details
-                </button>
+                </button> */}
+                <div className="mt-6 flex justify-end gap-3">
+                  <CustomButton
+                    disabled={isProcessing || selectedUser?.totalAmount > 5000}
+                    onClick={() => handleApprove(selectedUser, "rejected")}
+                    className="px-4 py-2 rounded text-white bg-red-600 hover:bg-red-700"
+                  >
+                    {isProcessing ? "Processing..." : "Reject"}
+                  </CustomButton>
+                  <CustomButton
+                    disabled={isProcessing || selectedUser?.totalAmount > 5000}
+                    onClick={() => handleApprove(selectedUser, "approved")}
+                    className="px-4 py-2 rounded text-white bg-green-600 hover:bg-green-700"
+                  >
+                    {isProcessing ? "Processing..." : "Approve"}
+                  </CustomButton>
+                </div>
               </div>
             </div>
           ))}
