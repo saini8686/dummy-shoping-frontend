@@ -17,7 +17,7 @@ const BasicDetailForm = () => {
   const router = useRouter();
 
   const [formDetails, setFormDetails] = useState({
-    username: "",
+    username: "Not Provided",
     village: "",
     city: "",
     district: "",
@@ -153,7 +153,7 @@ const BasicDetailForm = () => {
 
         // Reset form
         setFormDetails({
-          username: "",
+          username: "Not Provided",
           village: "",
           city: "",
           district: "",
@@ -217,7 +217,7 @@ const BasicDetailForm = () => {
               <div className="px-4 py-4 bg-white rounded-b-lg space-y-4">
                 {index === 0 && (
                   <>
-                    <CustomInput
+                    {/* <CustomInput
                       placeholder="Name"
                       name="username"
                       type="text"
@@ -230,7 +230,7 @@ const BasicDetailForm = () => {
                           username: e.target.value,
                         })
                       }
-                    />
+                    /> */}
                     <CustomInput
                       placeholder="Village"
                       name="village"
