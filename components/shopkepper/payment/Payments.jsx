@@ -260,7 +260,7 @@ const Payments = () => {
               <div className="px-5 pb-4">
                 <div className="mt-6 flex justify-end gap-3">
                   <CustomButton
-                    disabled={selectedUser?.totalAmount > 5000 || loadingAction === "rejected"}
+                    disabled={selectedUser?.totalAmount > 0 || loadingAction === "rejected"}
                     onClick={() => handleApprove(selectedUser, "rejected")}
                     className="px-4 py-2 rounded text-white bg-red-600 hover:bg-red-700 flex items-center justify-center gap-2"
                   >
@@ -275,7 +275,7 @@ const Payments = () => {
                   </CustomButton>
 
                   <CustomButton
-                    disabled={selectedUser?.totalAmount > 5000 || loadingAction === "approved"}
+                    disabled={selectedUser?.totalAmount > 0 || loadingAction === "approved"}
                     onClick={() => handleApprove(selectedUser, "approved")}
                     className="px-4 py-2 rounded text-white bg-green-600 hover:bg-green-700 flex items-center justify-center gap-2"
                   >

@@ -214,16 +214,16 @@ const Recharges = () => {
                 </button> */}
                 <div className="mt-6 flex justify-end gap-3">
                   <CustomButton
-                    disabled={isProcessing || selectedUser?.totalAmount > 5000}
+                    disabled={isProcessing || selectedUser?.totalAmount > 0}
                     onClick={() => handleApprove(selectedUser, "rejected")}
-                    className="px-4 py-2 rounded text-white bg-red-600 hover:bg-red-700"
+                    className="px-4 py-2 rounded text-white bg-red-600 hover:bg-red-700 w-full"
                   >
                     {isProcessing ? "Processing..." : "Reject"}
                   </CustomButton>
                   <CustomButton
-                    disabled={isProcessing || selectedUser?.totalAmount > 5000}
+                    disabled={isProcessing || selectedUser?.totalAmount > 0}
                     onClick={() => handleApprove(selectedUser, "approved")}
-                    className="px-4 py-2 rounded text-white bg-green-600 hover:bg-green-700"
+                    className="px-4 py-2 rounded text-white bg-green-600 hover:bg-green-700 w-full"
                   >
                     {isProcessing ? "Processing..." : "Approve"}
                   </CustomButton>
