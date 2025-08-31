@@ -29,7 +29,7 @@ const SelectRole = () => {
         onClick={() => selectRole("shopkepper")}
         className="block mt-3 py-[15px] w-full border-white border rounded-lg text-center text-white font-semibold hover:bg-white duration-300 hover:!text-greens-900"
       >
-        shopkepper
+        Shopkepper
       </button>
 
       <button

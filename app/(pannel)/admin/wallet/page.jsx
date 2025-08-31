@@ -38,7 +38,7 @@ const Page = () => {
             wallet2: parseFloat(admin.wallet2) || 0,
           });
 
-          setTotalAmount(wallet1 + wallet2 + (parseFloat(admin.wallet) || 0));
+          setTotalAmount((parseFloat(admin.wallet) || 0));
         }
 
         const notifResponse = await getAllNotifications();

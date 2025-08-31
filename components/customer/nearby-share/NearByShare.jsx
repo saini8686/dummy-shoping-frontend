@@ -253,26 +253,7 @@ const NearByShare = ({ search }) => {
                   <small className="text-sm text-green-600 font-medium block mt-1">
                     {obj?.address}
                   </small>
-                  {obj.latitude && obj.longitude && (
-                    <a
-                      href={`https://www.google.com/maps?q=${obj.latitude},${obj.longitude}`}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="text-blue-600 text-sm font-medium mt-2 inline-block"
-                    >
-                      📍 View on Map
-                    </a>
-                  )}
-                </div>
 
-                <div className="mt-3">
-                  <CustomButton url={`../customer/${obj.path}`} customClass="w-fit text-sm">
-                    View Shop
-                  </CustomButton>
-                </div>
-
-                <div className="flex justify-between items-center mt-3">
-                  {/* Stars */}
                   <div className="flex items-center gap-[2px]">
                     {Array.from({ length: 5 }, (_, index) => (
                       <span
@@ -287,6 +268,26 @@ const NearByShare = ({ search }) => {
                       </span>
                     ))}
                   </div>
+                </div>
+
+                <div className="mt-3">
+                  <CustomButton url={`../customer/${obj.path}`} customClass="w-fit text-sm">
+                    View Shop
+                  </CustomButton>
+                </div>
+
+                <div className="flex justify-between items-center mt-1 mb-2">
+                  {/* Stars */}
+                  {obj.latitude && obj.longitude && (
+                    <a
+                      href={`https://www.google.com/maps?q=${obj.latitude},${obj.longitude}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-blue-600 text-sm font-medium mt-2 inline-block"
+                    >
+                      📍 View on Map
+                    </a>
+                  )}
 
                   {/* Distance */}
                   <p className="text-xs italic font-medium text-reds-900">
