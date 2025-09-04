@@ -91,7 +91,7 @@ const Recharges = () => {
           earnType: "recharge",
           earnUserId: user.userId,
           earnUserName: userData?.name || "self",
-          status: "sent",
+          status: "approved",
         });
 
         const updatedAdmin = {
