@@ -55,10 +55,10 @@ const SignUp = () => {
     e.preventDefault();
     setError(false);
 
-    if (auth === "customer" && formDetails.referralCode === "") {
-      toast.error("Referral Code is required.");
-      return;
-    }
+    // if (auth === "customer" && formDetails.referralCode === "") {
+    //   toast.error("Referral Code is required.");
+    //   return;
+    // }
     const isValid =
       formDetails.name &&
       formDetails.email &&
@@ -198,8 +198,8 @@ const SignUp = () => {
             placeholder="Referral Code"
             name="referralCode"
             type="text"
-            error={!formDetails.referralCode && error}
-            errorText="Referral Code is required"
+            // error={!formDetails.referralCode && error}
+            // errorText="Referral Code is required"
             value={formDetails.referralCode}
             onChange={(e) => setFormDetails({ ...formDetails, referralCode: e.target.value })}
           />}
