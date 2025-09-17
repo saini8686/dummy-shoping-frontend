@@ -195,7 +195,7 @@ const SignUp = () => {
           />
           {auth === "customer" && <CustomInput
             customClass="mt-4"
-            placeholder="Referral Code"
+            placeholder="Referral Code(Optional)"
             name="referralCode"
             type="text"
             // error={!formDetails.referralCode && error}
