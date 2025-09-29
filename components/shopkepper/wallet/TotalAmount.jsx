@@ -11,6 +11,7 @@ import Icon from "@/components/common/Icons";
 import { getUser, updateUserWallet2UsingSMP } from "@/services/users.service";
 import { createPayment } from "@/services/payment.service";
 import Link from "next/link";
+import { createWithdrawal } from "@/services/transactions.service";
 
 
 const TotalAmount = ({ total, isAdmin, isshopkepper, breakdown }) => {
@@ -21,9 +22,66 @@ const TotalAmount = ({ total, isAdmin, isshopkepper, breakdown }) => {
   const [showBalance, setShowBalance] = useState(false);
   const [showBalance1, setShowBalance1] = useState(false);
   const [showBalance2, setShowBalance2] = useState(false);
+  const [isOpenWithdrawal, setIsOpenWithdrawal] = useState(false);
+
 
   const token = Cookies.get("token");
   const userId = Cookies.get("userId");
+
+  const [amountWithdrawal, setAmountWithdrawal] = useState("");
+  const [method, setMethod] = useState("bank");
+
+  // Separate states for each method
+  const [bankDetails, setBankDetails] = useState({
+    holderName: "",
+    accountNumber: "",
+    ifsc: "",
+  });
+
+  const [upiId, setUpiId] = useState("");
+  const [paypalEmail, setPaypalEmail] = useState("");
+
+  const handleFormSubmit = async () => {
+    let payload = {
+      amount: amountWithdrawal,
+      method,
+    };
+
+    if (method === "bank") {
+      payload = { ...payload, ...bankDetails };
+    } else if (method === "upi") {
+      payload = { ...payload, ...bankDetails };
+      payload.upiId = upiId;
+    } else if (method === "paypal") {
+      payload = { ...payload, ...bankDetails };
+      payload.paypalEmail = paypalEmail;
+    }
+    const userInfo = await getUser(userId, token);
+    console.log("Submitting Withdrawal Request:", payload);
+    // 👉 Call your API here with `payload`
+    try {
+      const data = {
+        userId,
+        userName: userInfo?.name || "user",
+        receiverName: payload.holderName || "N/A",
+        paymentType: payload.method,
+        transactionAmount: amountWithdrawal,
+        paymentMethod: "recharge",
+        transactionId: payload.upiId || payload.paypalEmail || payload.accountNumber || "N/A",
+        status: "pending",
+        filename: "",
+        filepath: "",
+        mimetype: payload.ifsc || "N/A",
+      };
+      console.log(data, "data data data");
+
+      await createWithdrawal(data);
+      toast.success(`Submitting Withdrawal Request successfully!`);
+    } catch (error) {
+      toast.error("Unable to create the Withdrawal Request.");
+    }
+    setIsOpenWithdrawal(false);
+  };
 
   const handleSubmit = async () => {
     const value = parseFloat(amount);
@@ -96,7 +154,7 @@ const TotalAmount = ({ total, isAdmin, isshopkepper, breakdown }) => {
       <ToastContainer />
       <div className="px-6 w-full bg-greens-900/10 rounded-lg py-4">
         <div className="flex justify-between items-center">
-          <h2 className="text-blacks-200 text-sm">{isshopkepper ? "RECHARGE WALLET" :"YOUR LOCKED WALLET"}</h2>
+          <h2 className="text-blacks-200 text-sm">{isshopkepper ? "RECHARGE WALLET" : "YOUR LOCKED WALLET"}</h2>
           <button onClick={() => setShowBalance((prev) => !prev)}>
             <Icon icon="greenEye" />
           </button>
@@ -170,6 +228,14 @@ const TotalAmount = ({ total, isAdmin, isshopkepper, breakdown }) => {
               Update Customer Unlock Wallet
             </CustomButton>
           </div>
+          <div className="w-full mt-3">
+            <CustomButton
+              customClass="w-full sm:w-auto text-sm px-4 py-2 bg-primary text-white rounded-sm transition text-center"
+              url={'./withdrawal'}
+            >
+              Customer Withdrawl Request
+            </CustomButton>
+          </div>
         </>
       )}
 
@@ -188,6 +254,14 @@ const TotalAmount = ({ total, isAdmin, isshopkepper, breakdown }) => {
               <p className="text-greens-900 text-2xl mt-3 font-semibold">
                 {showBalance2 ? formatAmount(total?.wallet2) : "*******"}
               </p>
+              <div className="d-flex">
+                <CustomButton
+                  onClick={() => setIsOpenWithdrawal(true)}
+                  className="px-4 py-2 rounded-md bg-blue-600 hover:bg-blue-700 text-white"
+                >
+                  Withdrawal
+                </CustomButton>
+              </div>
             </div>
           </div>
         </>
@@ -262,8 +336,134 @@ const TotalAmount = ({ total, isAdmin, isshopkepper, breakdown }) => {
           </Dialog.Panel>
         </div>
       </Dialog>
+
+      <Dialog
+        open={isOpenWithdrawal}
+        onClose={() => setIsOpenWithdrawal(false)}
+        className="relative z-50"
+      >
+        <div className="fixed inset-0 bg-black/30" aria-hidden="true" />
+        <div className="fixed inset-0 flex items-center justify-center p-4">
+          <Dialog.Panel className="w-full max-w-md bg-white rounded-lg p-6 shadow-lg">
+            <Dialog.Title className="text-lg font-semibold text-gray-800 mb-4">
+              Withdrawal Request Form
+            </Dialog.Title>
+
+            {/* Amount */}
+            <input
+              type="number"
+              placeholder="Enter amount"
+              value={amountWithdrawal}
+              onChange={(e) => setAmountWithdrawal(e.target.value)}
+              className="w-full px-4 py-2 border rounded-md mb-4 focus:outline-none focus:ring focus:border-blue-300"
+            />
+
+            {/* Withdrawal Method */}
+            <select
+              value={method}
+              onChange={(e) => setMethod(e.target.value)}
+              className="w-full px-4 py-2 border rounded-md mb-4 focus:outline-none focus:ring focus:border-blue-300"
+            >
+              <option value="bank">Bank Transfer</option>
+              <option value="upi">UPI</option>
+              <option value="paypal">PayPal</option>
+            </select>
+
+            {/* Conditional Fields */}
+            {method === "bank" && (
+              <div className="space-y-3 mb-4">
+                <input
+                  type="text"
+                  placeholder="Account Holder Name"
+                  className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring focus:border-blue-300"
+                  value={bankDetails.holderName}
+                  onChange={(e) =>
+                    setBankDetails({ ...bankDetails, holderName: e.target.value })
+                  }
+                />
+                <input
+                  type="text"
+                  placeholder="Account Number"
+                  className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring focus:border-blue-300"
+                  value={bankDetails.accountNumber}
+                  onChange={(e) =>
+                    setBankDetails({ ...bankDetails, accountNumber: e.target.value })
+                  }
+                />
+                <input
+                  type="text"
+                  placeholder="IFSC Code"
+                  className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring focus:border-blue-300"
+                  value={bankDetails.ifsc}
+                  onChange={(e) =>
+                    setBankDetails({ ...bankDetails, ifsc: e.target.value })
+                  }
+                />
+              </div>
+            )}
+
+            {method === "upi" && (
+              <>
+                <input
+                  type="text"
+                  placeholder="Account Holder Name"
+                  className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring focus:border-blue-300"
+                  value={bankDetails.holderName}
+                  onChange={(e) =>
+                    setBankDetails({ ...bankDetails, holderName: e.target.value })
+                  }
+                />
+                <input
+                  type="text"
+                  placeholder="Enter UPI ID (e.g. name@upi)"
+                  className="w-full px-4 mt-3 py-2 border rounded-md mb-4 focus:outline-none focus:ring focus:border-blue-300"
+                  value={upiId}
+                  onChange={(e) => setUpiId(e.target.value)}
+                />
+              </>
+            )}
+
+            {method === "paypal" && (
+              <>
+                <input
+                  type="text"
+                  placeholder="Account Holder Name"
+                  className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring focus:border-blue-300"
+                  value={bankDetails.holderName}
+                  onChange={(e) =>
+                    setBankDetails({ ...bankDetails, holderName: e.target.value })
+                  }
+                />
+                <input
+                  type="email"
+                  placeholder="Enter PayPal Email"
+                  className="w-full px-4 mt-3 py-2 border rounded-md mb-4 focus:outline-none focus:ring focus:border-blue-300"
+                  value={paypalEmail}
+                  onChange={(e) => setPaypalEmail(e.target.value)}
+                />
+              </>
+            )}
+
+            {/* Buttons */}
+            <div className="flex justify-end gap-2">
+              <CustomButton
+                onClick={() => setIsOpenWithdrawal(false)}
+                className="px-4 py-2 rounded-md !bg-transparent !text-[#01be62] hover:!bg-gray-100"
+              >
+                Cancel
+              </CustomButton>
+              <CustomButton
+                onClick={handleFormSubmit}
+                className="px-4 py-2 rounded-md bg-blue-600 hover:bg-blue-700 text-white"
+              >
+                Submit Request
+              </CustomButton>
+            </div>
+          </Dialog.Panel>
+        </div>
+      </Dialog>
     </>
   );
 };
 
-export default TotalAmount;
+export default TotalAmount; 
