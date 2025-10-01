@@ -28,11 +28,13 @@ const Page = () => {
         const withdraw = await getAllWithdrawal();
 
         // Ensure type match for filtering
-        const filtered = withdraw.filter((item) => 
+        const filtered = withdraw.filter((item) =>
           String(item.userId) === String(userId)
         );
+        const sorted = filtered.sort((a, b) => Number(b.transId) - Number(a.transId));
 
-        setTransactions(filtered);
+        setTransactions(sorted);
+
       } catch (err) {
         console.error("Error fetching withdrawals:", err);
       }
@@ -52,8 +54,8 @@ const Page = () => {
         ) : (
           <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-2">
             {transactions.map((tx) => (
-              <div 
-                key={tx.transId} 
+              <div
+                key={tx.transId}
                 className="p-5 bg-white rounded-2xl shadow-md border hover:shadow-lg transition duration-200"
               >
                 {/* Header with User + Status */}

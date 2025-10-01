@@ -13,6 +13,7 @@ import { createPayment } from "@/services/payment.service";
 import Link from "next/link";
 import { createWithdrawal } from "@/services/transactions.service";
 import { createNotification } from "@/services/notification.service";
+import { useRouter } from "next/navigation"; 
 
 
 const TotalAmount = ({ total, isAdmin, isshopkepper, breakdown }) => {
@@ -24,6 +25,7 @@ const TotalAmount = ({ total, isAdmin, isshopkepper, breakdown }) => {
   const [showBalance1, setShowBalance1] = useState(false);
   const [showBalance2, setShowBalance2] = useState(false);
   const [isOpenWithdrawal, setIsOpenWithdrawal] = useState(false);
+  const router = useRouter();
 
 
   const token = Cookies.get("token");
@@ -110,6 +112,7 @@ const TotalAmount = ({ total, isAdmin, isshopkepper, breakdown }) => {
       }
 
       toast.success("Withdrawal Request submitted successfully!");
+      router.push("./withdrawal-request");
     } catch (error) {
       console.error(error);
 
