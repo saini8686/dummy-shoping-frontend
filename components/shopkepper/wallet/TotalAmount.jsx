@@ -8,10 +8,11 @@ import "react-toastify/dist/ReactToastify.css";
 
 import { CustomButton } from "@/components/common/CustomButton";
 import Icon from "@/components/common/Icons";
-import { getUser, updateUserWallet2UsingSMP } from "@/services/users.service";
+import { getUser, updateUser, updateUserWallet2UsingSMP } from "@/services/users.service";
 import { createPayment } from "@/services/payment.service";
 import Link from "next/link";
 import { createWithdrawal } from "@/services/transactions.service";
+import { createNotification } from "@/services/notification.service";
 
 
 const TotalAmount = ({ total, isAdmin, isshopkepper, breakdown }) => {
@@ -42,46 +43,88 @@ const TotalAmount = ({ total, isAdmin, isshopkepper, breakdown }) => {
   const [paypalEmail, setPaypalEmail] = useState("");
 
   const handleFormSubmit = async () => {
-    let payload = {
-      amount: amountWithdrawal,
-      method,
-    };
+    const value = parseFloat(amountWithdrawal);
+
+    // ✅ Validate minimum request amount
+    if (isNaN(value) || value < 100) {
+      toast.error("Minimum withdrawal request amount is 100.");
+      return;
+    }
+
+    let payload = { amount: value, method };
 
     if (method === "bank") {
       payload = { ...payload, ...bankDetails };
     } else if (method === "upi") {
-      payload = { ...payload, ...bankDetails };
-      payload.upiId = upiId;
+      payload = { ...payload, ...bankDetails, upiId };
     } else if (method === "paypal") {
-      payload = { ...payload, ...bankDetails };
-      payload.paypalEmail = paypalEmail;
+      payload = { ...payload, ...bankDetails, paypalEmail };
     }
+
     const userInfo = await getUser(userId, token);
-    console.log("Submitting Withdrawal Request:", payload);
-    // 👉 Call your API here with `payload`
+
     try {
+      // ✅ Check balance before withdrawal
+      if ((userInfo?.wallet2 || 0) < value) {
+        toast.error("Insufficient balance for withdrawal.");
+        return;
+      }
+
+      // ✅ Deduct balance first
+      const newBalance = (userInfo.wallet2 || 0) - value;
+      await updateUser({
+        ...userInfo,
+        wallet2: newBalance,
+      });
+
       const data = {
         userId,
         userName: userInfo?.name || "user",
         receiverName: payload.holderName || "N/A",
         paymentType: payload.method,
-        transactionAmount: amountWithdrawal,
+        transactionAmount: value,
         paymentMethod: "recharge",
-        transactionId: payload.upiId || payload.paypalEmail || payload.accountNumber || "N/A",
+        transactionId:
+          payload.upiId || payload.paypalEmail || payload.accountNumber || "N/A",
         status: "pending",
         filename: "",
         filepath: "",
         mimetype: payload.ifsc || "N/A",
       };
-      console.log(data, "data data data");
+
+      await createNotification({
+        userId, // or the admin userId
+        message: `New withdrawal request from ${userInfo?.name} of ₹${amountWithdrawal}.`,
+        earnCoin: 0,
+        earnType: "withdrawal_request",
+        earnUserId: userInfo?.userId,
+        earnUserName: userInfo?.name || "user",
+        status: "pending",
+      });
 
       await createWithdrawal(data);
-      toast.success(`Submitting Withdrawal Request successfully!`);
+
+      // ✅ Update UI instantly
+      if (typeof setTotal === "function") {
+        setTotal((prev) => ({ ...prev, wallet2: newBalance }));
+      }
+
+      toast.success("Withdrawal Request submitted successfully!");
     } catch (error) {
-      toast.error("Unable to create the Withdrawal Request.");
+      console.error(error);
+
+      // ❌ Rollback on failure
+      await updateUser({
+        ...userInfo,
+        wallet2: userInfo.wallet2 || 0,
+      });
+
+      toast.error("Unable to create the Withdrawal Request. Amount refunded.");
     }
+
     setIsOpenWithdrawal(false);
   };
+
 
   const handleSubmit = async () => {
     const value = parseFloat(amount);
@@ -254,12 +297,19 @@ const TotalAmount = ({ total, isAdmin, isshopkepper, breakdown }) => {
               <p className="text-greens-900 text-2xl mt-3 font-semibold">
                 {showBalance2 ? formatAmount(total?.wallet2) : "*******"}
               </p>
-              <div className="d-flex">
+              <div className="flex gap-3 w-full">
                 <CustomButton
                   onClick={() => setIsOpenWithdrawal(true)}
-                  className="px-4 py-2 rounded-md bg-blue-600 hover:bg-blue-700 text-white"
+                  className="flex-1 px-4 py-2 rounded-md bg-blue-600 hover:bg-blue-700 text-white text-center"
                 >
                   Withdrawal
+                </CustomButton>
+
+                <CustomButton
+                  url={'./withdrawal-request'}
+                  className="flex-1 px-4 py-2 rounded-md bg-blue-600 hover:bg-blue-700 text-white text-center"
+                >
+                  Withdrawal Requests
                 </CustomButton>
               </div>
             </div>

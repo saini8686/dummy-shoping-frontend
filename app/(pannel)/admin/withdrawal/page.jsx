@@ -4,6 +4,8 @@ import HeaderCustomer from "@/components/customer/HeaderCustomer";
 import BottomBarAdmin from '@/components/admin/common/BottomBarAdmin'
 import { useState, Suspense, useEffect } from 'react'
 import { getAllWithdrawal, updateWithdrawal, deleteWithdrawal } from '@/services/transactions.service'
+import { getUser, updateUser } from "@/services/users.service";
+import Cookies from "js-cookie";
 
 const Page = () => {
     const [transactions, setTransactions] = useState([]);
@@ -24,18 +26,36 @@ const Page = () => {
 
     const handleUpdateStatus = async (id, newStatus) => {
         try {
-            await updateWithdrawal(id, { status: newStatus });
+            // update withdrawal status
+            const withdrawal = await updateWithdrawal(id, { status: newStatus });
+
             setTransactions((prev) =>
                 prev.map((w) =>
-                    w.transactionId === id ? { ...w, status: newStatus } : w
+                    w.transId === id ? { ...w, status: newStatus } : w
                 )
             );
+
+            // ✅ If rejected → refund amount back to user
+            if (newStatus === "rejected") {
+                const token = Cookies.get("token");
+                const userInfo = await getUser(withdrawal.userId, token); // fetch user by id
+                const refundAmount = withdrawal.transactionAmount || 0;
+
+                await updateUser({
+                    ...userInfo,
+                    wallet2: (userInfo.wallet2 || 0) + refundAmount, // add back money
+                });
+
+                console.log(`Refunded ₹${refundAmount} back to user ${withdrawal.userId}`);
+            }
+
             setUpdated(true);
         } catch (err) {
             console.error("Error updating withdrawal:", err);
             alert("Could not update withdrawal");
         }
     };
+
 
     const handleDelete = async (id) => {
         if (!window.confirm("Are you sure you want to delete this withdrawal?")) return;
@@ -63,10 +83,10 @@ const Page = () => {
             <HeaderCustomer name="Withdrawal Requests" />
             <div className="pb-20 mt-10 px-4">
                 <div className="overflow-x-auto">
-                    <table className="min-w-full border border-gray-300 rounded-lg shadow-sm" style={{ minWidth: "1800px;"}}>
+                    <table className="min-w-full border border-gray-300 rounded-lg shadow-sm" style={{ minWidth: "1800px;" }}>
                         <thead className="bg-green-200">
                             <tr>
-                                {["ID", "Name", "Holder Name", 'Account/UPI/Paypal Email', "Amount",  "IFSC", 'Payment Type', "Status", "Created At", "Actions"].map((title) => (
+                                {["ID", "Name", "Holder Name", 'Account/UPI/Paypal Email', "Amount", "IFSC", 'Payment Type', "Status", "Created At", "Actions"].map((title) => (
                                     <th key={title} className="p-3 text-left text-gray-700 font-medium">
                                         {title}
                                     </th>
@@ -99,24 +119,36 @@ const Page = () => {
                                         </span>
                                     </td>
                                     <td className="p-3">{new Date(tx.createdAt).toLocaleString()}</td>
-                                    <td className="p-3 flex gap-2">
-                                        <select
-                                            value={tx.status}
-                                            onChange={(e) =>
-                                                handleUpdateStatus(tx.transId, e.target.value)
-                                            }
-                                            className="border rounded-md px-2 py-1 text-sm hover:border-blue-400 focus:outline-none focus:ring focus:ring-blue-200"
-                                        >
-                                            <option value="pending">Pending</option>
-                                            <option value="approved">Approved</option>
-                                            <option value="rejected">Rejected</option>
-                                        </select>
-                                        <button
-                                            onClick={() => handleDelete(tx.transId)}
-                                            className="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded-md text-sm font-medium transition"
-                                        >
-                                            Delete
-                                        </button>
+                                    <td className="p-3 flex gap-2 items-center">
+                                        {tx.status === "pending" ? (
+                                            <>
+                                                <select
+                                                    value={tx.status}
+                                                    onChange={(e) => handleUpdateStatus(tx.transId, e.target.value)}
+                                                    className="border rounded-md px-3 py-1 text-sm font-medium shadow-sm hover:border-blue-400 focus:outline-none focus:ring-2 focus:ring-blue-200 transition"
+                                                >
+                                                    <option value="pending">Pending</option>
+                                                    <option value="approved">Approve</option>
+                                                    <option value="rejected">Reject</option>
+                                                </select>
+
+                                                <button
+                                                    onClick={() => handleDelete(tx.transId)}
+                                                    className="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded-md text-sm font-medium shadow-sm transition"
+                                                >
+                                                    Delete
+                                                </button>
+                                            </>
+                                        ) : (
+                                            <span
+                                                className={`px-2 py-1 rounded-full text-xs font-semibold ${tx.status === "approved"
+                                                        ? "bg-green-100 text-green-700"
+                                                        : "bg-red-100 text-red-700"
+                                                    }`}
+                                            >
+                                                {tx.status === "approved" ? "Approved ✅" : "Rejected ❌"}
+                                            </span>
+                                        )}
                                     </td>
                                 </tr>
                             ))}
