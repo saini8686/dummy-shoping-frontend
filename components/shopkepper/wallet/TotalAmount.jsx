@@ -94,15 +94,15 @@ const TotalAmount = ({ total, isAdmin, isshopkepper, breakdown }) => {
         mimetype: payload.ifsc || "N/A",
       };
 
-      await createNotification({
-        userId, // or the admin userId
-        message: `New withdrawal request from ${userInfo?.name} of ₹${amountWithdrawal}.`,
-        earnCoin: 0,
-        earnType: "withdrawal_request",
-        earnUserId: userInfo?.userId,
-        earnUserName: userInfo?.name || "user",
-        status: "pending",
-      });
+      // await createNotification({
+      //   userId, // or the admin userId
+      //   message: `New withdrawal request from ${userInfo?.name} of ₹${amountWithdrawal}.`,
+      //   earnCoin: 0,
+      //   earnType: "withdrawal_request",
+      //   earnUserId: userInfo?.userId,
+      //   earnUserName: userInfo?.name || "user",
+      //   status: "pending",
+      // });
 
       await createWithdrawal(data);
 
