@@ -45,7 +45,7 @@ const Page = () => {
 
                 await updateUser({
                     ...userInfo,
-                    wallet2: (userInfo.wallet2 || 0) + refundAmount, // add back money
+                    wallet2: Number(userInfo.wallet2 || 0) + Number(refundAmount), // add back money
                 });
 
                 console.log(`Refunded ₹${refundAmount} back to user ${withdrawal.userId}`);
