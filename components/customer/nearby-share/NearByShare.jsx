@@ -157,6 +157,18 @@ const NearByShare = ({ search }) => {
     const videoPositions = [0, 3, 6];
     return videoPositions.includes(index);
   };
+  function openGoogleMaps(lat, lng) {
+    const appUrl = `comgooglemaps://?q=${lat},${lng}`;
+    const webUrl = `https://www.google.com/maps/search/?api=1&query=${lat},${lng}`;
+
+    // try opening app
+    window.location.href = appUrl;
+
+    // fallback if app not installed
+    setTimeout(() => {
+      window.location.href = webUrl;
+    }, 500);
+  }
 
   return (
     <>
@@ -281,13 +293,14 @@ const NearByShare = ({ search }) => {
                   {obj.latitude && obj.longitude && (
                     <a
                       href={`comgooglemaps://?q=${obj.latitude},${obj.longitude}`}
-                      target="_blank"
-                      rel="noopener noreferrer"
+                      onClick={() => openGoogleMaps(26.1075909, 85.4049232)}
+                           
                       className="text-blue-600 text-sm font-medium mt-2 inline-block"
                     >
                       📍 View on Map
                     </a>
                   )}
+
 
                   {/* Distance */}
                   <p className="text-xs italic font-medium text-reds-900">
