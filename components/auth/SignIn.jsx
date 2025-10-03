@@ -158,8 +158,8 @@ const SignIn = () => {
         </CustomButton>
       </form>
 
-      <OptionWay />
-      <LoginWay />
+      {/* <OptionWay /> */}
+      {/* <LoginWay /> */}
       <AgreementConfirm />
 
       <Link href={`/sign-up?auth=${auth}`} className="transparent-green-border-button mb-5">

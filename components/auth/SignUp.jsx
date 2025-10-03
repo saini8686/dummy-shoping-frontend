@@ -236,8 +236,8 @@ const SignUp = () => {
         </div>
       )}
 
-      <OptionWay />
-      <LoginWay />
+      {/* <OptionWay /> */}
+      {/* <LoginWay /> */}
       <AgreementConfirm />
 
       <Link
