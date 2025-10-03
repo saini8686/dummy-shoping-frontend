@@ -280,7 +280,7 @@ const NearByShare = ({ search }) => {
                   {/* Stars */}
                   {obj.latitude && obj.longitude && (
                     <a
-                      href={`https://www.google.com/maps/dir/?api=1&destination=${obj.latitude},${obj.longitude}`}
+                      href={`https://www.google.com/maps/dir/?api=1&origin=My+Location&destination=${obj.latitude},${obj.longitude}&travelmode=driving`}
                       target="_blank"
                       rel="noopener noreferrer"
                       className="text-blue-600 text-sm font-medium mt-2 inline-block"
