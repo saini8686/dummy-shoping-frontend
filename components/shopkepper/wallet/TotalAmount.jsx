@@ -13,14 +13,16 @@ import { createPayment } from "@/services/payment.service";
 import Link from "next/link";
 import { createWithdrawal } from "@/services/transactions.service";
 import { createNotification } from "@/services/notification.service";
-import { useRouter } from "next/navigation"; 
+import { useRouter } from "next/navigation";
 
 
 const TotalAmount = ({ total, isAdmin, isshopkepper, breakdown }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [isOpenSMP, setIsOpenSMP] = useState(false);
+  const [isOpenCompany, setIsOpenCompany] = useState(false);
   const [amount, setAmount] = useState("");
   const [smp, setSMP] = useState("");
+  const [transferPercent, setTransferPercent] = useState("");
   const [showBalance, setShowBalance] = useState(false);
   const [showBalance1, setShowBalance1] = useState(false);
   const [showBalance2, setShowBalance2] = useState(false);
@@ -128,6 +130,52 @@ const TotalAmount = ({ total, isAdmin, isshopkepper, breakdown }) => {
     setIsOpenWithdrawal(false);
   };
 
+  const handleSubmitTransfer = async () => {
+    try {
+      const adminInfo = await getUser(1, token); // admin user
+
+      const wallet1 = adminInfo.wallet1 ?? 0;
+      const wallet2 = adminInfo.wallet2 ?? 0;
+      const wallet = adminInfo.wallet ?? 0;
+
+      const percentage = parseFloat(transferPercent); // value user entered (%)
+      if (isNaN(percentage) || percentage <= 0) {
+        toast.error("Please enter a valid percentage");
+        return;
+      }
+
+      // calculate deductions
+      const deduct1 = (wallet1 * percentage) / 100;
+      const deduct2 = (wallet2 * percentage) / 100;
+
+      // new balances
+      const newWallet1 = wallet1 - deduct1;
+      const newWallet2 = wallet2 - deduct2;
+      const newWallet = wallet + deduct1 + deduct2;
+
+      // update admin wallets
+      await updateUser({
+        ...adminInfo,
+        wallet1: newWallet1,
+        wallet2: newWallet2,
+        wallet: newWallet,
+      });
+
+      // ✅ create notification
+      await createNotification({
+        userId: 1,
+        title: "Wallet Transfer",
+        message: `An amount of ${percentage}% has been transferred from Wallet1 and Wallet2 to the Customer Unlock Wallet.`,
+        type: "wallet-transfer",
+      });
+
+      toast.success("Wallet updated & notification sent!");
+      setIsOpenCompany(false);
+    } catch (error) {
+      console.error("Error updating admin wallet:", error);
+      toast.error("Failed to update wallet");
+    }
+  };
 
   const handleSubmit = async () => {
     const value = parseFloat(amount);
@@ -280,6 +328,17 @@ const TotalAmount = ({ total, isAdmin, isshopkepper, breakdown }) => {
               url={'./withdrawal'}
             >
               Customer Withdrawl Request
+            </CustomButton>
+          </div>
+          <div className="w-full mt-3">
+            <CustomButton
+              customClass="w-full sm:w-auto text-sm px-4 py-2 bg-primary text-white rounded-sm transition text-center"
+              onClick={(e) => {
+                e.preventDefault();
+                setIsOpenCompany(true);
+              }}
+            >
+              Admin  Withdrawl Request
             </CustomButton>
           </div>
         </>
@@ -510,6 +569,52 @@ const TotalAmount = ({ total, isAdmin, isshopkepper, breakdown }) => {
                 className="px-4 py-2 rounded-md bg-blue-600 hover:bg-blue-700 text-white"
               >
                 Submit Request
+              </CustomButton>
+            </div>
+          </Dialog.Panel>
+        </div>
+      </Dialog>
+
+      <Dialog open={isOpenCompany} onClose={() => setIsOpenCompany(false)} className="relative z-50">
+        {/* Background Overlay */}
+        <div className="fixed inset-0 bg-black/40 backdrop-blur-sm" aria-hidden="true" />
+
+        {/* Centered Modal */}
+        <div className="fixed inset-0 flex items-center justify-center p-4">
+          <Dialog.Panel className="w-full max-w-md bg-white rounded-2xl p-6 shadow-xl transition-all">
+
+            {/* Title */}
+            <Dialog.Title className="text-xl font-bold text-gray-900 mb-3 text-center">
+              Transfer Amount to Customer Unlock Wallet
+            </Dialog.Title>
+            <p className="text-sm text-gray-500 text-center mb-5">
+              Enter the transfer percentage below
+            </p>
+
+            {/* Input Field */}
+            <div className="mb-5">
+              <input
+                type="number"
+                placeholder="Enter %"
+                value={transferPercent}
+                onChange={(e) => setTransferPercent(e.target.value)}
+                className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
+              />
+            </div>
+
+            {/* Action Buttons */}
+            <div className="flex justify-end gap-3">
+              <CustomButton
+                onClick={() => setIsOpenCompany(false)}
+                className="px-4 py-2 rounded-lg !bg-transparent !text-blue-600 border border-blue-200 hover:!bg-blue-50"
+              >
+                Cancel
+              </CustomButton>
+              <CustomButton
+                onClick={handleSubmitTransfer}
+                className="px-5 py-2 rounded-lg bg-blue-600 hover:bg-blue-700 text-white font-medium shadow-sm"
+              >
+                Submit
               </CustomButton>
             </div>
           </Dialog.Panel>
